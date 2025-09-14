@@ -29,7 +29,7 @@ export default function RoadmapScreen() {
     return (
         <ImageBackground
             source={path}
-            style={{ flex: 1, width}}
+            style={{ flex: 1, width: 'auto'}}
             resizeMode="cover"
             imageStyle={{ resizeMode: 'cover', alignSelf: 'center'}}
         >
