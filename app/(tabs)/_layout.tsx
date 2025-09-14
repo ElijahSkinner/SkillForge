@@ -21,7 +21,7 @@ export default function TabLayout() {
                     name="glossary/index"
                     options={{
                         title: 'Glossary',
-                        tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+                        tabBarIcon: ({ color, size }) => <Ionicons name="create" size={size} color={color} />,
                     }}
             />
             <Tabs.Screen
