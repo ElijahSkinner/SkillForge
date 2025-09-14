@@ -204,4 +204,33 @@ const styles = StyleSheet.create({
         color: '#fee37f', // fallback
     },
     tileText: { color: '#fff', fontWeight: '600' },
+    modalOverlay: {
+        position: 'absolute',
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 100,
+    },
+    modalContent: {
+        width: '80%',
+        backgroundColor: '#1a1b1f',
+        padding: 20,
+        borderRadius: 12,
+        alignItems: 'center',
+    },
+    modalTitle: { fontSize: 18, fontWeight: 'bold', color: '#fee37f', marginBottom: 10 },
+    modalLessonName: { fontSize: 16, color: '#fff', marginBottom: 10, textAlign: 'center' },
+    modalXP: { fontSize: 14, color: '#ccc', marginBottom: 20 },
+    startButton: {
+        backgroundColor: '#27b0b9',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 8,
+        marginBottom: 10,
+    },
+    closeButton: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+    },
 });
