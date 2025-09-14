@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: 8,
     },
     quizText: { color: '#fff', fontWeight: '700' },
 });
