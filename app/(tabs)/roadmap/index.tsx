@@ -44,7 +44,7 @@ export default function RoadmapScreen() {
                     />
 
                     {/* Optional Quiz Roadmap overview */}
-                    <QuizRoadmap />
+
 
                     {/* ScrollView with bottom-to-top scroll */}
                     <ScrollView
@@ -53,7 +53,7 @@ export default function RoadmapScreen() {
                             alignItems: 'center',    // center everything horizontally
                             paddingVertical: 30,
                         }}
-                    >
+                    ><QuizRoadmap />
                         {modules.map((mod) => (
                             <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
                                 {/* Module / Exam Objective */}
