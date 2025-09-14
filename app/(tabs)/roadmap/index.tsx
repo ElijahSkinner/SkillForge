@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
 // @ts-ignore
 import path from '@/assets/images/path.png';
+import {ModuleType} from "@/types/certs";
 
 const { height: screenHeight } = Dimensions.get('window');
 const TILE_SIZE = 60;
