@@ -10,7 +10,6 @@ import QuizRoadmap from '@/components/QuizRoadmap';
 import GradientText from '@/components/GradientText';
 import { LinearGradient } from 'expo-linear-gradient';
 
-<GradientText style={styles.sectionTitle}>{mod.name}</GradientText>
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 // @ts-ignore
