@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import {SafeAreaView} from "react-native-safe-area-context";
 
 export default function TodayReviewScreen() {
     const router = useRouter();
@@ -13,6 +14,7 @@ export default function TodayReviewScreen() {
     const wordsLearned = ['Subnet', 'DHCP', 'Motherboard'];
 
     return (
+        <SafeAreaView style={{ flex: 1}}>
         <ScrollView style={styles.container} contentContainerStyle={{ padding: 20 }}>
             <Text style={styles.title}>Today’s Review</Text>
 
@@ -54,6 +56,7 @@ export default function TodayReviewScreen() {
                 ))}
             </View>
         </ScrollView>
+    </SafeAreaView>
     );
 }
 
