@@ -1,6 +1,7 @@
 // skillforge/components/CoursesDropdown.tsx
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+import { useRouter } from 'expo-router';
 
 type Course = {
     id: number;
@@ -14,9 +15,12 @@ type CoursesDropdownProps = {
 };
 
 export default function CoursesDropdown({ onClose, enrolledCourses = [] }: CoursesDropdownProps) {
+    const router = useRouter();
+
     return (
         <Pressable style={styles.overlay} onPress={onClose}>
-            <Pressable style={styles.dropdown} onPress={() => {}}>
+            {/* Inner container prevents overlay taps from blocking button presses */}
+            <Pressable style={styles.dropdown} onPress={(e) => e.stopPropagation()}>
                 <Text style={styles.title}>Your Courses</Text>
                 <ScrollView style={{ maxHeight: 250 }}>
                     {enrolledCourses.map((course) => (
@@ -29,8 +33,8 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                     <Pressable
                         style={styles.addCourse}
                         onPress={() => {
-                            onClose();           // close dropdown
-                            router.push('/course'); // navigate to courses page
+                            router.push('/tabs/course');
+                            onClose(); // close the dropdown after navigation
                         }}
                     >
                         <Text style={styles.addText}>+ Add Course</Text>
@@ -38,7 +42,6 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                 </ScrollView>
             </Pressable>
         </Pressable>
-
     );
 }
 
