@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useCert } from '@/context/CertContext';
-import { CERTS_ROADMAP } from '@/constants/certs';
+import { useCert } from '../../context/CertContext';
+import { CERTS_ROADMAP } from '../../constants/certs';
+
 
 export default function CourseScreen() {
     const router = useRouter();
