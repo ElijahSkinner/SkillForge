@@ -13,6 +13,11 @@ export default function RoadmapScreen() {
         return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
 
     const modules = CERTS_ROADMAP[selectedCert];
+    const enrolledCourses = Object.keys(CERTS_ROADMAP).map((name, idx) => ({
+        id: idx + 1,
+        name,
+        score: 0, // optional: track progress
+    }));
 
     return (
         <View style={{ flex: 1 }}>
