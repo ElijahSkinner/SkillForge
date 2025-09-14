@@ -5,7 +5,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
         {
             id: 1,
             name: 'Networking Concepts',
-            weight: 30,
+            weight: 23,
             completed: false,
             lessons: [
                 { id: 1, name: 'OSI Model' },
