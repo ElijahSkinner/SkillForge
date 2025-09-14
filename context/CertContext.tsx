@@ -15,6 +15,11 @@ type CertContextType = {
 };
 
 const CertContext = createContext<CertContextType | null>(null);
+export const useCert = (): CertContextType => {
+    const context = useContext(CertContext);
+    if (!context) throw new Error('useCert must be used within CertProvider');
+    return context;
+};
 
 export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [selectedCert, setSelectedCertState] = useState<string | null>(null);
