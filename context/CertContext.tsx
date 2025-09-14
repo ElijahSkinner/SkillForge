@@ -14,7 +14,7 @@ type CertContextType = {
     addCourse: (course: Course) => void;
 };
 
-const CertContext = CertContext<CertContextType | null>(null);
+const CertContext = createContext<CertContextType | null>(null);
 
 export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [selectedCert, setSelectedCertState] = useState<string | null>(null);
