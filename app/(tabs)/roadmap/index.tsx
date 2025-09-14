@@ -15,7 +15,7 @@ export default function RoadmapScreen() {
     const modules = CERTS_ROADMAP[selectedCert];
 
     return (
-        
+        <View style={{ flex: 1 }}>
             <ScrollView style={styles.container}>
                 {modules.map((mod) => (
                     <View key={mod.id} style={styles.section}>
@@ -39,7 +39,7 @@ export default function RoadmapScreen() {
                         </View>
                     </View>
                 ))}
-            </ScrollView>
+            </ScrollView></View>
     );
 }
 
