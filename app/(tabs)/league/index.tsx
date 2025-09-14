@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import {SafeAreaView} from "react-native-safe-area-context";
 
 // Forge-themed leagues (10 total) with individual colors
 const LEAGUES = [
@@ -27,7 +28,8 @@ const MOCK_USERS = [
 
 export default function LeagueScreen() {
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
+<SafeAreaView>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
             <Text style={styles.header}>Forge Leagues</Text>
 
             {LEAGUES.map((league, index) => {
@@ -57,6 +59,7 @@ export default function LeagueScreen() {
                 );
             })}
         </ScrollView>
+    </SafeAreaView>
     );
 }
 
