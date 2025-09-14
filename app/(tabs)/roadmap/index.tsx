@@ -49,21 +49,36 @@ export default function RoadmapScreen() {
                     <ScrollView
                         contentContainerStyle={{
                             flexDirection: 'column-reverse',
+                            alignItems: 'center',    // center everything horizontally
                             paddingVertical: 20,
-                            alignItems: 'center',
                         }}
                     >
                         {modules.map((mod) => (
-                            <View key={mod.id} style={styles.section}>
-                                {/* Exam Objective */}
+                            <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
+                                {/* Module / Exam Objective */}
                                 <Text style={styles.sectionTitle}>{mod.name}</Text>
 
-                                {/* Module Tiles */}
-                                <View style={styles.tilesColumn}>
+                                {/* Tiles */}
+                                <View
+                                    style={{
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }}
+                                >
                                     {[...Array(5)].map((_, idx) => (
                                         <Pressable
                                             key={idx}
-                                            style={[styles.tile, mod.completed && styles.completedTile]}
+                                            style={[
+                                                {
+                                                    width: TILE_SIZE,
+                                                    height: TILE_SIZE,
+                                                    marginBottom: TILE_SPACING,
+                                                    borderRadius: 12,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
+                                                },
+                                            ]}
                                             onPress={() =>
                                                 router.push({
                                                     pathname: '/quiz/[cert]/[id]',
@@ -74,23 +89,32 @@ export default function RoadmapScreen() {
                                             <Text style={styles.tileText}>{idx + 1}</Text>
                                         </Pressable>
                                     ))}
-                                </View>
 
-                                {/* Inclusive Quiz for this objective */}
-                                <Pressable
-                                    style={styles.quizTile}
-                                    onPress={() =>
-                                        router.push({
-                                            pathname: '/quiz/[cert]/[id]',
-                                            params: { cert: selectedCert, id: `quiz-${mod.id}` },
-                                        })
-                                    }
-                                >
-                                    <Text style={styles.quizText}>Quiz: {mod.name}</Text>
-                                </Pressable>
+                                    {/* Optional: Module quiz at the bottom */}
+                                    <Pressable
+                                        style={{
+                                            width: TILE_SIZE,
+                                            height: TILE_SIZE,
+                                            borderRadius: 12,
+                                            marginTop: 12,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            backgroundColor: '#444',
+                                        }}
+                                        onPress={() =>
+                                            router.push({
+                                                pathname: '/quiz/[cert]/[id]',
+                                                params: { cert: selectedCert, id: String(mod.id) + '-quiz' },
+                                            })
+                                        }
+                                    >
+                                        <Text style={styles.tileText}>Q</Text>
+                                    </Pressable>
+                                </View>
                             </View>
                         ))}
                     </ScrollView>
+
                 </View>
             </SafeAreaView>
         </ImageBackground>
