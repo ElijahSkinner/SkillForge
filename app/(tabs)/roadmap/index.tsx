@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import { View, ScrollView, StyleSheet, Text, Pressable, ImageBackground } from 'react-native';
+import { Animated, View, ScrollView, StyleSheet, Text, Pressable, ImageBackground } from 'react-native';
 import TopBar from '@/components/TopBar';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import { useCert } from '@/context/CertContext';
