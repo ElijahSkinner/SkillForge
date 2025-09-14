@@ -22,11 +22,13 @@ export default function GradientText({
     return (
         <MaskedView maskElement={<Text style={[style, styles.mask]}>{children}</Text>}>
             <LinearGradient
-                colors={colors as readonly [string, string, ...string[]]}
+                colors={colors as unknown as readonly [string, string, ...string[]]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 0, y: 0 }}
             >
-                <Text style={[style, { opacity: 0 }]} {...props}>{children}</Text>
+                <Text style={[style, { opacity: 0 }]} {...props}>
+                    {children}
+                </Text>
             </LinearGradient>
         </MaskedView>
     );
