@@ -69,7 +69,7 @@ export default function RoadmapScreen() {
                                 >
                                     {numbers.map((number) => (
                                         <Pressable
-                                            key={idx}
+                                            key={`${mod.id}-${number}`}
                                             style={[
                                                 {
                                                     width: TILE_SIZE,
