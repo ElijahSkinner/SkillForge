@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, Pressable, TouchableWithoutFeedback } from 'react-native';
+import {View, Text, ScrollView, StyleSheet, Pressable, TouchableWithoutFeedback, Button} from 'react-native';
 import { useRouter } from 'expo-router';
 
 type Course = { id: number; name: string; score: number };
