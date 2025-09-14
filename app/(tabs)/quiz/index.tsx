@@ -23,7 +23,6 @@ export default function QuizRoadmap() {
                             params: { cert: selectedCert, id: String(mod.id) },
                         })
                     }
-
                 >
                     <Text style={styles.moduleTitle}>{mod.name}</Text>
                     <Text style={styles.statusText}>{mod.completed ? '✅ Completed' : '🔒 Locked'}</Text>
