@@ -24,7 +24,6 @@ export default function RootHomeScreen() {
         checkFirstLaunch();
     }, []);
 
-
     if (isFirstLaunch === null) return null;
 
     return (
