@@ -21,3 +21,10 @@ export const CERTS_ROADMAP = {
     ],
     // Add remaining 7 certs similarly
 };
+// types/certs.ts
+export type ModuleType = {
+    id: number;
+    name: string;
+    weight: number;
+    completed: boolean;
+};
