@@ -104,28 +104,32 @@ export default function RoadmapScreen() {
                                 </Pressable>
 
                                 {/* Dynamic lesson tiles */}
-                                {mod.lessons.map((lesson) => (
-                                    <Pressable
-                                        key={`${mod.id}-${lesson.id}`}
-                                        style={{
-                                            width: TILE_SIZE,
-                                            height: TILE_SIZE,
-                                            marginBottom: TILE_SPACING,
-                                            borderRadius: 12,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
-                                        }}
-                                        onPress={() =>
-                                            router.push({
-                                                pathname: '/quiz/[cert]/[id]',
-                                                params: { cert: selectedCert, id: String(mod.id) },
-                                            })
-                                        }
-                                    >
-                                        <Text style={styles.tileText}>{lesson.id}</Text>
-                                    </Pressable>
-                                ))}
+                                {mod.lessons.map((lesson, index) => {
+                                    const number = index + 1; // 1, 2, 3, ... dynamically
+                                    return (
+                                        <Pressable
+                                            key={`${mod.id}-${number}`}
+                                            style={{
+                                                width: TILE_SIZE,
+                                                height: TILE_SIZE,
+                                                marginBottom: TILE_SPACING,
+                                                borderRadius: 12,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
+                                            }}
+                                            onPress={() =>
+                                                router.push({
+                                                    pathname: '/quiz/[cert]/[id]',
+                                                    params: { cert: selectedCert, id: String(mod.id) },
+                                                })
+                                            }
+                                        >
+                                            <Text style={styles.tileText}>{number}</Text>
+                                        </Pressable>
+                                    );
+                                })}
+
 
                                 {/* BOTTOM: Chapter name */}
                                 <Animated.Text style={[styles.sectionTitle]}>
