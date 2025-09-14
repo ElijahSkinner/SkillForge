@@ -44,7 +44,7 @@ export default function RoadmapScreen() {
                     />
 
                     {/* Optional Quiz Roadmap overview */}
-                    //
+                    <QuizRoadmap />
 
                     {/* ScrollView with bottom-to-top scroll */}
                     <ScrollView
