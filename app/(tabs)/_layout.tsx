@@ -52,6 +52,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="quiz/index"
                 options={{
+                    href:null,
                     title: 'Quiz',
                     tabBarIcon: ({ color, size }) => <Ionicons name="help-circle" size={size} color={color} />,
                 }}
