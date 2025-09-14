@@ -18,11 +18,12 @@ export default function RootHomeScreen() {
                 setIsFirstLaunch(true);
             } else {
                 setIsFirstLaunch(false);
-                router.replace('/roadmap'); // skip home for returning users
+                router.replace('/roadmap'); // absolute path
             }
         };
         checkFirstLaunch();
     }, []);
+
 
     if (isFirstLaunch === null) return null;
 
