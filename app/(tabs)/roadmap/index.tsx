@@ -27,6 +27,7 @@ export default function RoadmapScreen() {
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
+    const [modulePositions, setModulePositions] = React.useState<{ [key: number]: number }>({});
 
     if (!selectedCert)
         return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
