@@ -29,7 +29,7 @@ export default function RoadmapScreen() {
     return (
         <ImageBackground
             source={path}
-            style={{ flex: 1, justifyContent:'center' }}
+            style={{ flex: 1, justifyContent:'center', }}
             resizeMode="contain"
         >
             <SafeAreaView style={{ flex: 1 }}>
