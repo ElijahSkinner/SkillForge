@@ -6,6 +6,7 @@ import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import QuizRoadmap from '@/components/QuizRoadmap';
 import { ImageBackground } from "react-native";
+// @ts-ignore
 import path from "@/assets/images/path.png";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
