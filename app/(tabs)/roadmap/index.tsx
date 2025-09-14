@@ -7,6 +7,10 @@ import { useRouter } from 'expo-router';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import QuizRoadmap from '@/components/QuizRoadmap';
+import GradientText from '@/components/GradientText';
+
+<GradientText style={styles.sectionTitle}>{mod.name}</GradientText>
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 // @ts-ignore
 import path from '@/assets/images/path.png';
