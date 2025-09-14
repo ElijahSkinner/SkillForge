@@ -71,7 +71,7 @@ export default function RoadmapScreen() {
                         enrolledCourses={enrolledCourses}
                     />
 
-                    <QuizRoadmap />
+
 
                     <Animated.ScrollView
                         ref={scrollViewRef}
@@ -154,7 +154,7 @@ export default function RoadmapScreen() {
                         ))}
                     </Animated.ScrollView>
                 </View>
-                
+
                 {selectedLesson && (() => {
                     const mod = modules.find(m => m.id === selectedLesson.modId)!;
                     const lessonCount = mod.lessons.length;
