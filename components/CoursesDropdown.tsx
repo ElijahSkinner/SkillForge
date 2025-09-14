@@ -26,13 +26,7 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                         </View>
                     ))}
                     {/* Add new course button */}
-                    <Pressable
-                        style={styles.addCourse}
-                        onPress={() => {
-                            onClose();           // close the dropdown first
-                            router.push('/course'); // navigate to courses page
-                        }}
-                    >
+                    <Pressable style={styles.addCourse} onPress={() => console.log('Add course')}>
                         <Text style={styles.addText}>+ Add Course</Text>
                     </Pressable>
                 </ScrollView>
