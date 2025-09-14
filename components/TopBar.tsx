@@ -32,7 +32,7 @@ export default function TopBar({
             <CoursesDropdown
                 trigger={
                     <View style={styles.courseBox}>
-                        <Text style={styles.courseText}>enrolled ▼</Text>
+                        <Text style={styles.courseText}>selectedCourse ▼</Text>
                     </View>
                 }
                 enrolledCourses={enrolledCourses}
