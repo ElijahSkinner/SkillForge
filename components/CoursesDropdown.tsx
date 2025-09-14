@@ -33,7 +33,7 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                     <Pressable
                         style={styles.addCourse}
                         onPress={() => {
-                            router.push('/course/index');
+                            router.push('/course');
                             onClose(); // close the dropdown after navigation
                         }}
                     >
