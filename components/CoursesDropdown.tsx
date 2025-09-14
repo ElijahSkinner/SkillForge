@@ -79,7 +79,7 @@ export default function CoursesDropdown({ trigger, enrolledCourses = [] }: Cours
 
                                 <MenuOption
                                     onSelect={() => {
-                                        router.push('/tabs/course'); // Go to course page
+                                        router.push('/course'); // Go to course page
                                         setVisible(false);
                                     }}
                                 >
