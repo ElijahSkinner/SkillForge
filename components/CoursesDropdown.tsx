@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 type Course = {
     id: number;
     name: string;
-    score: number; // Current score in course
+    score: number;
 };
 
 type CoursesDropdownProps = {
@@ -19,8 +19,8 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
 
     return (
         <Pressable style={styles.overlay} onPress={onClose}>
-            {/* Inner container prevents overlay taps from blocking button presses */}
-            <Pressable style={styles.dropdown} onPress={(e) => e.stopPropagation()}>
+            {/* Inner container stops the tap from closing dropdown */}
+            <View style={styles.dropdown} pointerEvents="box-none">
                 <Text style={styles.title}>Your Courses</Text>
                 <ScrollView style={{ maxHeight: 250 }}>
                     {enrolledCourses.map((course) => (
@@ -29,18 +29,19 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                             <Text style={styles.courseScore}>{course.score}%</Text>
                         </View>
                     ))}
+
                     {/* Add new course button */}
                     <Pressable
                         style={styles.addCourse}
                         onPress={() => {
-                            router.push('/course');
-                            onClose(); // close the dropdown after navigation
+                            router.push('/tabs/course');
+                            onClose();
                         }}
                     >
                         <Text style={styles.addText}>+ Add Course</Text>
                     </Pressable>
                 </ScrollView>
-            </Pressable>
+            </View>
         </Pressable>
     );
 }
@@ -48,7 +49,7 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
 const styles = StyleSheet.create({
     overlay: {
         position: 'absolute',
-        top: 60, // adjust based on TopBar height
+        top: 60,
         left: 0,
         right: 0,
         bottom: 0,
