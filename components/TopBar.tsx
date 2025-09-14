@@ -8,6 +8,7 @@ type TopBarProps = {
     currentStreak: number;
     currency: number;
     hearts?: number;
+    selectedCourse?: { id: number; name: string } | null;
     enrolledCourses?: { id: number; name: string; score: number }[];
 };
 
