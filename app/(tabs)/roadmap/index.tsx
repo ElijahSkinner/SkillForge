@@ -76,12 +76,11 @@ export default function RoadmapScreen() {
                         )}
                     >
                         {modules.map((mod, modIndex) => {
-                            const positionY = useRef(0).current;
+                            let positionY = 0; // use let, updated in onLayout
 
-                            // Interpolate color based on screen position
                             const color = scrollY.interpolate({
                                 inputRange: [positionY - screenHeight, positionY],
-                                outputRange: ['#fee37f', '#222222'], // top=gold, bottom=black
+                                outputRange: ['#fee37f', '#222222'],
                                 extrapolate: 'clamp',
                             });
 
