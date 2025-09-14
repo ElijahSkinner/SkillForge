@@ -29,18 +29,19 @@ export default function RootHomeScreen() {
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={[styles.button, { backgroundColor: '#da3a2b' }]}
-                    onPress={() => router.push('/(tabs)/course/index')}
+                    onPress={() => router.push('/course')}
                 >
                     <Text style={styles.buttonText}>Courses</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={[styles.button, { backgroundColor: '#fbc348' }]}
-                    onPress={() => router.push('/(tabs)/quiz/index')}
+                    style={[styles.button, { backgroundColor: '#27b0b9' }]}
+                    onPress={() => router.push('/quiz')}
                 >
                     <Text style={styles.buttonText}>Quiz</Text>
                 </TouchableOpacity>
             </View>
+
         </LinearGradient>
     );
 }
