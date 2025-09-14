@@ -12,6 +12,8 @@ import path from '@/assets/images/path.png';
 export default function RoadmapScreen() {
     const { selectedCert } = useCert();
     const router = useRouter();
+    const TILE_SIZE = 60;      // width & height of each tile
+    const TILE_SPACING = 8;    // spacing between tiles
 
     if (!selectedCert)
         return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
