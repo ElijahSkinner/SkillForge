@@ -122,7 +122,7 @@ export default function RoadmapScreen() {
                                 ))}
 
                                 {/* BOTTOM: Chapter name (so users start here and scroll up) */}
-                                <Text style={styles.sectionTitle}>{mod.name}</Text>
+                                <GradientText style={styles.sectionTitle}>{mod.name}</GradientText>
                             </View>
                         ))}
                     </ScrollView>
