@@ -16,7 +16,8 @@ export default function RoadmapScreen() {
 
     return (
         <View style={{ flex: 1 }}>
-            
+            <TopBar />
+            <QuizRoadmap />
             <ScrollView style={styles.container}>
                 {modules.map((mod) => (
                     <View key={mod.id} style={styles.section}>
