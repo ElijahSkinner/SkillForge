@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window');
 
 export default function RootHomeScreen() {
     const router = useRouter();
-
+    
     return (
         <LinearGradient
             colors={['#0d0e12', '#27b0b9', '#27f9c8']}
