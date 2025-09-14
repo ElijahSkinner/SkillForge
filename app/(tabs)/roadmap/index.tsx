@@ -118,7 +118,7 @@ export default function RoadmapScreen() {
                                 ))}
 
                                 {/* BOTTOM: Chapter name (so users start here and scroll up) */}
-                                <Text style={styles.sectionTitle}>{mod.name}</Text>
+                                <MaskedView maskElement={LinearGradient}<Text style={styles.sectionTitle}>{mod.name}</Text> </MaskedView>
                             </View>
                         ))}
                     </ScrollView>
