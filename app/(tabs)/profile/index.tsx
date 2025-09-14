@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-
+import {SafeAreaView} from "react-native-safe-area-context";
 export default function ProfileScreen() {
     const router = useRouter();
 
