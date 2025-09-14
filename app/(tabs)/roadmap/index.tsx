@@ -198,7 +198,7 @@ export default function RoadmapScreen() {
                     const isUnitReview = selectedLesson.lessonIndex === 0;
                     const lessonNum = isUnitReview
                         ? 'Unit Review'
-                        : lessonCount - selectedLesson.lessonIndex + 1;
+                        : lessonCount - selectedLesson.lessonIndex;
                     const xp = isUnitReview
                         ? mod.weight // Full module XP
                         : Math.round(mod.weight / lessonCount);
