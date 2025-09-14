@@ -80,7 +80,7 @@ export default function CoursesDropdown({ trigger, enrolledCourses = [] }: Cours
                                 <MenuOption
                                     onSelect={() => {
                                         router.push('/course'); // Go to course page
-                                        setVisible(false);
+                                        setVisible(true);
                                     }}
                                 >
                                     <Text style={styles.addText}>+ Add Course</Text>
