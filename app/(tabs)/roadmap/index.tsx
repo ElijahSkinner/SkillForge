@@ -1,65 +1,57 @@
 import React, { useState } from 'react';
-import {View, ScrollView, StyleSheet, Text, Pressable} from 'react-native';
-import TopBar from '@/components/TopBar';
-import { CERTS_ROADMAP } from '@/constants/certs';
-import { useCert } from '@/context/CertContext';
+import { View, Text, StyleSheet } from 'react-native';
+import CoursesDropdown from './CoursesDropdown';
 import { useRouter } from 'expo-router';
-import QuizRoadmap from '@/components/QuizRoadmap';
-export default function RoadmapScreen() {
-    const { selectedCert, setSelectedCert } = useCert();
+
+type Course = { id: number; name: string; score?: number };
+
+type TopBarProps = {
+    currentStreak: number;
+    currency: number;
+    hearts?: number;
+    selectedCourse?: Course | null;
+    enrolledCourses?: Course[];
+    onSelectCourse?: (course: Course) => void;
+};
+
+export default function TopBar({
+                                   currentStreak,
+                                   currency,
+                                   hearts = 0,
+                                   selectedCourse,
+                                   enrolledCourses = [],
+                                   onSelectCourse,
+                               }: TopBarProps) {
     const router = useRouter();
 
-    if (!selectedCert)
-        return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
-
-    const modules = CERTS_ROADMAP[selectedCert];
-
     return (
-        <View style={{ flex: 1 }}>
-            <TopBar currentStreak={123} currency={456} />
-            <QuizRoadmap />
-            <ScrollView style={styles.container}>
-                {modules.map((mod) => (
-                    <View key={mod.id} style={styles.section}>
-                        <Text style={styles.sectionTitle}>{mod.name}</Text>
-                        <View style={styles.tilesRow}>
-                            {/* 5 tiles per module */}
-                            {[...Array(5)].map((_, idx) => (
-                                <Pressable
-                                    key={idx}
-                                    style={[styles.tile, mod.completed && styles.completedTile]}
-                                    onPress={() =>
-                                        router.push({
-                                            pathname: '/quiz/[cert]/[id]',
-                                            params: { cert: selectedCert, id: String(mod.id) },
-                                        })
-                                    }
-                                >
-                                    <Text style={styles.tileText}>{idx + 1}</Text>
-                                </Pressable>
-                            ))}
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-        </View>
+        <View style={styles.container}>
+            {/* Left: Streak */}
+            <Text style={styles.streakLabel}>🔥 Streak {currentStreak}</Text>
 
+            {/* Center: Course Dropdown */}
+            <CoursesDropdown
+                trigger={
+                    <View style={styles.courseBox}>
+                        <Text style={styles.courseText}>
+                            {selectedCourse ? selectedCourse.name : 'Select a course'} ▼
+                        </Text>
+                    </View>
+                }
+                enrolledCourses={enrolledCourses}
+                onSelectCourse={onSelectCourse} // pass handler
+            />
+
+            {/* Right: Currency */}
+            <Text style={styles.currencyText}>💰 {currency}</Text>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20 },
-    section: { marginBottom: 30 },
-    sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff', marginBottom: 10 },
-    tilesRow: { flexDirection: 'row', justifyContent: 'space-between' },
-    tile: {
-        width: 60,
-        height: 60,
-        backgroundColor: '#1a1b1f',
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    completedTile: { backgroundColor: '#27b0b9' },
-    tileText: { color: '#fff', fontWeight: '600' },
+    container: { flexDirection: 'row', justifyContent: 'space-between', padding: 12, backgroundColor: '#1a1b1f', alignItems: 'center' },
+    streakLabel: { color: '#fff', fontWeight: '600' },
+    courseBox: { padding: 8, backgroundColor: '#333', borderRadius: 8 },
+    courseText: { color: '#fff', fontWeight: '600' },
+    currencyText: { color: '#fff', fontWeight: '600' },
 });
