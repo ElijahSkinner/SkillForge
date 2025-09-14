@@ -39,8 +39,9 @@ export default function RoadmapScreen() {
                         </View>
                     </View>
                 ))}
-            </ScrollView></View>
-        
+            </ScrollView>
+        </View>
+
     );
 }
 
