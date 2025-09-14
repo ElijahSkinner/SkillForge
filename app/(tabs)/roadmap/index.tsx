@@ -55,7 +55,7 @@ export default function RoadmapScreen() {
                         }}
                     >
                         {modules.map((mod) => (
-                            <View key={mod.id} style={{ marginBottom: 0, alignItems: 'center' }}>
+                            <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
                                 {/* Module / Exam Objective */}
                                 <Text style={styles.sectionTitle}>{mod.name}</Text>
 
