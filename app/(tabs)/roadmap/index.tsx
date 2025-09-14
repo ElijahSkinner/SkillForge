@@ -93,7 +93,8 @@ export default function RoadmapScreen() {
                                     key={mod.id}
                                     style={{ marginBottom: 30, alignItems: 'center' }}
                                     onLayout={(e) => {
-                                        positionY = e.nativeEvent.layout.y;
+                                        const y = e.nativeEvent.layout.y;
+                                        setModulePositions((prev) => ({ ...prev, [mod.id]: y }));
                                     }}
                                 >
                                     {/* Q tile at top */}
