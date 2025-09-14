@@ -6,7 +6,7 @@ import {
     StyleSheet,
     Dimensions,
     Animated,
-    ImageBackground,
+    ImageBackground, ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TopBar from '@/components/TopBar';
