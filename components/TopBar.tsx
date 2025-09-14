@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import CoursesDropdown from './CoursesDropdown';
+import {router} from "expo-router";
 
 type TopBarProps = {
     currentStreak: number;
