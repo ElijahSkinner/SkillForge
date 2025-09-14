@@ -163,7 +163,7 @@ export default function RoadmapScreen() {
                         <View style={styles.modalOverlay}>
                             <View style={styles.modalContent}>
                                 <Text style={styles.modalTitle}>
-                                    Lesson {lessonNum} / {lessonCount}
+                                    Lesson {selectedLesson.lessonIndex} / {lessonCount}
                                 </Text>
                                 <Text style={styles.modalLessonName}>{selectedLesson.lessonName}</Text>
                                 <Text style={styles.modalXP}>XP: {xp}</Text>
