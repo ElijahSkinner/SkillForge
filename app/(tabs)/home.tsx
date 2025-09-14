@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {useEffect, useState} from "react";
 
+
 const { width } = Dimensions.get('window');
 
 export default function RootHomeScreen() {
