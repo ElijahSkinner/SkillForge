@@ -17,6 +17,7 @@ export default function GlossaryScreen() {
     const terms = GLOSSARY[selectedCert] ?? [];
 
     return (
+        
         <View style={styles.container}>
             <FlatList
                 data={terms}
