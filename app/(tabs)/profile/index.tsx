@@ -51,6 +51,8 @@ export default function ProfileScreen() {
                 <Text>✅ Logged in 5 days in a row</Text>
             </View>
         </ScrollView>
+        </SafeAreaView>
+
     );
 }
 
