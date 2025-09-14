@@ -47,7 +47,7 @@ export default function RoadmapScreen() {
                     <ScrollView
                         contentContainerStyle={{
                             flexDirection: 'column-reverse',
-                            padding: 20,
+                            paddingVertical: 20,
                         }}
                     >
                         {modules.map((mod) => (
