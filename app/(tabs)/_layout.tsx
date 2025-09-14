@@ -45,6 +45,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="course/index"
                 options={{
+                    href: '/course',
                     title: 'Courses',
                     tabBarIcon: ({ color, size }) => <Ionicons name="book" size={size} color={color} />,
                 }}
