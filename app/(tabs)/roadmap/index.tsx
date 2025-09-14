@@ -30,7 +30,7 @@ export default function RoadmapScreen() {
             <View style={{ flex: 1 }}>
             <TopBar currentStreak={123} currency={456} selectedCourse={{ id: 0, name: selectedCert }} enrolledCourses={enrolledCourses} />
             <QuizRoadmap />
-            <ScrollView contantContainerstyle={styles.container}>
+            <ScrollView contantContainerStyle={styles.container}>
                 {modules.map((mod) => (
                     <View key={mod.id} style={styles.section}>
                         <Text style={styles.sectionTitle}>{mod.name}</Text>
