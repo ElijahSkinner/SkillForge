@@ -1,4 +1,7 @@
-export const CERTS_ROADMAP = {
+// constants/certs.ts
+import { ModuleType } from '../types/certs';
+
+export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
     'CompTIA A+ Core 1': [
         { id: 1, name: 'Mobile Devices', weight: 15, completed: false },
         { id: 2, name: 'Networking', weight: 20, completed: false },
@@ -13,11 +16,8 @@ export const CERTS_ROADMAP = {
         { id: 4, name: 'Operational Procedures', weight: 21, completed: false },
     ],
     'CompTIA Network+': [
-        { id: 1, name: 'Networking Basics', weight: 20, completed: false },
-        { id: 2, name: 'IP Addressing', weight: 15, completed: false },
-        { id: 3, name: 'Protocols & Ports', weight: 15, completed: false },
-        { id: 4, name: 'Network Security', weight: 20, completed: false },
-        { id: 5, name: 'Troubleshooting', weight: 30, completed: false },
+        { id: 1, name: 'Networking Basics', weight: 30, completed: false },
+        { id: 2, name: 'IP Addressing', weight: 25, completed: false },
+        { id: 3, name: 'Protocols & Ports', weight: 45, completed: false },
     ],
-    // Add remaining 7 certs similarly
 };
