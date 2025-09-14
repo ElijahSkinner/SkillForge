@@ -104,9 +104,9 @@ export default function RoadmapScreen() {
                                 </Pressable>
 
                                 {/* Dynamic lesson tiles */}
-                                {mod.lessons.map((lesson, idx) => (
+                                {mod.lessons.map((lesson) => (
                                     <Pressable
-                                        key={`${mod.id}-${idx}`}
+                                        key={`${mod.id}-${lesson.id}`}
                                         style={{
                                             width: TILE_SIZE,
                                             height: TILE_SIZE,
@@ -114,16 +114,16 @@ export default function RoadmapScreen() {
                                             borderRadius: 12,
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            backgroundColor: lesson.completed ? '#27b0b9' : '#1a1b1f',
+                                            backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
                                         }}
                                         onPress={() =>
                                             router.push({
                                                 pathname: '/quiz/[cert]/[id]',
-                                                params: { cert: selectedCert, id: lesson.id },
+                                                params: { cert: selectedCert, id: String(mod.id) },
                                             })
                                         }
                                     >
-                                        <Text style={styles.tileText}>{idx + 1}</Text>
+                                        <Text style={styles.tileText}>{lesson.id}</Text>
                                     </Pressable>
                                 ))}
 
