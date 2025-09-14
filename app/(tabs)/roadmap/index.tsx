@@ -85,7 +85,7 @@ export default function RoadmapScreen() {
                                     outputRange: ['#fee37f', '#222222'], // gold → black
                                     extrapolate: 'clamp',
                                 })
-                                : '#fee37f'; // fallback until layout measured
+                                : '#222222'; // fallback until layout measured
 
 
                             return (
