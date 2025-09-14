@@ -16,7 +16,7 @@ export default function RoadmapScreen() {
 
     return (
         <View style={{ flex: 1 }}>
-            <TopBar currentStreak={123} currency={456} />
+            <TopBar currentStreak={123} currency={456} selectedCourse={}/>
             <QuizRoadmap />
             <ScrollView style={styles.container}>
                 {modules.map((mod) => (
