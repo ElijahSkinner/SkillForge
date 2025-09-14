@@ -25,7 +25,7 @@ export default function RoadmapScreen() {
 
     return (
         <ImageBackground source={path} style={{ flex: 1, width: '100vw', height: '100vh', justifyContent: 'center', alignItems: 'center', }} resizeMode="cover" >
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#1a1b1f' }}>
+            <SafeAreaView style={{ flex: 1, }}>
             <View style={{ flex: 1 }}>
             <TopBar currentStreak={123} currency={456} selectedCourse={{ id: 0, name: selectedCert }} enrolledCourses={enrolledCourses} />
             <QuizRoadmap />
