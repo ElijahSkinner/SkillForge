@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import CoursesDropdown from '/CoursesDropdown';
+import CoursesDropdown from '@/CoursesDropdown';
 import { useRouter } from 'expo-router';
 
 type Course = { id: number; name: string; score?: number };
