@@ -56,7 +56,7 @@ export default function RoadmapScreen() {
 
                     {/* ScrollView with bottom-to-top scroll */}
                     <ScrollView
-                        
+                        ref={scrollViewRef}
                         contentContainerStyle={{
                             flexDirection: 'column-reverse',
                             alignItems: 'center',    // center everything horizontally
