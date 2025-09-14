@@ -1,20 +1,28 @@
 // components/GradientText.tsx
 import React from 'react';
-import { Text, TextProps, StyleSheet } from 'react-native';
+import { Text, TextProps, StyleSheet, Platform } from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type GradientTextProps = TextProps & {
     colors?: string[];
 };
 
-export default function GradientText({ children, colors = ['#222222', '#fee37f'], style, ...props }: GradientTextProps) {
+export default function GradientText({
+                                         children,
+                                         colors = ['#222222', '#fee37f'],
+                                         style,
+                                         ...props
+                                     }: GradientTextProps) {
+    // fallback for web: just use solid color
+    if (Platform.OS === 'web') {
+        return <Text style={[style, { color: colors[colors.length - 1] }]} {...props}>{children}</Text>;
+    }
+
     return (
         <MaskedView maskElement={<Text style={[style, styles.mask]}>{children}</Text>}>
             <LinearGradient colors={colors} start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}>
-                <Text style={[style, { opacity: 0 }]} {...props}>
-                    {children}
-                </Text>
+                <Text style={[style, { opacity: 0 }]} {...props}>{children}</Text>
             </LinearGradient>
         </MaskedView>
     );
