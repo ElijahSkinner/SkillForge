@@ -2,7 +2,7 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { useCert } from '@/context/CertContext';
 import { GLOSSARY } from '../../../constants/glossary';
-
+import {SafeAreaView} from "react-native-safe-area-context";
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
 
