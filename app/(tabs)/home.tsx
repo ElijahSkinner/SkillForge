@@ -2,7 +2,7 @@ import { Image, StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'rea
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {useEffect, useState} from "react";
-
+import {ReactNativeAsyncStorage} from "@firebase/auth";
 
 const { width } = Dimensions.get('window');
 
