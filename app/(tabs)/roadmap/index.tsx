@@ -26,7 +26,7 @@ export default function RoadmapScreen() {
     const { selectedCert } = useCert();
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
-    const scrollViewRef = useRef<Animated.ScrollView | null>(null); // define scrollViewRef
+    const scrollViewRef = useRef<InstanceType<typeof Animated.ScrollView> | null>(null);
 
     if (!selectedCert)
         return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
