@@ -48,6 +48,7 @@ export default function RoadmapScreen() {
                         contentContainerStyle={{
                             flexDirection: 'column-reverse',
                             paddingVertical: 20,
+                            alignItems
                         }}
                     >
                         {modules.map((mod) => (
