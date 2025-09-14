@@ -6,7 +6,24 @@ const { width } = Dimensions.get('window');
 
 export default function RootHomeScreen() {
     const router = useRouter();
-    
+    const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const checkFirstLaunch = async () => {
+            const value = await AsyncStorage.getItem('alreadyLaunched');
+            if (value === null) {
+                await AsyncStorage.setItem('alreadyLaunched', 'true');
+                setIsFirstLaunch(true);
+            } else {
+                setIsFirstLaunch(false);
+                router.replace('/tabs/roadmap'); // skip home for returning users
+            }
+        };
+        checkFirstLaunch();
+    }, []);
+
+    if (isFirstLaunch === null) return null;
+
     return (
         <LinearGradient
             colors={['#0d0e12', '#27b0b9', '#27f9c8']}
