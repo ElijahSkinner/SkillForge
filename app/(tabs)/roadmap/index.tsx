@@ -88,7 +88,7 @@ export default function RoadmapScreen() {
                                                 })
                                             }
                                         >
-                                            <Text style={styles.tileText}>{idx + 1}</Text>
+                                            <Text style={styles.tileText}>{number}</Text>
                                         </Pressable>
                                     ))}
 
