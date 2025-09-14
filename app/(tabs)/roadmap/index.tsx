@@ -8,6 +8,7 @@ import QuizRoadmap from '@/components/QuizRoadmap';
 import { ImageBackground } from "react-native";
 import path from "@/assets/images/path.png";
 
+
 export default function RoadmapScreen() {
     const { selectedCert, setSelectedCert } = useCert();
     const router = useRouter();
