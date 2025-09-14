@@ -1,13 +1,7 @@
-// skillforge/components/CoursesDropdown.tsx
-import React from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Pressable, TouchableWithoutFeedback } from 'react-native';
 import { useRouter } from 'expo-router';
 
-type Course = {
-    id: number;
-    name: string;
-    score: number;
-};
+type Course = { id: number; name: string; score: number };
 
 type CoursesDropdownProps = {
     onClose: () => void;
@@ -18,31 +12,31 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
     const router = useRouter();
 
     return (
-        <Pressable style={styles.overlay} onPress={onClose}>
-            {/* Inner container stops the tap from closing dropdown */}
-            <View style={styles.dropdown} pointerEvents="box-none">
-                <Text style={styles.title}>Your Courses</Text>
-                <ScrollView style={{ maxHeight: 250 }}>
-                    {enrolledCourses.map((course) => (
-                        <View key={course.id} style={styles.courseRow}>
-                            <Text style={styles.courseName}>{course.name}</Text>
-                            <Text style={styles.courseScore}>{course.score}%</Text>
-                        </View>
-                    ))}
+        <TouchableWithoutFeedback onPress={onClose}>
+            <View style={styles.overlay}>
+                <View style={styles.dropdown}>
+                    <Text style={styles.title}>Your Courses</Text>
+                    <ScrollView style={{ maxHeight: 250 }}>
+                        {enrolledCourses.map((course) => (
+                            <View key={course.id} style={styles.courseRow}>
+                                <Text style={styles.courseName}>{course.name}</Text>
+                                <Text style={styles.courseScore}>{course.score}%</Text>
+                            </View>
+                        ))}
 
-                    {/* Add new course button */}
-                    <Pressable
-                        style={styles.addCourse}
-                        onPress={() => {
-                            router.push('/course');
-                            onClose();
-                        }}
-                    >
-                        <Text style={styles.addText}>+ Add Course</Text>
-                    </Pressable>
-                </ScrollView>
+                        <Pressable
+                            style={styles.addCourse}
+                            onPress={() => {
+                                router.push('/tabs/course');
+                                onClose();
+                            }}
+                        >
+                            <Text style={styles.addText}>+ Add Course</Text>
+                        </Pressable>
+                    </ScrollView>
+                </View>
             </View>
-        </Pressable>
+        </TouchableWithoutFeedback>
     );
 }
 
