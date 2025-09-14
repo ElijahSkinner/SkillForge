@@ -1,4 +1,9 @@
-export const CERTS_ROADMAP = {
+export type ModuleType = {
+    id: number;
+    name: string;
+    weight: number;
+    completed: boolean;
+};export const CERTS_ROADMAP = {
     'CompTIA A+ Core 1': [
         { id: 1, name: 'Mobile Devices', weight: 15, completed: false },
         { id: 2, name: 'Networking', weight: 20, completed: false },
