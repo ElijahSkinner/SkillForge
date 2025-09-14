@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import TopBar from '@/components/TopBar';
-import { CERTS_ROADMAP } from '../../constants/certs';
+import { CERTS_ROADMAP } from '../../../constants/certs';
 import { useCert } from '@/context/CertContext';
 import QuizRoadmap from '@/components/QuizRoadmap';
 

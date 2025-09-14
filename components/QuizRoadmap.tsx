@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useCert } from '@/context/CertContext';
-import { CERTS_ROADMAP } from '../app/constants/certs';
+import { CERTS_ROADMAP } from '../constants/certs';
 
 export default function QuizRoadmap() {
     const { selectedCert } = useCert();
