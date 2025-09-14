@@ -30,7 +30,8 @@ export default function RoadmapScreen() {
         <ImageBackground
             source={path}
             style={{ flex: 1 }}
-            resizeMode="cover"
+            resizeMode="contain
+            "
         >
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
