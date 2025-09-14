@@ -20,7 +20,8 @@ export default function TopBar({
                                    enrolledCourses = [],
                                }: TopBarProps) {
     const router = useRouter();
-    
+    const { enrolledCourses, selectedCert } = useCert();
+
     return (
         <View style={styles.container}>
             {/* Left: Streak */}
