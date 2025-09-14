@@ -61,94 +61,78 @@ export default function RoadmapScreen() {
                     <QuizRoadmap />
 
                     <Animated.ScrollView
+                        ref={scrollViewRef}
                         contentContainerStyle={{
                             flexDirection: 'column-reverse',
                             alignItems: 'center',
                             paddingVertical: 30,
                         }}
                         onContentSizeChange={() => {
+                            // auto-scroll to bottom once content is measured
                             scrollViewRef.current?.scrollToEnd({ animated: false });
                         }}
-                        ref={scrollViewRef}
                         scrollEventThrottle={16}
                         onScroll={Animated.event(
                             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                             { useNativeDriver: false }
                         )}
                     >
-                        {modules.map((mod, modIndex) => {
-                            let positionY = 0; // use let, updated in onLayout
-
-                            const color = modulePositions[mod.id]
-                                ? scrollY.interpolate({
-                                    inputRange: [modulePositions[mod.id] - screenHeight, modulePositions[mod.id]],
-                                    outputRange: ['#fee37f', '#222222'], // gold → black
-                                    extrapolate: 'clamp',
-                                })
-                                : '#222222'; // fallback until layout measured
-
-
-                            return (
-                                <View
-                                    key={mod.id}
-                                    style={{ marginBottom: 30, alignItems: 'center' }}
-                                    onLayout={(e) => {
-                                        const y = e.nativeEvent.layout.y;
-                                        setModulePositions((prev) => ({ ...prev, [mod.id]: y }));
+                        {modules.map((mod) => (
+                            <View
+                                key={mod.id}
+                                style={{ marginBottom: 30, alignItems: 'center' }}
+                            >
+                                {/* TOP: Q tile */}
+                                <Pressable
+                                    style={{
+                                        width: TILE_SIZE,
+                                        height: TILE_SIZE,
+                                        borderRadius: 12,
+                                        marginBottom: TILE_SPACING,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#444', // Q tile color
                                     }}
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: '/quiz/[cert]/[id]',
+                                            params: { cert: selectedCert, id: `${mod.id}-quiz` },
+                                        })
+                                    }
                                 >
-                                    {/* Q tile at top */}
+                                    <Text style={styles.tileText}>Q</Text>
+                                </Pressable>
+
+                                {/* Dynamic lesson tiles */}
+                                {mod.lessons.map((lesson, idx) => (
                                     <Pressable
+                                        key={`${mod.id}-${idx}`}
                                         style={{
                                             width: TILE_SIZE,
                                             height: TILE_SIZE,
-                                            borderRadius: 12,
                                             marginBottom: TILE_SPACING,
+                                            borderRadius: 12,
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            backgroundColor: '#444',
+                                            backgroundColor: lesson.completed ? '#27b0b9' : '#1a1b1f',
                                         }}
                                         onPress={() =>
                                             router.push({
                                                 pathname: '/quiz/[cert]/[id]',
-                                                params: { cert: selectedCert, id: `${mod.id}-quiz` },
+                                                params: { cert: selectedCert, id: lesson.id },
                                             })
                                         }
                                     >
-                                        <Text style={styles.tileText}>Q</Text>
+                                        <Text style={styles.tileText}>{idx + 1}</Text>
                                     </Pressable>
+                                ))}
 
-                                    {/* Numbered tiles 5->1 */}
-                                    {numbers.map((number) => (
-                                        <Pressable
-                                            key={`${mod.id}-${number}`}
-                                            style={{
-                                                width: TILE_SIZE,
-                                                height: TILE_SIZE,
-                                                marginBottom: TILE_SPACING,
-                                                borderRadius: 12,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
-                                            }}
-                                            onPress={() =>
-                                                router.push({
-                                                    pathname: '/quiz/[cert]/[id]',
-                                                    params: { cert: selectedCert, id: String(mod.id) },
-                                                })
-                                            }
-                                        >
-                                            <Text style={styles.tileText}>{number}</Text>
-                                        </Pressable>
-                                    ))}
-
-                                    {/* Chapter name at bottom */}
-                                    <Animated.Text style={[styles.sectionTitle, { color }]}>
-                                        {mod.name}
-                                    </Animated.Text>
-                                </View>
-                            );
-                        })}
+                                {/* BOTTOM: Chapter name */}
+                                <Animated.Text style={[styles.sectionTitle]}>
+                                    {mod.name}
+                                </Animated.Text>
+                            </View>
+                        ))}
                     </Animated.ScrollView>
                 </View>
             </SafeAreaView>
