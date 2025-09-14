@@ -17,7 +17,13 @@ export default function QuizRoadmap() {
                 <Pressable
                     key={mod.id}
                     style={[styles.moduleCard, mod.completed && styles.completedCard]}
-                    onPress={() => router.push(`/quiz/${selectedCert}/${mod.id}`)}
+                    onPress={() =>
+                        router.push({
+                            pathname: '/quiz/[cert]/[id]',
+                            params: { cert: selectedCert, id: String(mod.id) },
+                        })
+                    }
+
                 >
                     <Text style={styles.moduleTitle}>{mod.name}</Text>
                     <Text style={styles.statusText}>{mod.completed ? '✅ Completed' : '🔒 Locked'}</Text>
