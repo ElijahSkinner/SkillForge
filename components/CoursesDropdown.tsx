@@ -15,7 +15,7 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
         <TouchableWithoutFeedback onPress={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.dropdown}>
-                    <Text style={styles.title}>Your Courses</Text>
+                    <Text style={styles.title}>Your Course</Text>
                     <ScrollView style={{ maxHeight: 250 }}>
                         {enrolledCourses.map((course) => (
                             <View key={course.id} style={styles.courseRow}>
