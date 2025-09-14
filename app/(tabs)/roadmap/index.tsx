@@ -63,6 +63,9 @@ export default function RoadmapScreen() {
                             alignItems: 'center',    // center everything horizontally
                             paddingVertical: 30,
                         }}
+                        onContentSizeChange={() => {
+                            scrollViewRef.current?.scrollToEnd({ animated: false });
+                        }}
                     >
                         {modules.map((mod) => (
                             <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
