@@ -67,7 +67,7 @@ export default function RoadmapScreen() {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    {[...Array(5)].map((_, idx) => (
+                                    { (
                                         <Pressable
                                             key={idx}
                                             style={[
