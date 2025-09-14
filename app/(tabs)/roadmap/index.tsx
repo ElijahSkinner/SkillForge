@@ -6,6 +6,7 @@ import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import QuizRoadmap from '@/components/QuizRoadmap';
 import { ImageBackground } from "react-native";
+import roadmapBg from '@/assets/images/roadmap-bg.png';
 
 export default function RoadmapScreen() {
     const { selectedCert, setSelectedCert } = useCert();
