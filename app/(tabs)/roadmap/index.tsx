@@ -15,6 +15,7 @@ export default function RoadmapScreen() {
     const modules = CERTS_ROADMAP[selectedCert];
 
     return (
+        
             <ScrollView style={styles.container}>
                 {modules.map((mod) => (
                     <View key={mod.id} style={styles.section}>
