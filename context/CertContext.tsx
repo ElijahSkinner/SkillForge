@@ -42,7 +42,7 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const addCourse = (course: Course) => {
-        setEnrolledCourses((prev) => [...prev, course]);
+        ssetEnrolledCourses([...enrolledCourses, course]);
     };
 
     return (
