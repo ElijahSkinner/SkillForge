@@ -18,6 +18,13 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
+                    name="glossary"
+                    options={{
+                        title: 'Glossary',
+                        tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+                    }}
+            />
+            <Tabs.Screen
                 name="course/index"
                 options={{
                     title: 'Courses',
