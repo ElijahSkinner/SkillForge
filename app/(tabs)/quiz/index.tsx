@@ -1,5 +1,5 @@
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useCert } from '@/context/CertContext';
+import { useCert } from '/context/CertContext';
 import { CERTS_ROADMAP } from '/constants/certs';
 import { useRouter } from 'expo-router';
 
