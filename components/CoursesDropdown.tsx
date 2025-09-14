@@ -16,7 +16,7 @@ type CoursesDropdownProps = {
 export default function CoursesDropdown({ onClose, enrolledCourses = [] }: CoursesDropdownProps) {
     return (
         <Pressable style={styles.overlay} onPress={onClose}>
-            <View style={styles.dropdown}>
+            <Pressable style={styles.dropdown} onPress={() => {}}>
                 <Text style={styles.title}>Your Courses</Text>
                 <ScrollView style={{ maxHeight: 250 }}>
                     {enrolledCourses.map((course) => (
@@ -26,17 +26,19 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                         </View>
                     ))}
                     {/* Add new course button */}
-                    <Pressable style={styles.addCourse}
-                               onPress={() => {
-                                   onClose();           // close the dropdown first
-                                   router.push('/course'); // navigate to courses page
-                               }}
+                    <Pressable
+                        style={styles.addCourse}
+                        onPress={() => {
+                            onClose();           // close dropdown
+                            router.push('/course'); // navigate to courses page
+                        }}
                     >
                         <Text style={styles.addText}>+ Add Course</Text>
                     </Pressable>
                 </ScrollView>
-            </View>
+            </Pressable>
         </Pressable>
+
     );
 }
 
