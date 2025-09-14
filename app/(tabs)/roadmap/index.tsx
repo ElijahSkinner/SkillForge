@@ -25,26 +25,26 @@ export default function RoadmapScreen() {
             <QuizRoadmap />
             <ScrollView style={styles.container}>
                 {modules.map((mod) => (
-                    <View key={mod.id} style={styles.section}>
-                        <Text style={styles.sectionTitle}>{mod.name}</Text>
-                        <View style={styles.tilesRow}>
+                    //<View key={mod.id} style={styles.section}>
+                    //    <Text style={styles.sectionTitle}>{mod.name}</Text>
+                     //   <View style={styles.tilesRow}>
                             {/* 5 tiles per module */}
-                            {[...Array(5)].map((_, idx) => (
-                                <Pressable
-                                    key={idx}
-                                    style={[styles.tile, mod.completed && styles.completedTile]}
-                                    onPress={() =>
-                                        router.push({
-                                            pathname: '/quiz/[cert]/[id]',
-                                            params: { cert: selectedCert, id: String(mod.id) },
-                                        })
-                                    }
-                                >
-                                    <Text style={styles.tileText}>{idx + 1}</Text>
-                                </Pressable>
-                            ))}
-                        </View>
-                    </View>
+                          //  {[...Array(5)].map((_, idx) => (
+                           //     <Pressable
+                           //         key={idx}
+                           //         style={[styles.tile, mod.completed && styles.completedTile]}
+                           //         onPress={() =>
+                           //             router.push({
+                            //                pathname: '/quiz/[cert]/[id]',
+                           //                 params: { cert: selectedCert, id: String(mod.id) },
+                                   //     )
+                                 //  }
+                               // >
+                                //    <Text style={styles.tileText}>{idx + 1}</Text>
+                              //  </Pressable>
+                       //     ))}
+                        //</View>
+                    //</View>
                 ))}
             </ScrollView>
         </View>
