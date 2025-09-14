@@ -23,14 +23,17 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                                 <Text style={styles.courseScore}>{course.score}%</Text>
                             </View>
                         ))}
+
+                        <Pressable
+                            style={styles.addCourse}
+                            onPress={()=> {
+                                router.push('/course');
+                                onClose();
+                            }}
+                        >
+                            <Text style={styles.addText}>+ Add Course</Text>
+                        </Pressable>
                     </ScrollView>
-                    {/* The Pressable component is now outside the ScrollView */}
-                    <Pressable style={styles.addCourse} onPress={() => {
-                        router.push('/course');
-                        onClose();
-                    }}>
-                        <Text style={styles.addText}>+ Add Course</Text>
-                    </Pressable>
                 </View>
             </View>
         </TouchableWithoutFeedback>
