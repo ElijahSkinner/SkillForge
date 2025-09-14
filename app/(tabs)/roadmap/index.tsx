@@ -4,6 +4,9 @@ import TopBar from '@/components/TopBar';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
+import MaskedView from '@react-native-masked-view/masked-view';
+import LinearGradient from 'react-native-linear-gradient';
+import { Text } from 'react-native';
 import QuizRoadmap from '@/components/QuizRoadmap';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // @ts-ignore
