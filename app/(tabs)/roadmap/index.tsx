@@ -63,7 +63,7 @@ export default function RoadmapScreen() {
 
 
                     {/* ScrollView with bottom-to-top scroll */}
-                    <ScrollView
+                    <Animated.ScrollView
                         ref={scrollViewRef}
                         contentContainerStyle={{
                             flexDirection: 'column-reverse',
@@ -71,63 +71,77 @@ export default function RoadmapScreen() {
                             paddingVertical: 30,
                         }}
                         onContentSizeChange={() => {
-                            // auto-scroll to bottom once content is measured
                             scrollViewRef.current?.scrollToEnd({ animated: false });
                         }}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: false } // color animation can't use native driver
+                        )}
+                        scrollEventThrottle={16} // ensures smooth updates
                     >
-                        {modules.map((mod) => (
-                            <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
-                                {/* TOP: Quiz (end-of-chapter) */}
-                                <Pressable
-                                    style={{
-                                        width: TILE_SIZE,
-                                        height: TILE_SIZE,
-                                        borderRadius: 12,
-                                        marginBottom: TILE_SPACING,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: '#444', // distinctive quiz color
-                                    }}
-                                    onPress={() =>
-                                        router.push({
-                                            pathname: '/quiz/[cert]/[id]',
-                                            params: { cert: selectedCert, id: `${mod.id}-quiz` },
-                                        })
-                                    }
-                                >
-                                    <Text style={styles.tileText}>Q</Text>
-                                </Pressable>
+                        {modules.map((mod) => {
+                            // Map scroll position to a color for this module name
+                            const moduleColor = scrollY.interpolate({
+                                inputRange: [0, 300], // adjust this based on your layout
+                                outputRange: ['#222222', '#fee37f'],
+                                extrapolate: 'clamp',
+                            });
 
-                                {/* Numbered tiles (rendered top → bottom as 5,4,3,2,1) */}
-                                {numbers.map((number) => (
+                            return (
+                                <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
+                                    {/* Quiz tile */}
                                     <Pressable
-                                        key={`${mod.id}-${number}`}
                                         style={{
                                             width: TILE_SIZE,
                                             height: TILE_SIZE,
-                                            marginBottom: TILE_SPACING,
                                             borderRadius: 12,
+                                            marginBottom: TILE_SPACING,
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
+                                            backgroundColor: '#444',
                                         }}
                                         onPress={() =>
                                             router.push({
                                                 pathname: '/quiz/[cert]/[id]',
-                                                params: { cert: selectedCert, id: String(mod.id) },
+                                                params: { cert: selectedCert, id: `${mod.id}-quiz` },
                                             })
                                         }
                                     >
-                                        <Text style={styles.tileText}>{number}</Text>
+                                        <Text style={styles.tileText}>Q</Text>
                                     </Pressable>
-                                ))}
 
-                                {/* BOTTOM: Chapter name (so users start here and scroll up) */}
-                                <GradientText style={styles.sectionTitle}>{mod.name}</GradientText>
-                            </View>
-                        ))}
-                    </ScrollView>
+                                    {/* Numbered tiles */}
+                                    {numbers.map((number) => (
+                                        <Pressable
+                                            key={`${mod.id}-${number}`}
+                                            style={{
+                                                width: TILE_SIZE,
+                                                height: TILE_SIZE,
+                                                marginBottom: TILE_SPACING,
+                                                borderRadius: 12,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
+                                            }}
+                                            onPress={() =>
+                                                router.push({
+                                                    pathname: '/quiz/[cert]/[id]',
+                                                    params: { cert: selectedCert, id: String(mod.id) },
+                                                })
+                                            }
+                                        >
+                                            <Text style={styles.tileText}>{number}</Text>
+                                        </Pressable>
+                                    ))}
 
+                                    {/* Animated chapter name */}
+                                    <Animated.Text style={[styles.sectionTitle, { color: moduleColor }]}>
+                                        {mod.name}
+                                    </Animated.Text>
+                                </View>
+                            );
+                        })}
+                    </Animated.ScrollView>
                 </View>
             </SafeAreaView>
         </ImageBackground>
