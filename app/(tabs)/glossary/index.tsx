@@ -17,7 +17,7 @@ export default function GlossaryScreen() {
     const terms = GLOSSARY[selectedCert] ?? [];
 
     return (
-        
+    <SafeAreaView style={styles.container}>
         <View style={styles.container}>
             <FlatList
                 data={terms}
@@ -30,7 +30,9 @@ export default function GlossaryScreen() {
                 )}
             />
         </View>
-    );
+</SafeAreaView>
+
+);
 }
 
 const styles = StyleSheet.create({
