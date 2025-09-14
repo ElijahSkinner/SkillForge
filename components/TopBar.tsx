@@ -1,17 +1,23 @@
 // skillforge/components/TopBar.tsx
-import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import CoursesDropdown from './CoursesDropdown';
-import {router} from "expo-router";
+import { useRouter } from 'expo-router';
 
 type TopBarProps = {
     currentStreak: number;
     currency: number;
     hearts?: number;
+    enrolledCourses?: { id: number; name: string; score: number }[];
 };
 
-export default function TopBar({ currentStreak, currency, hearts = 0 }: TopBarProps) {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+export default function TopBar({
+                                   currentStreak,
+                                   currency,
+                                   hearts = 0,
+                                   enrolledCourses = [],
+                               }: TopBarProps) {
+    const router = useRouter();
 
     return (
         <View style={styles.container}>
@@ -22,9 +28,14 @@ export default function TopBar({ currentStreak, currency, hearts = 0 }: TopBarPr
             </Pressable>
 
             {/* Center: Course Dropdown */}
-            <Pressable style={styles.courseBox} onPress={() => setDropdownOpen(!dropdownOpen)}>
-                <Text style={styles.courseText}>Current Course ▼</Text>
-            </Pressable>
+            <CoursesDropdown
+                trigger={
+                    <View style={styles.courseBox}>
+                        <Text style={styles.courseText}>Current Course ▼</Text>
+                    </View>
+                }
+                enrolledCourses={enrolledCourses}
+            />
 
             {/* Right: Currency / Hearts */}
             <View style={styles.rightBox}>
@@ -37,9 +48,6 @@ export default function TopBar({ currentStreak, currency, hearts = 0 }: TopBarPr
                     </View>
                 )}
             </View>
-
-            {/* Courses Dropdown Overlay */}
-            {dropdownOpen && <CoursesDropdown onClose={() => setDropdownOpen(false)} />}
         </View>
     );
 }
