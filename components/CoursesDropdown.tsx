@@ -25,14 +25,8 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                         ))}
 
                         <Button
-                            style={styles.addCourse}
-                            onPress={() => {
-                                router.push('/course');
-                                onClose();
-                            }}
-                        >
-                            <Text style={styles.addText}>+ Add Course</Text>
-                        </Button>
+
+                        />
                     </ScrollView>
                 </View>
             </View>
