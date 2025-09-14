@@ -16,7 +16,7 @@ export default function RootHomeScreen() {
                 setIsFirstLaunch(true);
             } else {
                 setIsFirstLaunch(false);
-                router.replace('/tabs/roadmap'); // skip home for returning users
+                router.replace('../tabs/roadmap'); // skip home for returning users
             }
         };
         checkFirstLaunch();
