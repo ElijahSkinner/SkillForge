@@ -5,7 +5,7 @@ import { CERTS_ROADMAP } from '@/constants/certs';
 import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import MaskedView from '@react-native-masked-view/masked-view';
-import LinearGradient from 'react-native-linear-gradient';
+
 import QuizRoadmap from '@/components/QuizRoadmap';
 import GradientText from '@/components/GradientText';
 import { LinearGradient } from 'expo-linear-gradient';
