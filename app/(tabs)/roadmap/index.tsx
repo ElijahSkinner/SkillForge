@@ -65,6 +65,8 @@ const styles = StyleSheet.create({
     section: { marginBottom: 30 },
     sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff', marginBottom: 10 },
     tilesRow: { flexDirection: 'row', justifyContent: 'space-between' },
+    tilesColumn: { flexDirection: 'column', marginBottom: 10 },
+
     tile: {
         width: 60,
         height: 60,
