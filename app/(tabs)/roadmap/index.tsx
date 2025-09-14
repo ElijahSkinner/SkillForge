@@ -54,8 +54,9 @@ export default function RoadmapScreen() {
                 ))}
             </ScrollView>
         </View>
-                
-    </ImageBackground>
+            </SafeAreaView>
+
+        </ImageBackground>
     );
 }
 
