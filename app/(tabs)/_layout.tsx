@@ -38,7 +38,7 @@ export default function TabLayout() {
                 options={{
                     title: "League",
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="trophy" size={size} color={color} />
+                        <Ionicons name="trophy-outline" size={size} color={color} />
                     ),
                 }}
             />
