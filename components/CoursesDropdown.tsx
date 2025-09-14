@@ -39,7 +39,7 @@ export default function CoursesDropdown({ onClose, enrolledCourses = [] }: Cours
                     <Pressable
                         style={styles.addCourse}
                         onPress={() => {
-                            router.push('/tabs/course'); // Navigate to the full course list
+                            router.push('/course'); // Navigate to the full course list
                             onClose(); // Close the dropdown
                         }}
                     >
