@@ -27,7 +27,13 @@ export default function RoadmapScreen() {
         name,
         score: 0,
     }));
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            scrollViewRef.current?.scrollToEnd({ animated: false });
+        }, 0); // small delay lets layout finish
 
+        return () => clearTimeout(timeout);
+    }, []);
     return (
         <ImageBackground
             source={path}
