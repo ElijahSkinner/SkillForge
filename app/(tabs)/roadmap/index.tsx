@@ -34,7 +34,7 @@ export default function RoadmapScreen() {
                 {modules.map((mod) => (
                     <View key={mod.id} style={styles.section}>
                         <Text style={styles.sectionTitle}>{mod.name}</Text>
-                        <View style={styles.tilesCol}>
+                        <View style={styles.tilesColumn}>
                             {/* 5 tiles per module */}
                             {[...Array(5)].map((_, idx) => (
                                 <Pressable
