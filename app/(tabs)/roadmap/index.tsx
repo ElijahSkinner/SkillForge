@@ -28,7 +28,18 @@ export default function RoadmapScreen() {
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
     const [modulePositions, setModulePositions] = React.useState<{ [key: number]: number }>({});
-    
+    const [selectedLesson, setSelectedLesson] = React.useState<{
+        modId: number;
+        lessonIndex: number;
+        lessonName: string;
+    } | null>(null);
+
+    function getLessonXP(mod: ModuleType, lessonIndex: number) {
+        const lessonCount = mod.lessons.length;
+        const lessonWeight = mod.weight / lessonCount;
+        return Math.round(lessonWeight);
+    }
+
 
     if (!selectedCert)
         return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
