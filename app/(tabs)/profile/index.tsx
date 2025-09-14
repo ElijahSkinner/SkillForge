@@ -13,6 +13,7 @@ export default function ProfileScreen() {
     const [topCourseScore, setTopCourseScore] = useState({ cert: 'A+ Core 1', score: 95 });
 
     return (
+        
         <ScrollView style={styles.container} contentContainerStyle={{ padding: 20 }}>
             {/* Header */}
             <View style={styles.header}>
