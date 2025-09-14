@@ -1,10 +1,10 @@
+import { ModuleType } from '../types/certs';
 export type ModuleType = {
     id: number;
     name: string;
     weight: number;
     completed: boolean;
 };
-import { ModuleType } from '../types/certs';
 
 export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
     'CompTIA A+ Core 1': [
