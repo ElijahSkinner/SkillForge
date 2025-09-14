@@ -104,8 +104,8 @@ export default function RoadmapScreen() {
                                 </Pressable>
 
                                 {/* Dynamic lesson tiles */}
-                                {mod.lessons.map((lesson, index) => {
-                                    const number = index + 1; // 1, 2, 3, ... dynamically
+                                {[...mod.lessons].reverse().map((lesson, index) => {
+                                    const number = mod.lessons.length - index; // descending numbers
                                     return (
                                         <Pressable
                                             key={`${mod.id}-${number}`}
