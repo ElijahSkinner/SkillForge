@@ -16,7 +16,10 @@ export default function TopBar({ currentStreak, currency, hearts = 0 }: TopBarPr
     return (
         <View style={styles.container}>
             {/* Left: Streak */}
-            V
+            <Pressable style={styles.streakBox} onPress={() => router.push('/profile')}>
+                <Text style={styles.streakLabel}>🔥 Streak</Text>
+                <Text style={styles.streakValue}>{currentStreak}</Text>
+            </Pressable>
 
             {/* Center: Course Dropdown */}
             <Pressable style={styles.courseBox} onPress={() => setDropdownOpen(!dropdownOpen)}>
