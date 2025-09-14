@@ -11,7 +11,7 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen
-                name="home"  // internal key, can be anything unique
+                name="roadmap/index"  // internal key, can be anything unique
                 options={{
                     title: 'Home',
                     tabBarIcon: ({ color, size }) => <Ionicons name="footsteps-sharp" size={size} color={color} />,
