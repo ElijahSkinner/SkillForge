@@ -16,7 +16,13 @@ export default function RoadmapScreen() {
     const TILE_SPACING = 8;    // spacing between tiles
     const TILE_COUNT = 5;
     const scrollViewRef = useRef<ScrollView | null>(null);
-    const numbers = Array.from({ length: TILE_COUNT }, (_, i) => TILE_COUNT - i); // [5,4,3,2,1]
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            scrollViewRef.current?.scrollToEnd({ animated: false });
+        }, 0); // small delay lets layout finish
+
+        return () => clearTimeout(timeout);
+    }, []);    const numbers = Array.from({ length: TILE_COUNT }, (_, i) => TILE_COUNT - i); // [5,4,3,2,1]
     if (!selectedCert)
         return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
 
@@ -27,13 +33,7 @@ export default function RoadmapScreen() {
         name,
         score: 0,
     }));
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            scrollViewRef.current?.scrollToEnd({ animated: false });
-        }, 0); // small delay lets layout finish
 
-        return () => clearTimeout(timeout);
-    }, []);
     return (
         <ImageBackground
             source={path}
