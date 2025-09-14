@@ -18,6 +18,7 @@ export default function TopBar({ currentStreak, currency, hearts = 0 }: TopBarPr
             <Pressable style={styles.streakBox}>
                 <Text style={styles.streakLabel}>🔥 Streak</Text>
                 <Text style={styles.streakValue}>{currentStreak}</Text>
+                
             </Pressable>
 
             {/* Center: Course Dropdown */}
