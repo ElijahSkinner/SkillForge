@@ -11,9 +11,10 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen
-                name="index" // Home
+                name="home"  // internal key, can be anything unique
                 options={{
                     title: 'Home',
+                    href: '/',  // this points to app/index.tsx
                     tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
                 }}
             />
