@@ -8,6 +8,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import QuizRoadmap from '@/components/QuizRoadmap';
 import GradientText from '@/components/GradientText';
+import { LinearGradient } from 'expo-linear-gradient';
 
 <GradientText style={styles.sectionTitle}>{mod.name}</GradientText>
 
