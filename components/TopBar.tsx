@@ -16,7 +16,7 @@ export default function TopBar({
                                    currentStreak,
                                    currency,
                                    hearts = 0,
-    selectedCourse = null,
+                                   selectedCourse = null,
                                    enrolledCourses = [],
                                }: TopBarProps) {
     const router = useRouter();
