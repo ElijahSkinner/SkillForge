@@ -40,6 +40,7 @@ export default function RoadmapScreen() {
                     </View>
                 ))}
             </ScrollView></View>
+        
     );
 }
 
