@@ -23,7 +23,7 @@ export default function RoadmapScreen() {
     }));
 
     return (
-        <ImageBackground source={path} style={{ flex: 1, width: '100vw', }} resizeMode="cover" >
+        <ImageBackground source={path} style={{ flex: 1, width: '100vw', height: '100vw' }} resizeMode="cover" >
         <View style={{ flex: 1 }}>
             <TopBar currentStreak={123} currency={456} selectedCourse={{ id: 0, name: selectedCert }} enrolledCourses={enrolledCourses} />
             <QuizRoadmap />
