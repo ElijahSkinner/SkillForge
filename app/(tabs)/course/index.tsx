@@ -19,7 +19,7 @@ export default function CourseScreen() {
                     style={styles.certButton}
                     onPress={() => {
                         setSelectedCert(cert);
-                        router.push('/(tabs)//(tabs)/roadmap');
+                        router.push('/(tabs)/roadm');
                     }}
                 >
                     <Text style={styles.certButtonText}>{cert}</Text>
