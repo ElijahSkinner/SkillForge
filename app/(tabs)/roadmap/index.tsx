@@ -73,7 +73,7 @@ export default function RoadmapScreen() {
                         onScroll={Animated.event(
                             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                             { useNativeDriver: false }
-                        )}scrollEventThrottle={16}
+                        )}
                     >
                         {modules.map((mod, modIndex) => {
                             let positionY = 0; // use let, updated in onLayout
