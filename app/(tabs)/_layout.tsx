@@ -38,6 +38,7 @@ export default function TabLayout() {
                     tabBarIcon: ({ color, size }) => <Ionicons name="help-circle" size={size} color={color} />,
                 }}
             />
+
             <Tabs.Screen
                 name="explore"
                 options={{
