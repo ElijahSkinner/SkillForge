@@ -132,9 +132,10 @@ export default function RoadmapScreen() {
                                                 backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
                                             }}
                                             onPress={() =>
-                                                router.push({
-                                                    pathname: '/quiz/[cert]/[id]',
-                                                    params: { cert: selectedCert, id: String(mod.id) },
+                                                setSelectedLesson({
+                                                    modId: mod.id,
+                                                    lessonIndex: number,
+                                                    lessonName: lesson.name,
                                                 })
                                             }
                                         >
