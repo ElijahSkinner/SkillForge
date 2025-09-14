@@ -1,24 +1,29 @@
 // skillforge/components/TopBar.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import CoursesDropdown from './CoursesDropdown';
 import { useRouter } from 'expo-router';
+
+type Course = { id: number; name: string };
+type EnrolledCourse = { id: number; name: string; score: number };
 
 type TopBarProps = {
     currentStreak: number;
     currency: number;
     hearts?: number;
-    selectedCourse?: { id: number; name: string } | null;
-    enrolledCourses?: { id: number; name: string; score: number }[];
+    selectedCourse?: Course | null;
+    enrolledCourses?: EnrolledCourse[];
 };
 
 export default function TopBar({
                                    currentStreak,
                                    currency,
                                    hearts = 0,
+                                   selectedCourse = null,
                                    enrolledCourses = [],
                                }: TopBarProps) {
     const router = useRouter();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -29,14 +34,18 @@ export default function TopBar({
             </Pressable>
 
             {/* Center: Course Dropdown */}
-            <CoursesDropdown
-                trigger={
-                    <View style={styles.courseBox}>
-                        <Text style={styles.courseText}>Current Course ▼</Text>
-                    </View>
-                }
-                enrolledCourses={enrolledCourses}
-            />
+            <Pressable style={styles.courseBox} onPress={() => setDropdownOpen(!dropdownOpen)}>
+                <Text style={styles.courseText}>
+                    {selectedCourse ? selectedCourse.name : 'Select a course'} ▼
+                </Text>
+            </Pressable>
+
+            {dropdownOpen && (
+                <CoursesDropdown
+                    onClose={() => setDropdownOpen(false)}
+                    enrolledCourses={enrolledCourses}
+                />
+            )}
 
             {/* Right: Currency / Hearts */}
             <View style={styles.rightBox}>
@@ -61,9 +70,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    streakBox: {
-        alignItems: 'center',
-    },
+    streakBox: { alignItems: 'center' },
     streakLabel: { color: '#fff', fontSize: 12 },
     streakValue: { color: '#fff', fontWeight: '700', fontSize: 16 },
     courseBox: {
