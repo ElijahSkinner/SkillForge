@@ -129,7 +129,7 @@ export default function RoadmapScreen() {
 
 const styles = StyleSheet.create({
     section: { marginBottom: 30 },
-    sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#', marginBottom: 10 },
+    sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#5', marginBottom: 10 },
     tilesColumn: { flexDirection: 'column', marginBottom: 12 },
     tile: {
         width: 60,
