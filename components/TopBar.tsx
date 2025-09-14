@@ -20,7 +20,7 @@ export default function TopBar({
                                    enrolledCourses = [],
                                }: TopBarProps) {
     const router = useRouter();
-
+    
     return (
         <View style={styles.container}>
             {/* Left: Streak */}
