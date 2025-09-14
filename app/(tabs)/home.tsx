@@ -1,6 +1,7 @@
 import { Image, StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import {useEffect} from "react";
 
 const { width } = Dimensions.get('window');
 
