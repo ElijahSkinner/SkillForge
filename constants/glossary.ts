@@ -14,7 +14,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '389', definition: 'LDAP – Lightweight Directory Protocol' },
         { port: '445', definition: 'SMB - Server Message Block' },
         { port: '514', definition: 'Syslog' },
-        { port: '587', definition: 'HTTPS – Hypertext Transfer Protocol Secure' },
+        { port: '587', definition: 'SMTPS' },
         { port: '636', definition: 'FTP – File Transfer Protocol' },
         { port: '1433', definition: 'SSH – Secure Shell' },
         { port: '3389', definition: 'SMTP – Simple Mail Transfer Protocol' },
