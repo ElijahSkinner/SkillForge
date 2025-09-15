@@ -9,7 +9,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '53', definition: 'DNS – Domain Name System' },
         { port: '67/68', definition: 'DHCP – Dynamic Host Configuration Protocol' },
         { port: '69', definition: 'TFTP - Trivial File Transfer Protocol' },
-        { port: '123', definition: '' },
+        { port: '123', definition: 'NTP - Network Transfer Protocol' },
         { port: '161/162', definition: 'SSH – Secure Shell' },
         { port: '389', definition: 'SMTP – Simple Mail Transfer Protocol' },
         { port: '445', definition: 'DNS – Domain Name System' },
