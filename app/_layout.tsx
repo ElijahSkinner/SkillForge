@@ -5,7 +5,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { CertProvider } from '@/context/CertContext'; // <-- import here
-import { Stack } from "expo-router";
+
 import { AuthProvider } from "@/context/AuthContext";
 
 export const unstable_settings = {
