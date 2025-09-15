@@ -36,7 +36,7 @@ export default function GlossaryScreen() {
     let flashcards: { term?: string; acronym?: string; port?: string; definition: string }[] = [];
     if (tab === 'terms') {
         flashcards = selectedObjective ? GLOSSARY_TERMS[selectedCert]?.[selectedObjective] ?? []
-            : []
+            : [];
     } else if (tab === 'acronyms') {
         flashcards = selectedObjective
             ? GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? []
