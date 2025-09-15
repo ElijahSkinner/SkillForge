@@ -1,5 +1,15 @@
 // constants/glossary.ts
-
+export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }[]> = {
+    'CompTIA Network+': [
+        { port: '80', definition: 'HTTP – Hypertext Transfer Protocol' },
+        { port: '443', definition: 'HTTPS – Hypertext Transfer Protocol Secure' },
+        { port: '21', definition: 'FTP – File Transfer Protocol' },
+        { port: '22', definition: 'SSH – Secure Shell' },
+        { port: '25', definition: 'SMTP – Simple Mail Transfer Protocol' },
+        { port: '53', definition: 'DNS – Domain Name System' },
+        // add the rest...
+    ],
+};
 export const GLOSSARY_TERMS: Record<string, { term: string; definition: string }[]> = {
     'CompTIA A+ Core 1': [
         { term: 'BIOS', definition: 'Basic Input/Output System; initializes hardware at startup.' },
