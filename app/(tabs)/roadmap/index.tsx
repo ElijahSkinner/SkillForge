@@ -14,7 +14,7 @@ import TopBar from '@/components/TopBar';
 import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
-import path from '../assets/images/path.png';
+import path from 'assets/images/path.png';
 import { ModuleType } from '@/types/certs';
 
 import ViewShot, { captureRef } from 'react-native-view-shot';
