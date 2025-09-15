@@ -1,5 +1,5 @@
 // app/(tabs)/glossary/index.tsx
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import {View, Text, FlatList, StyleSheet, Pressable} from 'react-native';
 import { useCert } from '@/context/CertContext';
 import { GLOSSARY_TERMS. GLOSSARY_ACRONYMS } from '../../../constants/glossary';
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -17,6 +17,33 @@ export default function GlossaryScreen() {
             </View>
         );
     }
+    <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+        <Pressable
+            style={{
+                flex: 1,
+                padding: 10,
+                backgroundColor: tab === 'terms' ? '#27b0b9' : '#444',
+                borderRadius: 8,
+                marginRight: 4,
+            }}
+            onPress={() => setTab('terms')}
+        >
+            <Text style={{ color: '#fff', textAlign: 'center' }}>Terms</Text>
+        </Pressable>
+
+        <Pressable
+            style={{
+                flex: 1,
+                padding: 10,
+                backgroundColor: tab === 'acronyms' ? '#27b0b9' : '#444',
+                borderRadius: 8,
+                marginLeft: 4,
+            }}
+            onPress={() => setTab('acronyms')}
+        >
+            <Text style={{ color: '#fff', textAlign: 'center' }}>Acronyms</Text>
+        </Pressable>
+    </View>
 
     const terms = GLOSSARY[selectedCert] ?? [];
 
