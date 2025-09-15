@@ -1,4 +1,5 @@
 // app/(tabs)/glossary/index.tsx
+
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable, Picker } from 'react-native';
 import { useCert } from '@/context/CertContext';
