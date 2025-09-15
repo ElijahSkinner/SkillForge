@@ -1,12 +1,13 @@
 // app/(tabs)/glossary/index.tsx
-import {View, Text, FlatList, StyleSheet, Pressable} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
 import { useCert } from '@/context/CertContext';
-import React from 'react';
 import { GLOSSARY_TERMS, GLOSSARY_ACRONYMS } from '../../../constants/glossary';
-import {SafeAreaView} from "react-native-safe-area-context";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
-    const [tab, setTab] = React.useState<'terms' | 'acronyms'>('terms');
+    const [tab, setTab] = useState<'terms' | 'acronyms'>('terms');
 
     if (!selectedCert) {
         return (
@@ -15,43 +16,43 @@ export default function GlossaryScreen() {
             </View>
         );
     }
+
     const data = tab === 'terms'
         ? GLOSSARY_TERMS[selectedCert] ?? []
         : GLOSSARY_ACRONYMS[selectedCert] ?? [];
 
-    <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-        <Pressable
-            style={{
-                flex: 1,
-                padding: 10,
-                backgroundColor: tab === 'terms' ? '#27b0b9' : '#444',
-                borderRadius: 8,
-                marginRight: 4,
-            }}
-            onPress={() => setTab('terms')}
-        >
-            <Text style={{ color: '#fff', textAlign: 'center' }}>Terms</Text>
-        </Pressable>
-
-        <Pressable
-            style={{
-                flex: 1,
-                padding: 10,
-                backgroundColor: tab === 'acronyms' ? '#27b0b9' : '#444',
-                borderRadius: 8,
-                marginLeft: 4,
-            }}
-            onPress={() => setTab('acronyms')}
-        >
-            <Text style={{ color: '#fff', textAlign: 'center' }}>Acronyms</Text>
-        </Pressable>
-    </View>
-
-    //const terms = GLOSSARY[selectedCert] ?? [];
-
     return (
-    <SafeAreaView style={styles.container}>
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            {/* Tab Buttons */}
+            <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+                <Pressable
+                    style={{
+                        flex: 1,
+                        padding: 10,
+                        backgroundColor: tab === 'terms' ? '#27b0b9' : '#444',
+                        borderRadius: 8,
+                        marginRight: 4,
+                    }}
+                    onPress={() => setTab('terms')}
+                >
+                    <Text style={{ color: '#fff', textAlign: 'center' }}>Terms</Text>
+                </Pressable>
+
+                <Pressable
+                    style={{
+                        flex: 1,
+                        padding: 10,
+                        backgroundColor: tab === 'acronyms' ? '#27b0b9' : '#444',
+                        borderRadius: 8,
+                        marginLeft: 4,
+                    }}
+                    onPress={() => setTab('acronyms')}
+                >
+                    <Text style={{ color: '#fff', textAlign: 'center' }}>Acronyms</Text>
+                </Pressable>
+            </View>
+
+            {/* List */}
             <FlatList
                 data={data}
                 keyExtractor={(item, idx) => tab === 'terms' ? item.term : item.acronym}
@@ -64,10 +65,8 @@ export default function GlossaryScreen() {
                     </View>
                 )}
             />
-        </View>
-</SafeAreaView>
-
-);
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
