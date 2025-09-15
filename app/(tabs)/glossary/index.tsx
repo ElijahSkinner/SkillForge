@@ -1,7 +1,7 @@
 // app/(tabs)/glossary/index.tsx
 import { Picker } from '@react-native-picker/picker';
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Pressable, Picker } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Pressable,} from 'react-native';
 import { useCert } from '@/context/CertContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
