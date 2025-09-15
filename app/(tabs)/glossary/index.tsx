@@ -1,13 +1,13 @@
 // app/(tabs)/glossary/index.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCert } from '@/context/CertContext';
 import { GLOSSARY_TERMS, GLOSSARY_ACRONYMS } from '../../../constants/glossary';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
-    const [tab, setTab] = useState<'terms' | 'acronyms'>('terms');
+    const [tab, setTab] = React.useState<'terms' | 'acronyms'>('terms');
 
     if (!selectedCert) {
         return (
@@ -17,9 +17,10 @@ export default function GlossaryScreen() {
         );
     }
 
-    const data = tab === 'terms'
-        ? GLOSSARY_TERMS[selectedCert] ?? []
-        : GLOSSARY_ACRONYMS[selectedCert] ?? [];
+    const data =
+        tab === 'terms'
+            ? GLOSSARY_TERMS[selectedCert] ?? []
+            : GLOSSARY_ACRONYMS[selectedCert] ?? [];
 
     return (
         <SafeAreaView style={styles.container}>
@@ -37,7 +38,6 @@ export default function GlossaryScreen() {
                 >
                     <Text style={{ color: '#fff', textAlign: 'center' }}>Terms</Text>
                 </Pressable>
-
                 <Pressable
                     style={{
                         flex: 1,
@@ -58,9 +58,7 @@ export default function GlossaryScreen() {
                 keyExtractor={(item, idx) => tab === 'terms' ? item.term : item.acronym}
                 renderItem={({ item }) => (
                     <View style={styles.card}>
-                        <Text style={styles.term}>
-                            {tab === 'terms' ? item.term : item.acronym}
-                        </Text>
+                        <Text style={styles.term}>{tab === 'terms' ? item.term : item.acronym}</Text>
                         <Text style={styles.definition}>{item.definition}</Text>
                     </View>
                 )}
