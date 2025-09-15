@@ -46,7 +46,9 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <CertContext.Provider value={{ selectedCert, setSelectedCert, enrolledCourses, addCourse }}>
+        <CertContext.Provider
+            value={{ selectedCert, setSelectedCert, enrolledCourses, addCourse }}
+        >
             {children}
         </CertContext.Provider>
     );
