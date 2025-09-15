@@ -16,7 +16,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '514', definition: 'Syslog' },
         { port: '587', definition: 'SMTPS - Simple Mail Transfer Protocol Secure' },
         { port: '636', definition: 'LDAPS - Lightweight Directory Access Protocol over SSL' },
-        { port: '1433', definition: '' },
+        { port: '1433', definition: 'SQL - Structured Query Language ' },
         { port: '3389', definition: 'SMTP – Simple Mail Transfer Protocol' },
         { port: '5060.5061', definition: 'DNS – Domain Name System' },
         { port: '22', definition: 'SMTP – Simple Mail Transfer Protocol' },
