@@ -1,7 +1,7 @@
 // app/(tabs)/glossary/index.tsx
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { useCert } from '@/context/CertContext';
-import { GLOSSARY_TERMS } from '../../../constants/glossary';
+import { GLOSSARY_TERMS. } from '../../../constants/glossary';
 import {SafeAreaView} from "react-native-safe-area-context";
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
