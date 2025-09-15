@@ -16,9 +16,9 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '514', definition: 'HTTP – Hypertext Transfer Protocol' },
         { port: '587', definition: 'HTTPS – Hypertext Transfer Protocol Secure' },
         { port: '636', definition: 'FTP – File Transfer Protocol' },
-        { port: '', definition: 'SSH – Secure Shell' },
-        { port: '25', definition: 'SMTP – Simple Mail Transfer Protocol' },
-        { port: '53', definition: 'DNS – Domain Name System' },
+        { port: '1433', definition: 'SSH – Secure Shell' },
+        { port: '3389', definition: 'SMTP – Simple Mail Transfer Protocol' },
+        { port: '', definition: 'DNS – Domain Name System' },
         { port: '25', definition: 'SMTP – Simple Mail Transfer Protocol' },
         { port: '53', definition: 'DNS – Domain Name System' }    ],
 };
