@@ -1,6 +1,6 @@
 // app/(tabs)/glossary/index.tsx
-import React, {useState} from 'react';
-import { View, Text, FlatList, StyleSheet, Pressable, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useCert } from '@/context/CertContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Flashcards from './Flashcards';
@@ -20,12 +20,29 @@ const OBJECTIVES = [
 
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
-    const [tab, setTab] = React.useState<'terms' | 'acronyms' | 'ports'>('terms');
-    const [selectedObjective, setSelectedObjective] = React.useState<string | null>(null); // null until clicked
+    const [tab, setTab] = useState<'terms' | 'acronyms' | 'ports'>('terms');
+    const [selectedObjective, setSelectedObjective] = useState<string | null>(null);
     const [showFlashcards, setShowFlashcards] = useState(false);
     const [flashcards, setFlashcards] = useState<
         { term?: string; acronym?: string; port?: string; definition: string }[]
     >([]);
+
+    // Update flashcards whenever selectedObjective or tab changes
+    useEffect(() => {
+        if (!selectedCert) return;
+
+        if (tab === 'terms' && selectedObjective) {
+            setFlashcards(GLOSSARY_TERMS[selectedCert]?.[selectedObjective] ?? []);
+            setShowFlashcards(true);
+        } else if (tab === 'acronyms' && selectedObjective) {
+            setFlashcards(GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? []);
+            setShowFlashcards(true);
+        } else if (tab === 'ports') {
+            setFlashcards(GLOSSARY_PORTS[selectedCert] ?? []);
+            setShowFlashcards(true);
+            setSelectedObjective('all_ports'); // optional
+        }
+    }, [tab, selectedObjective, selectedCert]);
 
     if (!selectedCert) {
         return (
@@ -35,18 +52,7 @@ export default function GlossaryScreen() {
         );
     }
 
-    if (selectedObjective) {
-        if (tab === 'terms') {
-            setFlashcards(GLOSSARY_TERMS[selectedCert]?.[selectedObjective] ?? []);
-        } else if (tab === 'acronyms') {
-            setFlashcards(GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? []);
-        } else if (tab === 'ports') {
-            setFlashcards(GLOSSARY_PORTS[selectedCert] ?? []);
-        }
-    }
-
-
-    // Render tab buttons
+    // Tab buttons
     const renderTabButtons = () => (
         <View style={{ flexDirection: 'row', marginBottom: 16 }}>
             {['terms', 'acronyms', 'ports'].map((t) => (
@@ -104,15 +110,11 @@ export default function GlossaryScreen() {
             {renderTabButtons()}
             {renderObjectiveCards()}
 
-            {selectedObjective && showFlashcards && (
-                <Flashcards
-                    data={flashcards}
-                    onClose={() => setShowFlashcards(false)}
-                />
+            {showFlashcards && selectedObjective && (
+                <Flashcards data={flashcards} onClose={() => setShowFlashcards(false)} />
             )}
         </SafeAreaView>
     );
-
 }
 
 const styles = StyleSheet.create({
@@ -126,21 +128,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         marginTop: 20,
-    },
-    card: {
-        backgroundColor: '#1f1f1f',
-        padding: 16,
-        borderRadius: 12,
-        marginBottom: 12,
-    },
-    term: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    definition: {
-        color: '#ccc',
-        marginTop: 6,
-        fontSize: 14,
     },
 });
