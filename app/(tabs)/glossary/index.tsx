@@ -35,17 +35,16 @@ export default function GlossaryScreen() {
         );
     }
 
-    // If an objective is selected, we show flashcards
-    let flashcards: { term?: string; acronym?: string; port?: string; definition: string }[] = [];
     if (selectedObjective) {
         if (tab === 'terms') {
-            flashcards = GLOSSARY_TERMS[selectedCert]?.[selectedObjective] ?? [];
+            setFlashcards(GLOSSARY_TERMS[selectedCert]?.[selectedObjective] ?? []);
         } else if (tab === 'acronyms') {
-            flashcards = GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? [];
+            setFlashcards(GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? []);
         } else if (tab === 'ports') {
-            flashcards = GLOSSARY_PORTS[selectedCert] ?? [];
+            setFlashcards(GLOSSARY_PORTS[selectedCert] ?? []);
         }
     }
+
 
     // Render tab buttons
     const renderTabButtons = () => (
