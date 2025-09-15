@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     View,
     Text,
@@ -6,17 +6,17 @@ import {
     StyleSheet,
     Dimensions,
     Animated,
-    ImageBackground, ScrollView,
+    ImageBackground,
+    ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TopBar from '@/components/TopBar';
-import QuizRoadmap from '@/components/QuizRoadmap';
 import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
 // @ts-ignore
 import path from '@/assets/images/path.png';
-import {ModuleType} from "@/types/certs";
+import { ModuleType } from "@/types/certs";
 
 const { height: screenHeight } = Dimensions.get('window');
 const TILE_SIZE = 60;
@@ -28,7 +28,7 @@ export default function RoadmapScreen() {
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
-    const [modulePositions, setModulePositions] = React.useState<{ [key: number]: number }>({});
+    const [textColor, setTextColor] = useState('#fee37f'); // default title color
     const [selectedLesson, setSelectedLesson] = React.useState<{
         modId: number;
         lessonIndex: number;
@@ -41,7 +41,6 @@ export default function RoadmapScreen() {
         return Math.round(lessonWeight);
     }
 
-
     if (!selectedCert)
         return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
 
@@ -52,8 +51,18 @@ export default function RoadmapScreen() {
         score: 0,
     }));
 
-    // reversed numbers 5->1
-    const numbers = Array.from({ length: TILE_COUNT }, (_, i) => TILE_COUNT - i);
+    const handleScroll = (event: any) => {
+        const y = event.nativeEvent.contentOffset.y;
+
+        // Example ranges – tweak these based on your backgrounds
+        if (y < 200) {
+            setTextColor('#111'); // dark text for light backgrounds
+        } else if (y >= 200 && y < 500) {
+            setTextColor('#fff'); // light text for dark backgrounds
+        } else {
+            setTextColor('#fee37f'); // accent color
+        }
+    };
 
     return (
         <ImageBackground
@@ -71,8 +80,6 @@ export default function RoadmapScreen() {
                         enrolledCourses={enrolledCourses}
                     />
 
-
-
                     <Animated.ScrollView
                         ref={scrollViewRef}
                         contentContainerStyle={{
@@ -81,14 +88,13 @@ export default function RoadmapScreen() {
                             paddingVertical: 30,
                         }}
                         onContentSizeChange={() => {
-                            // auto-scroll to bottom once content is measured
                             scrollViewRef.current?.scrollToEnd({ animated: false });
                         }}
                         scrollEventThrottle={16}
-                        onScroll={Animated.event(
-                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                            { useNativeDriver: false }
-                        )}
+                        onScroll={(e) => {
+                            handleScroll(e);
+                            scrollY.setValue(e.nativeEvent.contentOffset.y);
+                        }}
                     >
                         {modules.map((mod) => (
                             <View
@@ -104,12 +110,12 @@ export default function RoadmapScreen() {
                                         marginBottom: TILE_SPACING,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        backgroundColor: '#444', // Q tile color
+                                        backgroundColor: '#444',
                                     }}
                                     onPress={() =>
                                         setSelectedLesson({
                                             modId: mod.id,
-                                            lessonIndex: 0, // 0 = Unit Review
+                                            lessonIndex: 0,
                                             lessonName: `${mod.name} Unit Review`,
                                         })
                                     }
@@ -117,9 +123,9 @@ export default function RoadmapScreen() {
                                     <Text style={styles.tileText}>Q</Text>
                                 </Pressable>
 
-                                {/* Dynamic lesson tiles */}
+                                {/* Lesson tiles */}
                                 {[...mod.lessons].reverse().map((lesson, index) => {
-                                    const number = mod.lessons.length - index; // descending numbers
+                                    const number = mod.lessons.length - index;
                                     return (
                                         <Pressable
                                             key={`${mod.id}-${number}`}
@@ -130,7 +136,9 @@ export default function RoadmapScreen() {
                                                 borderRadius: 12,
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
+                                                backgroundColor: mod.completed
+                                                    ? '#27b0b9'
+                                                    : '#1a1b1f',
                                             }}
                                             onPress={() =>
                                                 setSelectedLesson({
@@ -145,9 +153,8 @@ export default function RoadmapScreen() {
                                     );
                                 })}
 
-
-                                {/* BOTTOM: Chapter name */}
-                                <Animated.Text style={[styles.sectionTitle]}>
+                                {/* Chapter name with dynamic color */}
+                                <Animated.Text style={[styles.sectionTitle, { color: textColor }]}>
                                     {mod.name}
                                 </Animated.Text>
                             </View>
@@ -159,13 +166,12 @@ export default function RoadmapScreen() {
                     const mod = modules.find(m => m.id === selectedLesson.modId)!;
                     const lessonCount = mod.lessons.length;
 
-                    // Determine display name and number
                     const isUnitReview = selectedLesson.lessonIndex === 0;
                     const lessonNum = isUnitReview
                         ? 'Unit Review'
                         : selectedLesson.lessonIndex;
                     const xp = isUnitReview
-                        ? mod.weight // Full module XP
+                        ? mod.weight
                         : Math.round(mod.weight / lessonCount);
 
                     return (
@@ -182,7 +188,6 @@ export default function RoadmapScreen() {
                                 <Pressable
                                     style={styles.startButton}
                                     onPress={() => {
-                                        // Start lesson logic
                                         router.push({
                                             pathname: '/quiz/[cert]/[id]',
                                             params: { cert: selectedCert, id: String(mod.id) },
@@ -203,7 +208,6 @@ export default function RoadmapScreen() {
                         </View>
                     );
                 })()}
-
             </SafeAreaView>
         </ImageBackground>
     );
@@ -215,7 +219,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 12,
         marginBottom: 10,
-        color: '#fee37f', // fallback
     },
     tileText: { color: '#fff', fontWeight: '600' },
     modalOverlay: {
