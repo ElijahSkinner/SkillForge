@@ -45,7 +45,7 @@ export default function RootHomeScreen() {
         }
     };
 
-    if (isFirstLaunch === null) return null;
+    //if (isFirstLaunch === null) return null;
 
     return (
         <LinearGradient
