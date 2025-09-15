@@ -16,7 +16,7 @@ export default function RootHomeScreen() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-//This is old redirect stuff. use for testing as needed
+//This is old redirect stuff. use for testing as needed.
     useEffect(() => {
         const checkFirstLaunch = async () => {
             const value = await AsyncStorage.getItem('alreadyLaunched');
