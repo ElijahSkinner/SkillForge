@@ -26,7 +26,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
             lessons: [
                 { id: 1, name: 'Characteristics of Routing Technologies' },
                 { id: 2, name: 'VLAN, Switching, and Features' },
-                { id: 3, name: 'wireless devices and technologies' },
+                { id: 3, name: 'Wireless devices and technologies' },
                 { id: 4, name: 'SSID: BSSID vs ESSID' },
                 { id: 5, name: 'Network types: mesh, ad hoc, point-to-point, infrastructure' },
                 { id: 6, name: 'Encryption: WPA2, WPA3' },
