@@ -1,16 +1,18 @@
+// app/(tabs)/glossary/index.tsx
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, FlatList, StyleSheet, Pressable, Picker } from 'react-native';
 import { useCert } from '@/context/CertContext';
-import { GLOSSARY_TERMS, GLOSSARY_ACRONYMS } from '@/constants/glossary';
-
-type GlossaryItem =
-    | { term: string; definition: string }
-    | { acronym: string; definition: string };
+import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+    GLOSSARY_TERMS,
+    GLOSSARY_ACRONYMS_BY_OBJECTIVE,
+    GLOSSARY_PORTS,
+} from '../../../constants/glossary';
 
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
-    const [tab, setTab] = React.useState<'terms' | 'acronyms'>('terms');
+    const [tab, setTab] = React.useState<'terms' | 'acronyms' | 'ports'>('terms');
+    const [selectedObjective, setSelectedObjective] = React.useState('1.0 Networking Concepts');
 
     if (!selectedCert) {
         return (
@@ -20,51 +22,69 @@ export default function GlossaryScreen() {
         );
     }
 
-    const data: GlossaryItem[] =
-        tab === 'terms'
-            ? GLOSSARY_TERMS[selectedCert] ?? []
-            : GLOSSARY_ACRONYMS[selectedCert] ?? [];
+    // Select data based on tab
+    let data: { term?: string; acronym?: string; port?: string; definition: string }[] = [];
+    if (tab === 'terms') {
+        data = GLOSSARY_TERMS[selectedCert] ?? [];
+    } else if (tab === 'acronyms') {
+        data = GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? [];
+    } else if (tab === 'ports') {
+        data = GLOSSARY_PORTS[selectedCert] ?? [];
+    }
+
+    // Tab buttons
+    const renderTabButtons = () => (
+        <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+            {['terms', 'acronyms', 'ports'].map((t) => (
+                <Pressable
+                    key={t}
+                    style={{
+                        flex: 1,
+                        padding: 10,
+                        backgroundColor: tab === t ? '#27b0b9' : '#444',
+                        borderRadius: 8,
+                        marginHorizontal: 4,
+                    }}
+                    onPress={() => setTab(t as any)}
+                >
+                    <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
+                        {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </Text>
+                </Pressable>
+            ))}
+        </View>
+    );
+
+    // Objective picker for acronyms
+    const renderObjectivePicker = () => {
+        if (tab !== 'acronyms') return null;
+        const objectives = Object.keys(GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert] ?? {});
+        return (
+            <View style={{ marginBottom: 16, backgroundColor: '#1f1f1f', borderRadius: 8 }}>
+                <Picker
+                    selectedValue={selectedObjective}
+                    onValueChange={(itemValue) => setSelectedObjective(itemValue)}
+                    style={{ color: '#fff' }}
+                >
+                    {objectives.map((obj) => (
+                        <Picker.Item key={obj} label={obj} value={obj} />
+                    ))}
+                </Picker>
+            </View>
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Tab Buttons */}
-            <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-                <Pressable
-                    style={{
-                        flex: 1,
-                        padding: 10,
-                        backgroundColor: tab === 'terms' ? '#27b0b9' : '#444',
-                        borderRadius: 8,
-                        marginRight: 4,
-                    }}
-                    onPress={() => setTab('terms')}
-                >
-                    <Text style={{ color: '#fff', textAlign: 'center' }}>Terms</Text>
-                </Pressable>
-                <Pressable
-                    style={{
-                        flex: 1,
-                        padding: 10,
-                        backgroundColor: tab === 'acronyms' ? '#27b0b9' : '#444',
-                        borderRadius: 8,
-                        marginLeft: 4,
-                    }}
-                    onPress={() => setTab('acronyms')}
-                >
-                    <Text style={{ color: '#fff', textAlign: 'center' }}>Acronyms</Text>
-                </Pressable>
-            </View>
-
-            {/* List */}
+            {renderTabButtons()}
+            {renderObjectivePicker()}
             <FlatList
                 data={data}
-                keyExtractor={(item, idx) =>
-                    'term' in item ? item.term : item.acronym
-                }
+                keyExtractor={(item, idx) => item.term || item.acronym || item.port || idx.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.card}>
                         <Text style={styles.term}>
-                            {'term' in item ? item.term : item.acronym}
+                            {item.term || item.acronym || item.port}
                         </Text>
                         <Text style={styles.definition}>{item.definition}</Text>
                     </View>
