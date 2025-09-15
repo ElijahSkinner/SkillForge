@@ -19,7 +19,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '1433', definition: 'SQL - Structured Query Language Server' },
         { port: '3389', definition: 'RDP - Remote Desktop Protocol' },
         { port: '5060.5061', definition: 'SIP - Session Initiation Protocol' },
-        { port: '22', definition: '' },
+        { port: '22', definition: 'SFTP' },
         { port: '23', definition: 'DNS – Domain Name System' }    ],
 };
 export const GLOSSARY_TERMS: Record<string, { term: string; definition: string }[]> = {
