@@ -24,7 +24,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
             weight: 23,
             completed: false,
             lessons: [
-                { id: 1, name: 'Characteristics of ' },
+                { id: 1, name: 'Characteristics of Routing Technologies' },
                 { id: 2, name: '802.11h' },
                 { id: 3, name: 'Frequency options: 2.4/5/6 GHz, band steering' },
                 { id: 4, name: 'SSID: BSSID vs ESSID' },
