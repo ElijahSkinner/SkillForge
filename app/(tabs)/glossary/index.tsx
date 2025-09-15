@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCert } from '@/context/CertContext';
-import { GLOSSARY_TERMS, GLOSSARY_ACRONYMS } from '../../../constants/glossary';
+import { GLOSSARY_TERMS, GLOSSARY_ACRONYMS } from '@/constants/glossary';
 
 type GlossaryItem =
     | { term: string; definition: string }
