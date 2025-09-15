@@ -1,6 +1,8 @@
 // app/(tabs)/glossary/index.tsx
 import {View, Text, FlatList, StyleSheet, Pressable} from 'react-native';
 import { useCert } from '@/context/CertContext';
+import React from 'react';
+
 import { GLOSSARY_TERMS, GLOSSARY_ACRONYMS } from '../../../constants/glossary';
 import {SafeAreaView} from "react-native-safe-area-context";
 export default function GlossaryScreen() {
