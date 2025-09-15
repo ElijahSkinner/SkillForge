@@ -67,7 +67,7 @@ export default function GlossaryScreen() {
                     onValueChange={(itemValue: 'Unit 1' | 'Unit 2' | 'Unit 3') => setTab(itemValue)}
                     style={{ color: '#fff', backgroundColor: '#1f1f1f', borderRadius: 8 }}
                 >
-                    <Picker.Item label="Terms" value="terms" />
+                    <Picker.Item label="Unit 1" value="terms" />
                     <Picker.Item label="Acronyms" value="acronyms" />
                     <Picker.Item label="Ports" value="ports" />
                 </Picker>
