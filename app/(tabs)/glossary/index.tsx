@@ -6,6 +6,9 @@ import {SafeAreaView} from "react-native-safe-area-context";
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
     const [tab, setTab] = React.useState<'terms' | 'acronyms'>('terms');
+    const data = tab === 'terms'
+        ? GLOSSARY_TERMS[selectedCert] ?? []
+        : GLOSSARY_ACRONYMS[selectedCert] ?? [];
 
     if (!selectedCert) {
         return (
