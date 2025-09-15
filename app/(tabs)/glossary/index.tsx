@@ -1,5 +1,5 @@
 // app/(tabs)/glossary/index.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { useCert } from '@/context/CertContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,6 +22,10 @@ export default function GlossaryScreen() {
     const { selectedCert } = useCert();
     const [tab, setTab] = React.useState<'terms' | 'acronyms' | 'ports'>('terms');
     const [selectedObjective, setSelectedObjective] = React.useState<string | null>(null); // null until clicked
+    const [showFlashcards, setShowFlashcards] = useState(false);
+    const [flashcards, setFlashcards] = useState<
+        { term?: string; acronym?: string; port?: string; definition: string }[]
+    >([]);
 
     if (!selectedCert) {
         return (
