@@ -17,8 +17,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '587', definition: 'SMTPS - Simple Mail Transfer Protocol Secure' },
         { port: '636', definition: 'LDAPS - Lightweight Directory Access Protocol over SSL' },
         { port: '1433', definition: 'SQL - Structured Query Language Server' },
-        { port: '3389', definition: 'RDP - Remote Desktop Protocol' +
-                '' },
+        { port: '3389', definition: 'RDP - Remote Desktop Protocol' },
         { port: '5060.5061', definition: 'DNS – Domain Name System' },
         { port: '22', definition: 'SMTP – Simple Mail Transfer Protocol' },
         { port: '23', definition: 'DNS – Domain Name System' }    ],
