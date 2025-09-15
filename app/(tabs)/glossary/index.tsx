@@ -1,5 +1,5 @@
 // app/(tabs)/glossary/index.tsx
-
+npm install @react-native-picker/picker
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable, Picker } from 'react-native';
 import { useCert } from '@/context/CertContext';
