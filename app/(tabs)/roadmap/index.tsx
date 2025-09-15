@@ -41,7 +41,15 @@ export default function RoadmapScreen() {
     const [dynamicColors, setDynamicColors] = useState<{ [key: number]: string }>({});
 
     if (!selectedCert)
-        return <Text style={{ color: '#fff', padding: 20 }}>Select a cert first</Text>;
+        return <View style={styles.container}>
+            <Text style={styles.message}>Please select a certification first.</Text>
+            <Pressable
+                style={styles.button}
+                onPress={() => router.push('../course')} // adjust to your course selection route
+            >
+                <Text style={{ color: '#fff', fontWeight: 'bold' }}>Select a Cert</Text>
+            </Pressable>
+        </View>;
 
     const modules = CERTS_ROADMAP[selectedCert];
     const enrolledCourses = Object.keys(CERTS_ROADMAP).map((name, idx) => ({
@@ -203,4 +211,24 @@ const styles = StyleSheet.create({
         color: '#fee37f',
     },
     tileText: { color: '#fff', fontWeight: '600' },
+    container: {
+        flex: 1,
+        backgroundColor: '#121212',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+    },
+    message: {
+        color: '#aaa',
+        fontSize: 16,
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    button: {
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        backgroundColor: '#27b0b9',
+        borderRadius: 8,
+    },
+
 });

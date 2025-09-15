@@ -8,8 +8,8 @@ import {
     GLOSSARY_TERMS,
     GLOSSARY_ACRONYMS_BY_OBJECTIVE,
     GLOSSARY_PORTS,
-} from '../../../constants/glossary';
-
+} from '@/constants/glossary';
+import CourseRedirect from '@/components/CourseRedirect';
 const OBJECTIVES = [
     '1.0 Networking Concepts',
     '2.0 Network Implementation',
@@ -46,9 +46,7 @@ export default function GlossaryScreen() {
 
     if (!selectedCert) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.message}>Please select a certification first.</Text>
-            </View>
+            <CourseRedirect />
         );
     }
 
