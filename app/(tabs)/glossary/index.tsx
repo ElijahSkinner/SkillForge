@@ -103,7 +103,9 @@ export default function GlossaryScreen() {
             {selectedObjective && (
                 <FlatList
                     data={flashcards}
-                    keyExtractor={(item, idx) => item.term || item.acronym || item.port || idx.toString()}
+                    keyExtractor={(item, idx) =>
+                        `${item.term || item.acronym || item.port || 'item'}-${idx}`
+                    }
                     renderItem={({ item }) => (
                         <View style={styles.card}>
                             <Text style={styles.term}>
