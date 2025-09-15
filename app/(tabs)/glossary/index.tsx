@@ -64,7 +64,7 @@ export default function GlossaryScreen() {
             <View style={{ marginBottom: 16, backgroundColor: '#1f1f1f', borderRadius: 8 }}>
                 <Picker
                     selectedValue={tab}
-                    onValueChange={(itemValue: 'Unit 1' | 'acronyms' | 'ports') => setTab(itemValue)}
+                    onValueChange={(itemValue: 'Unit 1' | 'Unit 1' | 'ports') => setTab(itemValue)}
                     style={{ color: '#fff', backgroundColor: '#1f1f1f', borderRadius: 8 }}
                 >
                     <Picker.Item label="Terms" value="terms" />
