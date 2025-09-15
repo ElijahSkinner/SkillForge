@@ -1,5 +1,5 @@
 // components/ProtectedRoute.tsx
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "@/AuthContext";
 import { Redirect } from "expo-router";
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
