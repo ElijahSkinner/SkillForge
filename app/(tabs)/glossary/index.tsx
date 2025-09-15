@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { useCert } from '@/context/CertContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Flashcards from './Flashcards';
 import {
     GLOSSARY_TERMS,
     GLOSSARY_ACRONYMS_BY_OBJECTIVE,
