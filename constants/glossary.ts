@@ -13,7 +13,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '161/162', definition: 'SSH – Secure Shell' },
         { port: '389', definition: 'SMTP – Simple Mail Transfer Protocol' },
         { port: '445', definition: 'DNS – Domain Name System' },
-        { port: '80', definition: 'HTTP – Hypertext Transfer Protocol' },
+        { port: '514', definition: 'HTTP – Hypertext Transfer Protocol' },
         { port: '443', definition: 'HTTPS – Hypertext Transfer Protocol Secure' },
         { port: '20/21', definition: 'FTP – File Transfer Protocol' },
         { port: '22', definition: 'SSH – Secure Shell' },
