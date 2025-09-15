@@ -105,16 +105,15 @@ export default function GlossaryScreen() {
             {renderTabButtons()}
             {renderObjectiveCards()}
 
-            {selectedObjective && (
-                {showFlashcards && (
-                    <Flashcards
-                        data={flashcards}
-                        onClose={() => setShowFlashcards(false)}
-                    />
-                )}
+            {selectedObjective && showFlashcards && (
+                <Flashcards
+                    data={flashcards}
+                    onClose={() => setShowFlashcards(false)}
+                />
             )}
         </SafeAreaView>
     );
+
 }
 
 const styles = StyleSheet.create({
