@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from "../context/AuthContext"; // adjust import if needed
+import { useAuth } from "@/context/AuthContext"; // adjust import if needed
 
 const { width } = Dimensions.get('window');
 
