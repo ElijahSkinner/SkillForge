@@ -9,9 +9,7 @@ import {
     GLOSSARY_PORTS,
 } from '../../../constants/glossary';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-
-const EXAM_OBJECTIVES = [
+const OBJECTIVES = [
     '1.0 Networking Concepts',
     '2.0 Network Implementation',
     '3.0 Network Operations',
@@ -22,7 +20,7 @@ const EXAM_OBJECTIVES = [
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
     const [tab, setTab] = React.useState<'terms' | 'acronyms' | 'ports'>('terms');
-    const [selectedObjective, setSelectedObjective] = React.useState<string | null>(null);
+    const [selectedObjective, setSelectedObjective] = React.useState<string | null>(null); // null until clicked
 
     if (!selectedCert) {
         return (
@@ -32,45 +30,19 @@ export default function GlossaryScreen() {
         );
     }
 
-    // Get the data for flashcards
+    // If an objective is selected, we show flashcards
     let flashcards: { term?: string; acronym?: string; port?: string; definition: string }[] = [];
-
-    if (tab === 'terms') {
-        flashcards = selectedObjective
-            ? GLOSSARY_TERMS[selectedCert]?.[selectedObjective] ?? []
-            : [];
-    } else if (tab === 'acronyms') {
-        flashcards = selectedObjective
-            ? GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? []
-            : [];
-    } else if (tab === 'ports') {
-        flashcards = selectedObjective
-            ? GLOSSARY_PORTS[selectedCert]?.[selectedObjective] ?? []
-            : [];
-    }
-
-    // If an objective is selected, show flashcards mode
     if (selectedObjective) {
-        return (
-            <SafeAreaView style={styles.container}>
-                <Pressable onPress={() => setSelectedObjective(null)} style={styles.backButton}>
-                    <Text style={{ color: '#fff' }}>← Back</Text>
-                </Pressable>
-                <FlatList
-                    data={flashcards}
-                    keyExtractor={(item, idx) => item.term || item.acronym || item.port || idx.toString()}
-                    renderItem={({ item }) => (
-                        <View style={styles.flashcard}>
-                            <Text style={styles.term}>{item.term || item.acronym || item.port}</Text>
-                            <Text style={styles.definition}>{item.definition}</Text>
-                        </View>
-                    )}
-                />
-            </SafeAreaView>
-        );
+        if (tab === 'terms') {
+            flashcards = GLOSSARY_TERMS[selectedCert]?.[selectedObjective] ?? [];
+        } else if (tab === 'acronyms') {
+            flashcards = GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[selectedObjective] ?? [];
+        } else if (tab === 'ports') {
+            flashcards = GLOSSARY_PORTS[selectedCert] ?? [];
+        }
     }
 
-    // Render the 3 tab buttons
+    // Render tab buttons
     const renderTabButtons = () => (
         <View style={{ flexDirection: 'row', marginBottom: 16 }}>
             {['terms', 'acronyms', 'ports'].map((t) => (
@@ -83,7 +55,10 @@ export default function GlossaryScreen() {
                         borderRadius: 8,
                         marginHorizontal: 4,
                     }}
-                    onPress={() => setTab(t as any)}
+                    onPress={() => {
+                        setTab(t as any);
+                        setSelectedObjective(t === 'ports' ? 'all_ports' : null);
+                    }}
                 >
                     <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
                         {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -93,25 +68,52 @@ export default function GlossaryScreen() {
         </View>
     );
 
-    // Render objective cards
-    const renderObjectiveCards = () => (
-        <View style={{ marginTop: 16 }}>
-            {EXAM_OBJECTIVES.map((obj) => (
-                <Pressable
-                    key={obj}
-                    style={styles.objectiveCard}
-                    onPress={() => setSelectedObjective(obj)}
-                >
-                    <Text style={styles.objectiveText}>{obj}</Text>
-                </Pressable>
-            ))}
-        </View>
-    );
+    // Render 5 objective cards for Terms / Acronyms
+    const renderObjectiveCards = () => {
+        if (tab === 'ports' || selectedObjective) return null;
+        return (
+            <View style={{ marginBottom: 16 }}>
+                {OBJECTIVES.map((obj) => (
+                    <Pressable
+                        key={obj}
+                        style={{
+                            height: 120,
+                            backgroundColor: '#1f1f1f',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginBottom: 12,
+                            borderRadius: 12,
+                        }}
+                        onPress={() => setSelectedObjective(obj)}
+                    >
+                        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
+                            {obj}
+                        </Text>
+                    </Pressable>
+                ))}
+            </View>
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
             {renderTabButtons()}
             {renderObjectiveCards()}
+
+            {selectedObjective && (
+                <FlatList
+                    data={flashcards}
+                    keyExtractor={(item, idx) => item.term || item.acronym || item.port || idx.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.card}>
+                            <Text style={styles.term}>
+                                {item.term || item.acronym || item.port}
+                            </Text>
+                            <Text style={styles.definition}>{item.definition}</Text>
+                        </View>
+                    )}
+                />
+            )}
         </SafeAreaView>
     );
 }
@@ -128,43 +130,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
     },
-    objectiveCard: {
+    card: {
         backgroundColor: '#1f1f1f',
-        width: SCREEN_WIDTH - 32, // full width minus padding
-        height: 100,
+        padding: 16,
         borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
         marginBottom: 12,
-    },
-    objectiveText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    flashcard: {
-        backgroundColor: '#1f1f1f',
-        borderRadius: 12,
-        padding: 24,
-        marginBottom: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     term: {
         color: '#fff',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 12,
-        textAlign: 'center',
     },
     definition: {
         color: '#ccc',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    backButton: {
-        padding: 10,
-        marginBottom: 16,
+        marginTop: 6,
+        fontSize: 14,
     },
 });
