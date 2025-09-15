@@ -63,13 +63,13 @@ export default function GlossaryScreen() {
         return (
             <View style={{ marginBottom: 16, backgroundColor: '#1f1f1f', borderRadius: 8 }}>
                 <Picker
-                    selectedValue={selectedObjective}
-                    onValueChange={(itemValue) => setSelectedObjective(itemValue)}
-                    style={{ color: '#fff' }}
+                    selectedValue={tab}
+                    onValueChange={(itemValue: 'terms' | 'acronyms' | 'ports') => setTab(itemValue)}
+                    style={{ color: '#fff', backgroundColor: '#1f1f1f', borderRadius: 8 }}
                 >
-                    {objectives.map((obj) => (
-                        <Picker.Item key={obj} label={obj} value={obj} />
-                    ))}
+                    <Picker.Item label="Terms" value="terms" />
+                    <Picker.Item label="Acronyms" value="acronyms" />
+                    <Picker.Item label="Ports" value="ports" />
                 </Picker>
             </View>
         );
