@@ -20,10 +20,11 @@ export const GLOSSARY_TERMS: Record<string, { term: string; definition: string }
         { term: 'Registry', definition: 'Windows database storing OS and application settings.' },
         { term: 'Malware', definition: 'Software designed to harm, exploit, or disable computers.' },
     ],
-    'CompTIA Network+': [
-        { term: 'OSI Model', definition: 'Conceptual model with 7 layers for network communication.' },
-        { term: 'TCP/IP', definition: 'Protocol suite for internet and network communication.' },
-    ],
+    'CompTIA Network+': {
+        '1.0 Networking Concepts': [
+            { term: 'OSI Model', definition: 'Conceptual model with 7 layers for network communication.' },
+            { term: 'TCP/IP', definition: 'Protocol suite for internet and network communication.' },
+    ],}
 };
 
 export const GLOSSARY_ACRONYMS: Record<string, { acronym: string; definition: string }[]> = {
