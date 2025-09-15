@@ -1,14 +1,21 @@
-import { Image, StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, Text, Dimensions, TextInput, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from "../context/AuthContext"; // adjust import if needed
 
 const { width } = Dimensions.get('window');
 
 export default function RootHomeScreen() {
     const router = useRouter();
+    const { login } = useAuth(); // your auth hook
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+    const [showForm, setShowForm] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const checkFirstLaunch = async () => {
@@ -18,11 +25,25 @@ export default function RootHomeScreen() {
                 setIsFirstLaunch(true);
             } else {
                 setIsFirstLaunch(false);
-                router.replace('/roadmap'); // absolute path
+                // if logged in, skip straight to roadmap
+                router.replace('/roadmap');
             }
         };
         checkFirstLaunch();
     }, []);
+
+    const handleLogin = async () => {
+        setError("");
+        setLoading(true);
+        try {
+            await login(email, password);
+            router.replace('/roadmap');
+        } catch (err: any) {
+            setError(err.message || "Login failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (isFirstLaunch === null) return null;
 
@@ -44,23 +65,67 @@ export default function RootHomeScreen() {
                 Learn, practice, and master your tech certifications
             </Text>
 
-            {/* Quick Start Buttons */}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={[styles.button, { backgroundColor: '#da3a2b' }]}
-                    onPress={() => router.push('/course')}
-                >
-                    <Text style={styles.buttonText}>Courses</Text>
-                </TouchableOpacity>
+            {error ? <Text style={styles.error}>{error}</Text> : null}
 
-                <TouchableOpacity
-                    style={[styles.button, { backgroundColor: '#27b0b9' }]}
-                    onPress={() => router.push('/quiz')}
-                >
-                    <Text style={styles.buttonText}>Quiz</Text>
-                </TouchableOpacity>
-            </View>
+            {!showForm ? (
+                // Splash with login options
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={[styles.button, { backgroundColor: '#27b0b9' }]}
+                        onPress={() => setShowForm(true)}
+                    >
+                        <Text style={styles.buttonText}>Login with Email</Text>
+                    </TouchableOpacity>
 
+                    <TouchableOpacity
+                        style={[styles.button, { backgroundColor: '#444' }]}
+                        onPress={() => alert("Google login coming soon")}
+                    >
+                        <Text style={styles.buttonText}>Continue with Google</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[styles.button, { backgroundColor: '#555' }]}
+                        onPress={() => alert("GitHub login coming soon")}
+                    >
+                        <Text style={styles.buttonText}>Continue with GitHub</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                // Email/password login form
+                <View style={{ width: "100%" }}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Email"
+                        placeholderTextColor="#888"
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Password"
+                        placeholderTextColor="#888"
+                        secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+
+                    <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+                        {loading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text style={styles.buttonText}>Login</Text>
+                        )}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setShowForm(false)}>
+                        <Text style={styles.link}>← Back to login options</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
         </LinearGradient>
     );
 }
@@ -98,10 +163,31 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         borderRadius: 12,
         alignItems: 'center',
+        marginBottom: 15,
     },
     buttonText: {
-        color: '#0d0e12',
+        color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    input: {
+        width: "100%",
+        padding: 12,
+        borderWidth: 1,
+        borderColor: "#333",
+        borderRadius: 8,
+        marginBottom: 15,
+        color: "#fff",
+        backgroundColor: "#1e1e1e",
+    },
+    link: {
+        color: "#27b0b9",
+        marginTop: 12,
+        textAlign: "center",
+    },
+    error: {
+        color: "red",
+        marginBottom: 15,
+        textAlign: "center",
     },
 });
