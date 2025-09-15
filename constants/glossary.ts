@@ -10,7 +10,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '67/68', definition: 'DHCP – Dynamic Host Configuration Protocol' },
         { port: '69', definition: 'TFTP - Trivial File Transfer Protocol' },
         { port: '123', definition: 'NTP - Network Time Protocol' },
-        { port: '161/162', definition: 'SNMP - Simple' },
+        { port: '161/162', definition: 'SNMP - Simple Network Management Protocol' },
         { port: '389', definition: 'SMTP – Simple Mail Transfer Protocol' },
         { port: '445', definition: 'DNS – Domain Name System' },
         { port: '514', definition: 'HTTP – Hypertext Transfer Protocol' },
