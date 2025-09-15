@@ -20,7 +20,7 @@ export const GLOSSARY_PORTS: Record<string, { port: string; definition: string }
         { port: '3389', definition: 'RDP - Remote Desktop Protocol' },
         { port: '5060.5061', definition: 'SIP - Session Initiation Protocol' },
         { port: '22', definition: 'SFTP - Secure File Transfer Protocol' },
-        { port: '23', definition: 'DNS – Domain Name System' }    ],
+        { port: '23', definition: '' }    ],
 };
 export const GLOSSARY_TERMS: Record<string, { term: string; definition: string }[]> = {
     'CompTIA A+ Core 1': [
