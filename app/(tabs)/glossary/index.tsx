@@ -101,20 +101,12 @@ export default function GlossaryScreen() {
             {renderObjectiveCards()}
 
             {selectedObjective && (
-                <FlatList
-                    data={flashcards}
-                    keyExtractor={(item, idx) =>
-                        `${item.term || item.acronym || item.port || 'item'}-${idx}`
-                    }
-                    renderItem={({ item }) => (
-                        <View style={styles.card}>
-                            <Text style={styles.term}>
-                                {item.term || item.acronym || item.port}
-                            </Text>
-                            <Text style={styles.definition}>{item.definition}</Text>
-                        </View>
-                    )}
-                />
+                {showFlashcards && (
+                    <Flashcards
+                        data={flashcards}
+                        onClose={() => setShowFlashcards(false)}
+                    />
+                )}
             )}
         </SafeAreaView>
     );
