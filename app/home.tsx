@@ -26,7 +26,7 @@ export default function RootHomeScreen() {
             } else {
                 setIsFirstLaunch(false);
                 // if logged in, skip straight to roadmap
-                router.replace('/roadmap');
+                //router.replace('/roadmap');
             }
         };
         checkFirstLaunch();
