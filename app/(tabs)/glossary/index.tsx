@@ -1,9 +1,12 @@
-// app/(tabs)/glossary/index.tsx
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCert } from '@/context/CertContext';
 import { GLOSSARY_TERMS, GLOSSARY_ACRONYMS } from '../../../constants/glossary';
+
+type GlossaryItem =
+    | { term: string; definition: string }
+    | { acronym: string; definition: string };
 
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
@@ -17,7 +20,7 @@ export default function GlossaryScreen() {
         );
     }
 
-    const data =
+    const data: GlossaryItem[] =
         tab === 'terms'
             ? GLOSSARY_TERMS[selectedCert] ?? []
             : GLOSSARY_ACRONYMS[selectedCert] ?? [];
@@ -55,10 +58,14 @@ export default function GlossaryScreen() {
             {/* List */}
             <FlatList
                 data={data}
-                keyExtractor={(item, idx) => tab === 'terms' ? item.term : item.acronym}
+                keyExtractor={(item, idx) =>
+                    'term' in item ? item.term : item.acronym
+                }
                 renderItem={({ item }) => (
                     <View style={styles.card}>
-                        <Text style={styles.term}>{tab === 'terms' ? item.term : item.acronym}</Text>
+                        <Text style={styles.term}>
+                            {'term' in item ? item.term : item.acronym}
+                        </Text>
                         <Text style={styles.definition}>{item.definition}</Text>
                     </View>
                 )}
