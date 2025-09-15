@@ -13,7 +13,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                 { id: 3, name: 'Cloud Concepts and Connectivity' },
                 { id: 4, name: 'Ports, Protocols, and Traffic' },
                 { id: 5, name: 'Transmission Media and Transceivers' },
-                { id: 6, name: 'Network Topologies and Architectures, and Types' },
+                { id: 6, name: 'Network Topologies, Architectures, and Types' },
                 { id: 7, name: 'IPv4 Network Addressing' },
                 { id: 8, name: 'Modern Network Environments' },
             ],
