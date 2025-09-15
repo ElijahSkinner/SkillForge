@@ -68,7 +68,7 @@ export default function GlossaryScreen() {
                     style={{ color: '#fff', backgroundColor: '#1f1f1f', borderRadius: 8 }}
                 >
                     <Picker.Item label="Unit 1" value="Unit 1" />
-                    <Picker.Item label="Unit 1" value="Unit 1" />
+                    <Picker.Item label="Unit 1" value="Unit 2" />
                     <Picker.Item label="Unit 1" value="Unit 1" />
                 </Picker>
             </View>
