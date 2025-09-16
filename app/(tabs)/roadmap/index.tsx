@@ -121,7 +121,7 @@ export default function RoadmapScreen() {
                                                 borderRadius: 12,
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                backgroundColor: mod.completed ? '#55555' : '#55555',
+                                                backgroundColor: mod.completed ? '#55555' : '#1a1b1f',
                                             }}
                                             onPress={() =>
                                                 setSelectedLesson({
