@@ -81,7 +81,7 @@ export default function RoadmapScreen() {
                                         data: {
                                             type: 'quiz',
                                             moduleName: mod.name,
-                                            xp: mod.unitReviewXP,
+                                            xp: mod.weight,
                                             info: 'Unit Review / Quiz info',
                                         },
                                     });
