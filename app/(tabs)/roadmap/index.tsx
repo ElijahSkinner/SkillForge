@@ -63,7 +63,7 @@ export default function RoadmapScreen() {
 
     return (
         <ImageBackground
-            source={'@/assets/new'}
+            source={'@/assets/new-lo'}
             style={{ flex: 1, width: 'auto' }}
             resizeMode="cover"
             imageStyle={{ resizeMode: 'cover', alignSelf: 'center' }}
