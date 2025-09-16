@@ -13,7 +13,6 @@ import TopBar from '@/components/TopBar';
 import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
-import GradientText from "@/components/GradientText";
 
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 60, TILE_SPACING: 8 };
 
@@ -119,7 +118,7 @@ export default function RoadmapScreen() {
                         ))}
 
                         {/* Module Name */}
-                        <GradientText style={styles.sectionTitle}>{mod.name}</GradientText>
+                        <Text style={styles.sectionTitle}>{mod.name}</Text>
                     </View>
                 ))}
             </Animated.ScrollView>
