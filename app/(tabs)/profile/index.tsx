@@ -73,10 +73,11 @@ export default function ProfileScreen() {
                         <Button title="➖ Decrease" onPress={() => updateStreak(Math.max(0, streak - 1))} />
                     </View>
                 </View>
+                
                 <Text>Total XP: 420</Text>
                 <Text>Current League: BAB</Text>
                 <Text>Top Score: CompTIA Net+ - 95%</Text>
-            
+
 
             {/* Friends Box */}
             <View style={styles.box}>
