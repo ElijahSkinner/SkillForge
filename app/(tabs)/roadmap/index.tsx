@@ -107,7 +107,7 @@ export default function RoadmapScreen() {
 
                         {/* Lesson Tiles */}
                         {mod.lessons.map((lesson, index) => {
-                            const number = index - 1; // dynamic
+                            const number = index + 1; // dynamic
                             return (
                                 <Pressable
                                     key={`${mod.id}-${number}`}
