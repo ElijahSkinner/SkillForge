@@ -73,6 +73,29 @@ export default function ProfileScreen() {
                         <Button title="➖ Decrease" onPress={() => updateStreak(Math.max(0, streak - 1))} />
                     </View>
                 </View>
+                <Text>Total XP: 420</Text>
+                <Text>Current League: BAB</Text>
+                <Text>Top Score: CompTIA Net+ - 95%</Text>
+            
+
+            {/* Friends Box */}
+            <View style={styles.box}>
+                <Text style={styles.boxTitle}>Friends</Text>
+                <Text>No friends added yet</Text>
+            </View>
+
+            {/* Monthly Badges */}
+            <View style={styles.box}>
+                <Text style={styles.boxTitle}>Monthly Badges</Text>
+                <Text>🏅 3 Badges earned</Text>
+            </View>
+
+            {/* Achievements */}
+            <View style={styles.box}>
+                <Text style={styles.boxTitle}>Achievements</Text>
+                <Text>✅ Completed 1 module</Text>
+                <Text>✅ Logged in 5 days in a row</Text>
+            </View>
             </ScrollView>
         </SafeAreaView>
     );
