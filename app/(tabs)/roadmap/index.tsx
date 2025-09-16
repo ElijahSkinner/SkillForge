@@ -26,15 +26,15 @@ const TILE_SIZE = 60;
 const TILE_SPACING = 8;
 
 export default function RoadmapScreen() {
-    //debug
-    console.log('selectedCert:', selectedCert);
-    console.log('modules:', modules);
 
     const { selectedCert } = useCert();
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
     const viewShotRef = useRef(null);
+    //debug
+    console.log('selectedCert:', selectedCert);
+    console.log('modules:', modules);
 
     const [selectedLesson, setSelectedLesson] = useState<{
         modId: number;
