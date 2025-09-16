@@ -14,7 +14,6 @@ const AuthContext = createContext<any>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<any>(null);
-    const [user, setUser] = useState<any>(null);
     const [progress, setProgress] = useState<any>(null);
 
     useEffect(() => {
