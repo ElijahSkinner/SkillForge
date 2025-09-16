@@ -172,7 +172,7 @@ export default function RoadmapScreen() {
             {selectedLesson && (() => {
                 const mod = modules.find(m => m.id === selectedLesson.modId)!;
                 const lessonCount = mod.lessons.length;
-                const lessonNum = lessonCount - selectedLesson.lessonIndex + 1;
+                const lessonNum = selectedLesson.lessonIndex;
                 const xp = getLessonXP(mod, selectedLesson.lessonIndex);
 
                 return (
