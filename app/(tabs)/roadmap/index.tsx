@@ -22,7 +22,7 @@ export default function RoadmapScreen() {
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
 
-    //For TileModal data
+    //For Tile Modal data
     const [selectedLesson, setSelectedLesson] = React.useState<{
         modId: number;
         lessonIndex: number;
