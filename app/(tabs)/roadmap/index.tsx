@@ -95,7 +95,7 @@ export default function RoadmapScreen() {
                                         marginBottom: TILE_SPACING,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        backgroundColor: '#',
+                                        backgroundColor: '#666',
                                     }}
                                     onPress={() =>
                                         setSelectedLesson({
