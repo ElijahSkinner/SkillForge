@@ -5,7 +5,7 @@ const client = new Client()
     .setEndpoint("http://192.168.40.142/v1") // Tailscale IP
     .setProject("68c99e72002c3fb21bdf");
 const databases = new Databases(client);
-const DATABASE_ID = "your_database_id";
+const DATABASE_ID = "68c9a6a6000cf7733309";
 const COLLECTION_ID = "68c9a6b7002dfd514488";
 
 const account = new Account(client);
