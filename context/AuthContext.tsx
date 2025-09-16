@@ -6,7 +6,7 @@ const client = new Client()
     .setProject("68c99e72002c3fb21bdf");
 const databases = new Databases(client);
 const DATABASE_ID = "your_database_id";
-const COLLECTION_ID = "user_progress";
+const COLLECTION_ID = "68c9a6b7002dfd514488";
 
 const account = new Account(client);
 
