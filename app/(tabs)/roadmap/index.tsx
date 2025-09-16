@@ -84,25 +84,26 @@ export default function RoadmapScreen() {
                     <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
                         {/* Q Tile */}
                         <Pressable
-                            style={styles.qTile}
-                            onPress={(e) => {
-                                e.target.measure((fx, fy, width, height, px, py) => {
-                                    setPopup({
-                                        x: px,
-                                        y: py - 80,
-                                        width,
-                                        data: {
-                                            type: 'quiz',
-                                            moduleName: mod.name,
-                                            xp: mod.weight,
-                                            info: 'Unit Review / Quiz info',
-                                        },
-                                    });
-                                });
+                            style={{
+                                width: TILE_SIZE,
+                                height: TILE_SIZE,
+                                borderRadius: 12,
+                                marginBottom: TILE_SPACING,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#444', // Q tile color
                             }}
+                            onPress={() =>
+                                setSelectedLesson({
+                                    modId: mod.id,
+                                    lessonIndex: 0, // 0 = Unit Review
+                                    lessonName: `${mod.name} Unit Review`,
+                                })
+                            }
                         >
                             <Text style={styles.tileText}>Q</Text>
                         </Pressable>
+
 
                         {/* Lesson Tiles */}
                         {mod.lessons.map((lesson, index) => {
