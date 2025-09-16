@@ -11,8 +11,6 @@ const COLLECTION_ID = "68c9a6b7002dfd514488";
 const account = new Account(client);
 
 const AuthContext = createContext<any>(null);
-const [user, setUser] = useState<any>(null);
-const [progress, setProgress] = useState<any>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<any>(null);
