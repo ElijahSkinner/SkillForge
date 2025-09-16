@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { account, databases } from '../lib/appwrite'; // adjust path
+import { account, databases } from '@/context/AuthContext'; // adjust path
 import { Query } from "appwrite";
 
 const DATABASE_ID = "your_database_id";
