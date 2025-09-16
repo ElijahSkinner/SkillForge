@@ -1,38 +1,28 @@
-import { View, Text, StyleSheet, Pressable, ScrollView, Switch, Alert } from 'react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Pressable, ScrollView, Switch, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '@/context/AuthContext'; // make sure path is correct
+import { useAuth } from '@/context/AuthContext';
 
 export default function SettingsScreen() {
-    const [darkMode, setDarkMode] = useState(true);
-    const [notifications, setNotifications] = useState(true);
-
     const router = useRouter();
     const { user, logout } = useAuth();
 
-    const handleLogout = () => {
-        if (!user) return;
+    const [darkMode, setDarkMode] = useState(true);
+    const [notifications, setNotifications] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
 
-        Alert.alert(
-            'Confirm Logout',
-            `Are you sure you want to log out, ${user.name}?`,
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Yes, Logout',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await logout();
-                            router.replace('../home'); // navigate to home after logout
-                        } catch (err) {
-                            console.error('Logout failed:', err);
-                        }
-                    },
-                },
-            ],
-            { cancelable: true }
-        );
+    // Trigger logout modal
+    const handleLogout = () => setModalVisible(true);
+
+    // Confirm logout
+    const confirmLogout = async () => {
+        try {
+            await logout();
+            setModalVisible(false);
+            router.replace('../home');
+        } catch (err) {
+            console.error('Logout failed:', err);
+        }
     };
 
     return (
@@ -61,7 +51,7 @@ export default function SettingsScreen() {
                 />
             </View>
 
-            {/* Placeholder for more settings */}
+            {/* Placeholder Settings */}
             <Pressable style={styles.settingItem} onPress={() => alert('Account Settings coming soon')}>
                 <Text style={styles.settingText}>Account</Text>
             </Pressable>
@@ -71,9 +61,39 @@ export default function SettingsScreen() {
             </Pressable>
 
             {/* Logout Button */}
-            <Pressable style={[styles.settingItem, { backgroundColor: '#ff3b30', justifyContent: 'center' }]} onPress={handleLogout}>
-                <Text style={[styles.settingText, { color: '#fff', fontWeight: 'bold' }]}>Logout</Text>
+            <Pressable style={[styles.settingItem, { justifyContent: 'center' }]} onPress={handleLogout}>
+                <Text style={[styles.settingText, { color: '#ff4d4d' }]}>Logout</Text>
             </Pressable>
+
+            {/* Logout Confirmation Modal */}
+            <Modal
+                visible={modalVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>
+                            Are you sure you want to logout, {user?.name || 'User'}?
+                        </Text>
+                        <View style={styles.modalButtons}>
+                            <Pressable
+                                style={[styles.modalButton, { backgroundColor: '#ccc' }]}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text>Cancel</Text>
+                            </Pressable>
+                            <Pressable
+                                style={[styles.modalButton, { backgroundColor: '#ff4d4d' }]}
+                                onPress={confirmLogout}
+                            >
+                                <Text style={{ color: '#fff' }}>Logout</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 }
@@ -91,4 +111,32 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     settingText: { color: '#fff', fontSize: 16, fontWeight: '500' },
+
+    // Modal styles
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 12,
+        width: '80%',
+    },
+    modalText: {
+        fontSize: 16,
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    modalButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+    },
 });
