@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 12,
         marginBottom: 10,
-        color: '#fee37f',
+        //color: '#fee37f',
     },
     tileText: { color: '#fff', fontWeight: '600' },
     container: { flex: 1, backgroundColor: '#121212', justifyContent: 'center', alignItems: 'center', padding: 16 },
