@@ -4,6 +4,11 @@ import { Account, Client, Databases, ID, Query } from "appwrite";
 const client = new Client()
     .setEndpoint("http://192.168.40.142/v1") // Tailscale IP
     .setProject("68c99e72002c3fb21bdf");
+const databases = new Databases(client);
+
+// Replace with your real database + collection IDs
+const DATABASE_ID = "your_database_id";
+const COLLECTION_ID = "user_progress";
 
 const account = new Account(client);
 
