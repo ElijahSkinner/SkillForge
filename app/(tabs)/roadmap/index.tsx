@@ -21,6 +21,11 @@ export default function RoadmapScreen() {
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
+    const [selectedLesson, setSelectedLesson] = React.useState<{
+        modId: number;
+        lessonIndex: number;
+        lessonName: string;
+    } | null>(null);
 
     // For tooltip popup
     const [popup, setPopup] = useState<{
