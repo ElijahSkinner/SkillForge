@@ -119,7 +119,7 @@ export default function RoadmapScreen() {
                         ))}
 
                         {/* Module Name */}
-                        <GradientText style={styles.sectionTitle}>{mod.name}</GradientText>
+                        <GradientText {sectionTitle}>{mod.name}</GradientText>
                     </View>
                 ))}
             </Animated.ScrollView>
