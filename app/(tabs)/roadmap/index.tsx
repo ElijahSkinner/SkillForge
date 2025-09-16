@@ -173,20 +173,31 @@ export default function RoadmapScreen() {
             {selectedLesson && (() => {
                 const mod = modules.find(m => m.id === selectedLesson.modId)!;
                 const lessonCount = mod.lessons.length;
-                const lessonNum = selectedLesson.lessonIndex;
-                const xp = getLessonXP(mod, selectedLesson.lessonIndex);
+
+                // Determine display name and number
+                const isUnitReview = selectedLesson.lessonIndex === 0;
+                const lessonNum = isUnitReview
+                    ? 'Unit Review'
+                    : lessonCount - selectedLesson.lessonIndex + 1;
+                const xp = isUnitReview
+                    ? mod.weight // Full module XP
+                    : Math.round(mod.weight / lessonCount);
 
                 return (
                     <View style={styles.modalOverlay}>
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>
-                                Lesson {lessonNum} / {lessonCount}
+                                {isUnitReview ? 'Unit Review' : `Lesson ${lessonNum} / ${lessonCount}`}
                             </Text>
-                            <Text style={styles.modalLessonName}>{selectedLesson.lessonName}</Text>
+                            <Text style={styles.modalLessonName}>
+                                {selectedLesson.lessonName}
+                            </Text>
                             <Text style={styles.modalXP}>XP: {xp}</Text>
+
                             <Pressable
                                 style={styles.startButton}
                                 onPress={() => {
+                                    // Start lesson logic
                                     router.push({
                                         pathname: '/quiz/[cert]/[id]',
                                         params: { cert: selectedCert, id: String(mod.id) },
@@ -196,6 +207,7 @@ export default function RoadmapScreen() {
                             >
                                 <Text style={{ color: '#fff', fontWeight: 'bold' }}>Start</Text>
                             </Pressable>
+
                             <Pressable
                                 style={styles.closeButton}
                                 onPress={() => setSelectedLesson(null)}
@@ -205,6 +217,7 @@ export default function RoadmapScreen() {
                         </View>
                     </View>
                 );
+            
             })()}
         </SafeAreaView>
     );
