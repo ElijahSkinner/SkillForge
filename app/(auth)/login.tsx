@@ -16,7 +16,7 @@ export default function Login() {
 
         try {
             await login(email, password);
-            router.replace("//(tabs)/roadmap"); // redirect to home after login
+            router.replace("/(tabs)/roadmap"); // redirect to home after login
         } catch (err: any) {
             setError(err.message || "Login failed. Please try again.");
         } finally {
