@@ -217,7 +217,7 @@ export default function RoadmapScreen() {
                         </View>
                     </View>
                 );
-            
+
             })()}
         </SafeAreaView>
     );
