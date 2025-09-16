@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client } from "appwrite";
 
 const client = new Client()
-    .setEndpoint("http://100.x.y.z/v1") // Tailscale IP
+    .setEndpoint("http://192.168.40.142/v1") // Tailscale IP
     .setProject("68c99e72002c3fb21bdf");
 
 const account = new Account(client);
