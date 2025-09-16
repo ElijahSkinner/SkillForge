@@ -84,7 +84,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="glo"
+                name="glossary/Fl"
                 options={{
                     href: null,
                 }}
