@@ -28,7 +28,12 @@ export default function RoadmapScreen() {
         lessonIndex: number;
         lessonName: string;
     } | null>(null);
-    
+    function getLessonXP(mod: ModuleType, lessonIndex: number) {
+        const lessonCount = mod.lessons.length;
+        const lessonWeight = mod.weight / lessonCount;
+        return Math.round(lessonWeight); // Round to whole number
+    }
+
     // For tooltip popup
     const [popup, setPopup] = useState<{
         x: number;
