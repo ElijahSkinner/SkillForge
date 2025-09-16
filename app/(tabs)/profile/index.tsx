@@ -1,52 +1,34 @@
 import { View, Text, StyleSheet, ScrollView, Pressable, Button } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from '@/context/AuthContext'; // adjust path
-import { Query } from "appwrite";
-
-const DATABASE_ID = "your_database_id";
-const COLLECTION_ID = "user_progress";
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ProfileScreen() {
     const router = useRouter();
+    const { progress, databases } = useAuth();
 
     const [streak, setStreak] = useState(0);
-    const [docId, setDocId] = useState(null); // store progress doc id
-    const { progress, databases, user } = useAuth();
 
-    // Fetch user streak on load
+    // Initialize streak from progress
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const user = await account.get();
-                const res = await databases.listDocuments(
-                    DATABASE_ID,
-                    COLLECTION_ID,
-                    [Query.equal("userID", user.$id)]
-                );
-
-                if (res.documents.length > 0) {
-                    const doc = res.documents[0];
-                    setStreak(doc.currentStreak || 0);
-                    setDocId(doc.$id);
-                }
-            } catch (err) {
-                console.error("Error fetching streak:", err);
-            }
-        };
-        fetchData();
-    }, []);
+        if (progress) {
+            setStreak(progress.currentStreak || 0);
+        }
+    }, [progress]);
 
     // Update streak in DB
-    const updateStreak = async (newStreak) => {
+    const updateStreak = async (newStreak: number) => {
+        if (!progress) return;
         try {
-            if (!docId) return;
-            await databases.updateDocument(DATABASE_ID, COLLECTION_ID, docId, {
-                currentStreak: newStreak,
-            });
-            setStreak(newStreak);
+            const updated = await databases.updateDocument(
+                "68c9a6a6000cf7733309", // DATABASE_ID
+                "68c9a6b7002dfd514488", // COLLECTION_ID
+                progress.$id,
+                { currentStreak: newStreak }
+            );
+            setStreak(updated.currentStreak);
         } catch (err) {
             console.error("Error updating streak:", err);
         }
@@ -73,31 +55,31 @@ export default function ProfileScreen() {
                         <Button title="➕ Increase" onPress={() => updateStreak(streak + 1)} />
                         <Button title="➖ Decrease" onPress={() => updateStreak(Math.max(0, streak - 1))} />
                     </View>
+
+                    {/* Other overview info */}
+                    <Text>Total XP: {progress?.xp || 0}</Text>
+                    <Text>Current League: BAB</Text>
+                    <Text>Top Score: CompTIA Net+ - 95%</Text>
                 </View>
-                //other overview
-                <Text>Total XP: 420</Text>
-                <Text>Current League: BAB</Text>
-                <Text>Top Score: CompTIA Net+ - 95%</Text>
 
+                {/* Friends Box */}
+                <View style={styles.box}>
+                    <Text style={styles.boxTitle}>Friends</Text>
+                    <Text>No friends added yet</Text>
+                </View>
 
-            {/* Friends Box */}
-            <View style={styles.box}>
-                <Text style={styles.boxTitle}>Friends</Text>
-                <Text>No friends added yet</Text>
-            </View>
+                {/* Monthly Badges */}
+                <View style={styles.box}>
+                    <Text style={styles.boxTitle}>Monthly Badges</Text>
+                    <Text>🏅 3 Badges earned</Text>
+                </View>
 
-            {/* Monthly Badges */}
-            <View style={styles.box}>
-                <Text style={styles.boxTitle}>Monthly Badges</Text>
-                <Text>🏅 3 Badges earned</Text>
-            </View>
-
-            {/* Achievements */}
-            <View style={styles.box}>
-                <Text style={styles.boxTitle}>Achievements</Text>
-                <Text>✅ Completed 1 module</Text>
-                <Text>✅ Logged in 5 days in a row</Text>
-            </View>
+                {/* Achievements */}
+                <View style={styles.box}>
+                    <Text style={styles.boxTitle}>Achievements</Text>
+                    <Text>✅ Completed 1 module</Text>
+                    <Text>✅ Logged in 5 days in a row</Text>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
@@ -108,5 +90,5 @@ const styles = StyleSheet.create({
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
     title: { color: '#fee37f', fontSize: 24, fontWeight: 'bold' },
     box: { backgroundColor: '#fee37f', borderRadius: 15, padding: 15, marginBottom: 15 },
-    boxTitle: { color: '222222', fontWeight: '700', marginBottom: 8 },
+    boxTitle: { color: '#222222', fontWeight: '700', marginBottom: 8 },
 });
