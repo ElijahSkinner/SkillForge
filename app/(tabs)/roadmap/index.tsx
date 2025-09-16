@@ -14,6 +14,7 @@ import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import {ModuleType} from "@/types/certs";
+import {ImageBackground} from "expo-image";
 
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 60, TILE_SPACING: 8 };
 
@@ -61,6 +62,12 @@ export default function RoadmapScreen() {
     }));
 
     return (
+        <ImageBackground
+            source={path}
+            style={{ flex: 1, width: 'auto' }}
+            resizeMode="cover"
+            imageStyle={{ resizeMode: 'cover', alignSelf: 'center' }}
+        >
         <SafeAreaView style={{ flex: 1 }}>
             <TopBar
                 currentStreak={123}
@@ -220,6 +227,7 @@ export default function RoadmapScreen() {
 
             })()}
         </SafeAreaView>
+            </ImageBackground>
     );
 }
 
