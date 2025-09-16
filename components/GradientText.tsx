@@ -10,7 +10,7 @@ type GradientTextProps = TextProps & {
 
 export default function GradientText({
                                          children,
-                                         colors = ['#222222', ],
+                                         colors = ['#222222', '#fee37f'],
                                          style,
                                          ...props
                                      }: GradientTextProps) {
