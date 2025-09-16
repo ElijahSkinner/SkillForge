@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Account, Client } from "appwrite";
+import { Account, Client, Databases, ID, Query } from "appwrite";
 
 const client = new Client()
     .setEndpoint("http://192.168.40.142/v1") // Tailscale IP
