@@ -76,3 +76,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useAuth = () => useContext(AuthContext);
+export const account = new Account(client);
+export const databases = new Databases(client);
