@@ -61,5 +61,5 @@ const styles = StyleSheet.create({
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
     title: { color: '#fee37f', fontSize: 24, fontWeight: 'bold' },
     box: { backgroundColor: '#fee37f', borderRadius: 15, padding: 15, marginBottom: 15 },
-    boxTitle: { color: '#222222', fontWeight: '700', marginBottom: 8 },
+    boxTitle: { color: '222222', fontWeight: '700', marginBottom: 8 },
 });
