@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 12,
         marginBottom: 10,
-        color: '#222222',
+        color: '#fee37f',
     },
     tileText: { color: '#fff', fontWeight: '600' },
     container: {
