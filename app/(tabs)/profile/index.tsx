@@ -14,6 +14,7 @@ export default function ProfileScreen() {
 
     const [streak, setStreak] = useState(0);
     const [docId, setDocId] = useState(null); // store progress doc id
+    const { progress, databases, user } = useAuth();
 
     // Fetch user streak on load
     useEffect(() => {
