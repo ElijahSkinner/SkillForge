@@ -14,7 +14,7 @@ import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import {ModuleType} from "@/types/certs";
-import {ImageBackground} from "expo-image";
+import {ImageBackground} from "react-native";
 import path from "@/assets/images/path.png";
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 60, TILE_SPACING: 8 };
 
