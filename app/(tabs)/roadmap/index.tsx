@@ -32,9 +32,6 @@ export default function RoadmapScreen() {
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
     const viewShotRef = useRef(null);
-    //debug
-    console.log('selectedCert:', selectedCert);
-    console.log('modules:', modules);
 
     const [selectedLesson, setSelectedLesson] = useState<{
         modId: number;
@@ -61,6 +58,9 @@ export default function RoadmapScreen() {
         name,
         score: 0,
     }));
+    //debug
+    console.log('selectedCert:', selectedCert);
+    console.log('modules:', modules);
 
     // Capture background color under a module label
     const sampleColor = async (modId: number, yPos: number) => {
