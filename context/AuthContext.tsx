@@ -62,7 +62,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setProgress(newDoc);
         }
     };
-
+    export const account = new Account(client);
+    export const databases = new Databases(client);
     const logout = async () => {
         await account.deleteSession("current");
         setUser(null);
