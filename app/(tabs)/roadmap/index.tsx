@@ -26,6 +26,7 @@ const TILE_SIZE = 60;
 const TILE_SPACING = 8;
 
 export default function RoadmapScreen() {
+    //debug
     console.log('selectedCert:', selectedCert);
     console.log('modules:', modules);
 
