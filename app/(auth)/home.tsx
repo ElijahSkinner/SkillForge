@@ -37,7 +37,7 @@ export default function RootHomeScreen() {
         setLoading(true);
         try {
             await login(email, password);
-            router.replace('/roadmap');
+            router.replace('../roadmap');
         } catch (err: any) {
             setError(err.message || "Login failed. Please try again.");
         } finally {
