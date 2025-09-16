@@ -21,12 +21,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             try {
                 const res = await account.get();
                 setUser(res);
+
+                // Fetch progress doc
+                const result = await databases.listDocuments(
+                    DATABASE_ID,
+                    COLLECTION_ID,
+                    [Query.equal("userID", res.$id)]
+                );
+
+                if (result.total > 0) {
+                    setProgress(result.documents[0]);
+                }
             } catch {
                 setUser(null);
+                setProgress(null);
             }
         };
         checkSession();
     }, []);
+
 
     const login = async (email: string, password: string) => {
         await account.createEmailPasswordSession(email, password);
