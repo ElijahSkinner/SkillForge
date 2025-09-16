@@ -84,7 +84,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="glossary/Flashcards.tsx"
+                name="glossary/Flashcards"
                 options={{
                     href: null,
                 }}
