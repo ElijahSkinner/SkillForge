@@ -105,31 +105,30 @@ export default function RoadmapScreen() {
                         </Pressable>
 
                         {/* Lesson Tiles */}
-                        {mod.lessons.map((lesson, index) => {
-                            const number = index + 1; // dynamic
-                            return (
-                                <Pressable
-                                    key={`${mod.id}-${number}`}
-                                    style={{
-                                        width: TILE_SIZE,
-                                        height: TILE_SIZE,
-                                        marginBottom: TILE_SPACING,
-                                        borderRadius: 12,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
-                                    }}
-                                    onPress={() =>
-                                        setSelectedLesson({
-                                            modId: mod.id,
-                                            lessonIndex: number,
-                                            lessonName: lesson.name,
-                                        })
-                                    }
-                                >
-                                    <Text style={styles.tileText}>{number}</Text>
-                                </Pressable>
-                            );
+                        {mod.lessons.map((lesson, index) => (
+                            <Pressable
+                                key={`${mod.id}-${index}`}
+                                style={[styles.lessonTile, { backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f' }]}
+                                onPress={(e) => {
+                                    e.target.measure((fx, fy, width, height, px, py) => {
+                                        setPopup({
+                                            x: px,
+                                            y: py - 80,
+                                            width,
+                                            data: {
+                                                type: 'lesson',
+                                                moduleName: mod.name,
+                                                lessonNumber: index + 1,
+                                                lessonName: lesson.name,
+
+                                            },
+                                        });
+                                    });
+                                }}
+                            >
+                                <Text style={styles.tileText}>{index + 1}</Text>
+                            </Pressable>
+                        ))}
 
                         {/* Module Name */}
                         <Text style={styles.sectionTitle}>{mod.name}</Text>
