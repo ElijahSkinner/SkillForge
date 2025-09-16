@@ -57,7 +57,7 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#666666' },
+    container: { flex: 1, backgroundColor: '#121212' },
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
     title: { color: 'fff', fontSize: 24, fontWeight: 'bold' },
     box: { backgroundColor: '#1e1e1e', borderRadius: 15, padding: 15, marginBottom: 15 },
