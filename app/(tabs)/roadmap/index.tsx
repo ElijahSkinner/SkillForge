@@ -106,11 +106,12 @@ export default function RoadmapScreen() {
 
 
                         {/* Lesson Tiles */}
-                        {mod.lessons.map((lesson, index) => {
-                            const number = index + 1; // dynamic
+                        {[...mod.lessons].reverse().map((lesson, index) => {
+                            const lessonIndex = mod.lessons.length - 1 - index; // actual index in array
+                            const displayNumber = index + 1; // 1,2,3… bottom-to-top
                             return (
                                 <Pressable
-                                    key={`${mod.id}-${number}`}
+                                    key={`${mod.id}-${displayNumber}`}
                                     style={{
                                         width: TILE_SIZE,
                                         height: TILE_SIZE,
@@ -123,14 +124,14 @@ export default function RoadmapScreen() {
                                     onPress={() =>
                                         setSelectedLesson({
                                             modId: mod.id,
-                                            lessonIndex: number,
+                                            lessonIndex: lessonIndex, // actual index in lessons array
                                             lessonName: lesson.name,
                                         })
                                     }
                                 >
-                                    <Text style={styles.tileText}>{number}</Text>
+                                    <Text style={styles.tileText}>{displayNumber}</Text>
                                 </Pressable>
-                        );
+                            );
                         })}
 
                         {/* Module Name */}
