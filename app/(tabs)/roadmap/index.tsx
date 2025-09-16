@@ -15,23 +15,16 @@ import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import path from '@/assets/images/path.png';
-import { ModuleType } from '@/types/certs';
-
-import ViewShot, { captureRef } from 'react-native-view-shot';
-import * as ImageManipulator from 'expo-image-manipulator';
-import Color from 'color';
 
 const { height: screenHeight } = Dimensions.get('window');
 const TILE_SIZE = 60;
 const TILE_SPACING = 8;
 
 export default function RoadmapScreen() {
-
     const { selectedCert } = useCert();
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
-    const viewShotRef = useRef(null);
 
     const [selectedLesson, setSelectedLesson] = useState<{
         modId: number;
@@ -39,18 +32,18 @@ export default function RoadmapScreen() {
         lessonName: string;
     } | null>(null);
 
-    const [dynamicColors, setDynamicColors] = useState<{ [key: number]: string }>({});
-
     if (!selectedCert)
-        return <View style={styles.container}>
-            <Text style={styles.message}>Please select a certification first.</Text>
-            <Pressable
-                style={styles.button}
-                onPress={() => router.push('../course')} // adjust to your course selection route
-            >
-                <Text style={{ color: '#fff', fontWeight: 'bold' }}>Select a Cert</Text>
-            </Pressable>
-        </View>;
+        return (
+            <View style={styles.container}>
+                <Text style={styles.message}>Please select a certification first.</Text>
+                <Pressable
+                    style={styles.button}
+                    onPress={() => router.push('../course')}
+                >
+                    <Text style={{ color: '#fff', fontWeight: 'bold' }}>Select a Cert</Text>
+                </Pressable>
+            </View>
+        );
 
     const modules = CERTS_ROADMAP[selectedCert];
     const enrolledCourses = Object.keys(CERTS_ROADMAP).map((name, idx) => ({
@@ -58,42 +51,6 @@ export default function RoadmapScreen() {
         name,
         score: 0,
     }));
-    //debug
-    console.log('selectedCert:', selectedCert);
-    console.log('modules:', modules);
-
-    // Capture background color under a module label
-    const sampleColor = async (modId: number, yPos: number) => {
-        if (!viewShotRef.current) return;
-        try {
-            const uri = await captureRef(viewShotRef, {
-                format: 'png',
-                quality: 0.8,
-                result: 'base64',
-                width: 20,
-                height: 20,
-            });
-
-            // Downscale + get pixel data
-            const manipResult = await ImageManipulator.manipulateAsync(
-                `data:image/png;base64,${uri}`,
-                [{ resize: { width: 1, height: 1 } }],
-                { base64: true }
-            );
-
-            if (manipResult.base64) {
-                const base64Pixel = manipResult.base64;
-                // First pixel is the "average color"
-                const bgColor = `#${base64Pixel.substring(0, 6)}`;
-                const lum = Color(bgColor).luminosity();
-                const textColor = lum > 0.5 ? '#000' : '#fff';
-
-                setDynamicColors((prev) => ({ ...prev, [modId]: textColor }));
-            }
-        } catch (e) {
-            console.log('Color sample error', e);
-        }
-    };
 
     return (
         <ImageBackground
@@ -111,95 +68,79 @@ export default function RoadmapScreen() {
                         enrolledCourses={enrolledCourses}
                     />
 
-                    <ViewShot ref={viewShotRef} style={{ flex: 1 }}>
-                        <Animated.ScrollView
-                            ref={scrollViewRef}
-                            contentContainerStyle={{
-                                flexDirection: 'column-reverse',
-                                alignItems: 'center',
-                                paddingVertical: 30,
-                            }}
-                            onContentSizeChange={() => {
-                                scrollViewRef.current?.scrollToEnd({ animated: false });
-                            }}
-                            scrollEventThrottle={16}
-                            onScroll={Animated.event(
-                                [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                                { useNativeDriver: false }
-                            )}
-                        >
-                            {modules.map((mod) => (
-                                <View
-                                    key={mod.id}
-                                    style={{ marginBottom: 30, alignItems: 'center' }}
-                                    onLayout={(e) => {
-                                        const yPos = e.nativeEvent.layout.y;
-                                        sampleColor(mod.id, yPos);
+                    <Animated.ScrollView
+                        ref={scrollViewRef}
+                        contentContainerStyle={{
+                            flexDirection: 'column-reverse',
+                            alignItems: 'center',
+                            paddingVertical: 30,
+                        }}
+                        onContentSizeChange={() => {
+                            scrollViewRef.current?.scrollToEnd({ animated: false });
+                        }}
+                        scrollEventThrottle={16}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: false }
+                        )}
+                    >
+                        {modules.map((mod) => (
+                            <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
+                                {/* TOP: Q tile */}
+                                <Pressable
+                                    style={{
+                                        width: TILE_SIZE,
+                                        height: TILE_SIZE,
+                                        borderRadius: 12,
+                                        marginBottom: TILE_SPACING,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#444',
                                     }}
+                                    onPress={() =>
+                                        setSelectedLesson({
+                                            modId: mod.id,
+                                            lessonIndex: 0,
+                                            lessonName: `${mod.name} Unit Review`,
+                                        })
+                                    }
                                 >
-                                    {/* TOP: Q tile */}
-                                    <Pressable
-                                        style={{
-                                            width: TILE_SIZE,
-                                            height: TILE_SIZE,
-                                            borderRadius: 12,
-                                            marginBottom: TILE_SPACING,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            backgroundColor: '#444',
-                                        }}
-                                        onPress={() =>
-                                            setSelectedLesson({
-                                                modId: mod.id,
-                                                lessonIndex: 0,
-                                                lessonName: `${mod.name} Unit Review`,
-                                            })
-                                        }
-                                    >
-                                        <Text style={styles.tileText}>Q</Text>
-                                    </Pressable>
+                                    <Text style={styles.tileText}>Q</Text>
+                                </Pressable>
 
-                                    {/* Lesson tiles */}
-                                    {[...mod.lessons].reverse().map((lesson, index) => {
-                                        const number = mod.lessons.length - index;
-                                        return (
-                                            <Pressable
-                                                key={`${mod.id}-${number}`}
-                                                style={{
-                                                    width: TILE_SIZE,
-                                                    height: TILE_SIZE,
-                                                    marginBottom: TILE_SPACING,
-                                                    borderRadius: 12,
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
-                                                }}
-                                                onPress={() =>
-                                                    setSelectedLesson({
-                                                        modId: mod.id,
-                                                        lessonIndex: number,
-                                                        lessonName: lesson.name,
-                                                    })
-                                                }
-                                            >
-                                                <Text style={styles.tileText}>{number}</Text>
-                                            </Pressable>
-                                        );
-                                    })}
+                                {/* Lesson tiles */}
+                                {[...mod.lessons].reverse().map((lesson, index) => {
+                                    const number = mod.lessons.length - index;
+                                    return (
+                                        <Pressable
+                                            key={`${mod.id}-${number}`}
+                                            style={{
+                                                width: TILE_SIZE,
+                                                height: TILE_SIZE,
+                                                marginBottom: TILE_SPACING,
+                                                borderRadius: 12,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
+                                            }}
+                                            onPress={() =>
+                                                setSelectedLesson({
+                                                    modId: mod.id,
+                                                    lessonIndex: number,
+                                                    lessonName: lesson.name,
+                                                })
+                                            }
+                                        >
+                                            <Text style={styles.tileText}>{number}</Text>
+                                        </Pressable>
+                                    );
+                                })}
 
-                                    {/* BOTTOM: Chapter name with live-contrast color */}
-                                    <Animated.Text
-                                        style={[
-                                            styles.sectionTitle,
-                                            { color: dynamicColors[mod.id] || '#fee37f' },
-                                        ]}
-                                    >
-                                        {mod.name}
-                                    </Animated.Text>
-                                </View>
-                            ))}
-                        </Animated.ScrollView>
-                    </ViewShot>
+                                {/* Chapter name */}
+                                <Text style={styles.sectionTitle}>{mod.name}</Text>
+                            </View>
+                        ))}
+                    </Animated.ScrollView>
                 </View>
             </SafeAreaView>
         </ImageBackground>
@@ -234,5 +175,4 @@ const styles = StyleSheet.create({
         backgroundColor: '#27b0b9',
         borderRadius: 8,
     },
-
 });
