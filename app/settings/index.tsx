@@ -1,9 +1,39 @@
-import { View, Text, StyleSheet, Pressable, ScrollView, Switch } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, Switch, Alert } from 'react-native';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useAuth } from '@/context/AuthContext'; // make sure path is correct
 
 export default function SettingsScreen() {
     const [darkMode, setDarkMode] = useState(true);
     const [notifications, setNotifications] = useState(true);
+
+    const router = useRouter();
+    const { user, logout } = useAuth();
+
+    const handleLogout = () => {
+        if (!user) return;
+
+        Alert.alert(
+            'Confirm Logout',
+            `Are you sure you want to log out, ${user.name}?`,
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Yes, Logout',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await logout();
+                            router.replace('/(tabs)/home'); // navigate to home after logout
+                        } catch (err) {
+                            console.error('Logout failed:', err);
+                        }
+                    },
+                },
+            ],
+            { cancelable: true }
+        );
+    };
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={{ padding: 20 }}>
@@ -38,6 +68,11 @@ export default function SettingsScreen() {
 
             <Pressable style={styles.settingItem} onPress={() => alert('Privacy Settings coming soon')}>
                 <Text style={styles.settingText}>Privacy</Text>
+            </Pressable>
+
+            {/* Logout Button */}
+            <Pressable style={[styles.settingItem, { backgroundColor: '#ff3b30', justifyContent: 'center' }]} onPress={handleLogout}>
+                <Text style={[styles.settingText, { color: '#fff', fontWeight: 'bold' }]}>Logout</Text>
             </Pressable>
         </ScrollView>
     );
