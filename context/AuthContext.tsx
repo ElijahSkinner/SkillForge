@@ -5,7 +5,7 @@ import { Account, Client } from "appwrite";
 // Initialize Appwrite client
 const client = new Client()
     .setEndpoint("http://192.168.40.142/v1") // Appwrite VM IP
-    .setProject("68c99e72002c3fb21bdf"); // replace with your Appwrite Project ID
+    .setProject("68c99e72002c3fb21bdf"); 
 
 const account = new Account(client);
 
