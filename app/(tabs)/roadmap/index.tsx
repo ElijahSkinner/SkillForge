@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import {ModuleType} from "@/types/certs";
 import {ImageBackground} from "expo-image";
-import { path } from "@/assets/images"
+import { path } from "@/assets/images/icon.png"
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 60, TILE_SPACING: 8 };
 
 export default function RoadmapScreen() {
