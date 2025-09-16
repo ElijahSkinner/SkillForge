@@ -28,7 +28,7 @@ export default function RoadmapScreen() {
         lessonIndex: number;
         lessonName: string;
     } | null>(null);
-
+    
     // For tooltip popup
     const [popup, setPopup] = useState<{
         x: number;
