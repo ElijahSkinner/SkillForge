@@ -29,14 +29,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const login = async (email: string, password: string) => {
-        try {
-            // Create session
-            await account.createEmailPasswordSession(email, password);
-            const currentUser = await account.get();
-            setUser(currentUser);
-        } catch (err) {
-            console.log("Login error:", err);
-            throw err;
+        await account.createEmailPasswordSession(email, password);
+        const user = await account.get();
+        setUser(user);
+
+        // Look for existing progress doc
+        const result = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_ID,
+            [Query.equal("userID", user.$id)]
+        );
+
+        if (result.total > 0) {
+            // Found existing doc
+            setProgress(result.documents[0]);
+        } else {
+            // Create new progress doc
+            const newDoc = await databases.createDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                ID.unique(),
+                {
+                    userID: user.$id,
+                    currentCert: "",
+                    xp: 0,
+                    completedLessons: [],
+                    completedModules: [],
+                    maxStreakAllTime: 0,
+                    currentStreak: 0,
+                }
+            );
+            setProgress(newDoc);
         }
     };
 
