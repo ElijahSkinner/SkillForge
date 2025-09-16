@@ -24,7 +24,7 @@ export default function SettingsScreen() {
                     onPress: async () => {
                         try {
                             await logout();
-                            router.replace('/(tabs)/home'); // navigate to home after logout
+                            router.replace('/home'); // navigate to home after logout
                         } catch (err) {
                             console.error('Logout failed:', err);
                         }
