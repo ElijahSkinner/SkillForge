@@ -1,6 +1,6 @@
 // app/index.tsx
 import { Redirect } from "expo-router";
-import { useAuth } from "@/context/AuthContext"; // wherever you store auth
+import { useAuth } from "@/context/AuthContext";
 
 export default function Index() {
     const { user } = useAuth(); // `user` = logged-in user object or null
