@@ -154,7 +154,7 @@
 ## **8. Roadmap**
 
 * **Short-term:** Decide basic theme, create Network+ content, create xp tracking.
-* **Medium-term:** Add friends system, share progress, .
+* **Medium-term:** Add friends system, share progress, begin second course.
 * **Long-term:** Analytics dashboard, additional certifications, push notifications.
 
 ---
