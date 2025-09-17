@@ -130,7 +130,7 @@
     * Set auth to https instead of ssh then login to GitHub in Webstorm
 * **Dependencies / NPM Warnings:**
 
-    * Resolve conflicting versions for AsyncStorage, Firebase (if still installed).
+    * Resolve conflicting versions for AsyncStorage, Firebase.
 
 ---
 
