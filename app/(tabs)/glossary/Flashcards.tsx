@@ -1,4 +1,4 @@
-// ap p/(tabs)/glossary/Flashcards.tsx this is a test to push to giuthub
+// ap p/(tabs)/glossary/Flashcards.tsx this is a test to push to github
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
