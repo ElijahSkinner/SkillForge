@@ -153,7 +153,7 @@
 
 ## **8. Roadmap**
 
-* **Short-term:** Complete Quiz tab, refine leaderboard, improve UI.
+* **Short-term:** Decide basic them, .
 * **Medium-term:** Add friends system, share progress, daily reminders.
 * **Long-term:** Analytics dashboard, additional certifications, push notifications.
 
