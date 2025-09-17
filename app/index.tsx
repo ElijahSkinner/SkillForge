@@ -9,6 +9,5 @@ export default function Index() {
         return <Redirect href="/(auth)/home" />;
     }
 
-    // logged in → go straight to roadmap tab
     return <Redirect href="/(tabs)/roadmap" />;
 }
