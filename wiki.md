@@ -1,6 +1,4 @@
 
----
-
 # **SkillForge Wiki (Internal)**
 
 ---
