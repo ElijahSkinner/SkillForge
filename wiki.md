@@ -153,7 +153,7 @@
 
 ## **8. Roadmap**
 
-* **Short-term:** Decide basic them, .
+* **Short-term:** Decide basic them, up.
 * **Medium-term:** Add friends system, share progress, daily reminders.
 * **Long-term:** Analytics dashboard, additional certifications, push notifications.
 
