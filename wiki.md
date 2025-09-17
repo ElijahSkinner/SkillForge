@@ -5,8 +5,6 @@
 
 ## **1. Setup & Installation**
 
-**Purpose:** Guide developers on setting up the project locally.
-
 **Steps:**
 
 1. **Clone the repository**
@@ -73,8 +71,6 @@
 * `completedModules` (array of strings)
 * `maxStreakAllTime` (integer, default 0)
 * `currentStreak` (integer, default 0)
-
-> Note: Add other collections or attributes as project evolves.
 
 ---
 
