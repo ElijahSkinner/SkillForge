@@ -4,10 +4,10 @@ import { Account, Client, Databases, ID, Query } from "appwrite";
 const client = new Client()
     .setEndpoint("http://192.168.40.142/v1") // Tailscale IP
     .setProject("68c99e72002c3fb21bdf");
+
 const databases = new Databases(client);
 const DATABASE_ID = "68c9a6a6000cf7733309";
 const COLLECTION_ID = "68c9a6b7002dfd514488";
-
 const account = new Account(client);
 
 const AuthContext = createContext<any>(null);
@@ -15,6 +15,7 @@ const AuthContext = createContext<any>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<any>(null);
     const [progress, setProgress] = useState<any>(null);
+    const [loading, setLoading] = useState(true); // 🔑 add loading
 
     useEffect(() => {
         const checkSession = async () => {
@@ -35,11 +36,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } catch {
                 setUser(null);
                 setProgress(null);
+            } finally {
+                setLoading(false); // 🔑 stop loading once check is complete
             }
         };
         checkSession();
     }, []);
-
 
     const login = async (email: string, password: string) => {
         await account.createEmailPasswordSession(email, password);
@@ -54,10 +56,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
 
         if (result.total > 0) {
-            // Found existing doc
             setProgress(result.documents[0]);
         } else {
-            // Create new progress doc
             const newDoc = await databases.createDocument(
                 DATABASE_ID,
                 COLLECTION_ID,
@@ -79,10 +79,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const logout = async () => {
         await account.deleteSession("current");
         setUser(null);
+        setProgress(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, progress, login, logout, databases, account }}>
+        <AuthContext.Provider
+            value={{ user, progress, login, logout, databases, account, loading }}
+        >
             {children}
         </AuthContext.Provider>
     );
