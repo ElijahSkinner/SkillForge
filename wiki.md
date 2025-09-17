@@ -119,7 +119,7 @@
 
     * Ensure correct API endpoint & project ID in `.env`.
     * Verify active session or login.
-    * 
+    * Check if expo is running with --tunnel 
 * **Expo Tunnel Issues:**
 
     * Use LAN or localhost mode to test connectivity.
