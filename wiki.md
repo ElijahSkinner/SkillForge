@@ -127,7 +127,7 @@
 
     * SSH key must be added to GitHub account.
     * Ensure WebStorm SSH settings are configured.
-    * Set 
+    * Set auth to https instead of ssh
 * **Dependencies / NPM Warnings:**
 
     * Resolve conflicting versions for AsyncStorage, Firebase (if still installed).
