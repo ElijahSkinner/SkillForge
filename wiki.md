@@ -119,6 +119,7 @@
 
     * Ensure correct API endpoint & project ID in `.env`.
     * Verify active session or login.
+    * 
 * **Expo Tunnel Issues:**
 
     * Use LAN or localhost mode to test connectivity.
