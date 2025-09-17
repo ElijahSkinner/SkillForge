@@ -6,7 +6,6 @@ export default function Index() {
     const { user } = useAuth(); // `user` = logged-in user object or null
 
     if (!user) {
-        // not logged in → show login page
         return <Redirect href="/(auth)/home" />;
     }
 
