@@ -8,7 +8,7 @@ export default function QuizScreen() {
         <View style={styles.container}>
             <Text style={styles.title}>Quiz for {cert}</Text>
             <Text style={styles.subtitle}>Module ID: {id}</Text>
-            {/* You’ll put your actual quiz questions here */}
+            {/* actual quiz questions here */}
         </View>
     );
 }
