@@ -103,7 +103,7 @@
 * Run app via Expo (web, iOS, Android).
 * Test login/signup, progress creation, and updates.
 
-**Automated Tests (if any):**
+**Automated Tests:**
 
 * TBD / future integration with Jest or Detox.
 
