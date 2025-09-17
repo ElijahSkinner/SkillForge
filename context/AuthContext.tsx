@@ -15,7 +15,7 @@ const AuthContext = createContext<any>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<any>(null);
     const [progress, setProgress] = useState<any>(null);
-    const [loading, setLoading] = useState(true); // 🔑 add loading
+    const [loading, setLoading] = useState(true); //  add loading
 
     useEffect(() => {
         const checkSession = async () => {
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setUser(null);
                 setProgress(null);
             } finally {
-                setLoading(false); // 🔑 stop loading once check is complete
+                setLoading(false); //  stop loading once check is complete
             }
         };
         checkSession();
