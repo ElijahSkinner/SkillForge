@@ -15,7 +15,7 @@ Perfect — I’ll draft a structured, professional wiki for your private repo w
 1. **Clone the repository**
 
    ```bash
-   git clone git@github.com:YOUR_ORG/skillforge.git
+   git clone ggit@github.com:ElijahSkinner/SkillForge.git
    cd skillforge
    ```
 2. **Install dependencies**
