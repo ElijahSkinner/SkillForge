@@ -1,4 +1,4 @@
-// app/(tabs)/glossary/Flashcards.tsx
+// ap p/(tabs)/glossary/Flashcards.tsx
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
