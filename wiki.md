@@ -170,12 +170,3 @@ Perfect — I’ll draft a structured, professional wiki for your private repo w
 * **v1.1.0** - Added Streak tracking, XP updates, Quiz page scaffold.
 * **v1.2.0** - UI improvements, Settings and Logout modal.
 
----
-
-✅ **Tip:** Each section can have screenshots, diagrams, or code snippets added for clarity. Since this is internal, you can include internal API keys or sensitive endpoints in a secured, access-controlled way.
-
----
-
-I can also **make a ready-to-paste Markdown version** with proper formatting, headings, and table of contents for your repo wiki. That would be clean and professional.
-
-Do you want me to do that next?
