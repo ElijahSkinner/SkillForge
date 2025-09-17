@@ -1,4 +1,3 @@
-Perfect — I’ll draft a structured, professional wiki for your private repo with placeholders and guidance, keeping in mind that it’s only for internal use and may contain sensitive info. You can fill in screenshots, credentials, or project-specific details later.
 
 ---
 
