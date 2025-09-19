@@ -15,6 +15,7 @@ export default function RootLayout() {
     const colorScheme = useColorScheme();
 
     return (
+        
         <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <AppThemeProvider>
                 <CertProvider>
