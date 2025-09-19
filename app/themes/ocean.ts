@@ -1,6 +1,13 @@
 // app/themes/ocean.ts
 export const oceanTheme = {
     name: 'ocean',
+    userRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 6,
+        borderBottomColor: '#333',
+        borderBottomWidth: 1,
+    },
     colors: {
         // Deep ocean colors
         background: '#0d1b2a',
