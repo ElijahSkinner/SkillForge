@@ -19,11 +19,11 @@ export default function RootLayout() {
             <CertProvider>
                 <AuthProvider>
 
-                <Stack>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-                </Stack>
-            </AuthProvider> </CertProvider>
+                    <Stack>
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+                    </Stack>
+                </AuthProvider> </CertProvider>
             <StatusBar style="auto" />
         </ThemeProvider>
     );
