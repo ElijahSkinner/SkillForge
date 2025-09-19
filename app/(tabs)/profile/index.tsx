@@ -40,7 +40,7 @@ export default function ProfileScreen() {
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
             <ScrollView contentContainerStyle={{ padding: theme.spacing.md }}>
                 {/* Header */}
-                <View style={styles.header}>
+                <View style={{}}>
                     <Text style={theme.typography.h1}>Profile</Text>
 
                     <Pressable onPress={() => router.push('/settings')}>
