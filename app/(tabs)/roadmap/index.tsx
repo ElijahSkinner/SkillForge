@@ -121,7 +121,7 @@ export default function RoadmapScreen() {
                     Please select a certification first.
                 </ThemedText>
                 <Pressable
-                    style={[styles.button, { backgroundColor: theme.colors.primary }]}
+                    style={[styles.button, { backgroundColor: theme.colors.primaryDark }]}
                     onPress={() => router.push('../course')}
                 >
                     <ThemedText variant="button" color="textOnPrimary">
