@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import forge from "@/app/themes/forge.json";
-import space from "../themes/space.json";
-import ocean from "../themes/ocean.json";
+import space from "@/app/themes/space.json";
+import ocean from "@/app/themes/ocean.json";
 
 const themes: Record<string, any> = {
     forge,
