@@ -12,7 +12,7 @@ const LEAGUE_ORDER = [
 const LEAGUES = LEAGUE_ORDER.map((key, index) => ({
     name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
     color: theme.colors.leagues[key],
-    minXP: index * 300, 
+    minXP: index * 300,
 }));
 
 // Mock user XP data
