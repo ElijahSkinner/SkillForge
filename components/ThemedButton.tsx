@@ -18,7 +18,7 @@ export default function ThemedButton({ title, onPress }: Props) {
                 {
                     backgroundColor: theme.colors.primary,
                     borderRadius: theme.borderRadius,
-                    padding: theme.components.button.padding,
+                    padding: theme.button.padding,
                 },
             ]}
         >
