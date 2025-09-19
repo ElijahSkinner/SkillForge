@@ -88,7 +88,7 @@ export default function GlossaryScreen() {
                         key={obj}
                         style={{
                             height: 120,
-                            backgroundColor: theme.colors.Background,
+                            backgroundColor: theme.colors.cardBackground,
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginBottom: 12,
