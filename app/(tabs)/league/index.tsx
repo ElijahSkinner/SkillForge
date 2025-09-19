@@ -47,7 +47,7 @@ export default function LeagueScreen() {
                         key={league.name}
                         style={[
                             styles.leagueSection,
-                            { backgroundColor: league.color + '33' }
+                            { backgroundColor: league.color + '30' }
                         ]}
                     >
                         <Text style={[styles.leagueTitle, { color: league.color }]}>
