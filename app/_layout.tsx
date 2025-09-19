@@ -16,6 +16,7 @@ export default function RootLayout() {
 
     return (
         <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <AppThemeProvider></AppThemeProvider>
             <CertProvider>
                 <AuthProvider>
                     <Stack>
