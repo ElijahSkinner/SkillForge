@@ -40,7 +40,7 @@ export default function LeagueScreen() {
                         textAlign: "center",
                     }}
                 >
-                    Leader
+                    Leaderboard
                 </Text>
 
                 {LEAGUES.map((league, index) => {
