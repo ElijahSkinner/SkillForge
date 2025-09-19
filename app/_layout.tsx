@@ -5,7 +5,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { CertProvider } from '@/context/CertContext'; //
 import { AuthProvider } from "@/context/AuthContext";
-//import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 
 export const unstable_settings = {
