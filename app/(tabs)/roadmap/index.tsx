@@ -17,7 +17,7 @@ import { ModuleType } from "@/types/certs";
 import { ThemedView, ThemedText } from '@/components/themed';
 import TopBar from '@/components/TopBar';
 import LessonSelectionModal from '@/components/modals/LessonSelectionModal';
-import AnimatedProgressTile from '@/components/modals/AnimatedProgressTile';
+import AnimatedProgressTile from '@/components/AnimatedProgressTile';
 
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 70, TILE_SPACING: 12 };
 
@@ -85,28 +85,22 @@ export default function RoadmapScreen() {
             if (!newCompletedLessons.includes(lessonKey)) {
                 newCompletedLessons.push(lessonKey);
 
-                // Update in Appwrite
-                await databases.updateDocument(
-                    process.env.EXPO_PUBLIC_DATABASE_ID!,
-                    process.env.EXPO_PUBLIC_COLLECTION_ID!,
-                    progress.$id,
-                    {
-                        completedLessons: newCompletedLessons,
-                        xp: progress.xp + getLessonXP(
-                            modules.find(m => m.id === lesson.modId)!,
-                            lesson.lessonIndex
-                        )
-                    }
+                // Update in Appwrite using the context helper
+                await addCompletedLesson(
+                    selectedCert,
+                    lesson.modId,
+                    lesson.lessonIndex,
+                    getLessonXP(
+                        modules.find(m => m.id === lesson.modId)!,
+                        lesson.lessonIndex
+                    )
                 );
-
-                // Update local context
-                await updateUserProgress();
             }
 
             // Navigate to quiz
             router.push({
                 pathname: '/quiz/[cert]/[id]',
-                params: { cert: selectedCert, id: String(lesson.modId) },
+                params: { cert: selectedCert || '', id: String(lesson.modId) },
             });
         } catch (error) {
             console.error('Failed to update lesson progress:', error);
@@ -147,7 +141,7 @@ export default function RoadmapScreen() {
 
     return (
         <ImageBackground
-            source={theme.assets.roadmapBackground }
+            source={theme.assets.roadmapBackground || require('@/assets/images/path.png')}
             style={styles.backgroundImage}
             resizeMode="cover"
             imageStyle={styles.backgroundImageStyle}
@@ -174,7 +168,7 @@ export default function RoadmapScreen() {
                             { useNativeDriver: false }
                         )}
                     >
-                        {modules.map((module) => {
+                        {modules.slice().reverse().map((module) => {
                             const moduleProgress = getModuleProgress(module);
                             const isModuleComplete = moduleProgress === 1;
 
@@ -229,7 +223,7 @@ export default function RoadmapScreen() {
                                             >
                                                 <ThemedText
                                                     variant="h4"
-                                                    color={isLessonComplete ? "textOnPrimary" : "text"}
+                                                    color={isLessonComplete ? "success" : "text"}
                                                 >
                                                     {lessonNumber}
                                                 </ThemedText>
