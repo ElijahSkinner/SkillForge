@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useCert } from '@/context/CertContext';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import {useTheme} from "@/context/ThemeContext";
-
+import ThemedButton from "@/components/ThemedButton";
 
 export default function CourseScreen() {
     const router = useRouter();
