@@ -119,8 +119,13 @@ export default function ProfileScreen() {
                 </View>
 
                 {/* Achievements */}
-                <View style={styles.box}>
-                    <Text style={styles.boxTitle}>Achievements</Text>
+                <View style={{
+                    backgroundColor: theme.colors.surface,
+                    borderRadius: theme.borderRadius.lg,
+                    padding: theme.spacing.md,
+                    marginBottom: theme.spacing.md,
+                }}>
+                    <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Achievements</Text>
                     <Text>✅ Completed 1 module</Text>
                     <Text>✅ Logged in 5 days in a row</Text>
                 </View>
