@@ -1,5 +1,5 @@
 // app/(tabs)/glossary/index.tsx
-import 
+import { useTheme} from '@/context/ThemeContext';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useCert } from '@/context/CertContext';
