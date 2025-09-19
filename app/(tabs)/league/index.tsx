@@ -28,6 +28,7 @@ const MOCK_USERS = [
 
 
 export default function LeagueScreen() {
+    const { theme } = useTheme();
 
     return (
 <SafeAreaView style={{ flex: 1}}>
