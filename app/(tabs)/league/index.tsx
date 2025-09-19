@@ -30,7 +30,7 @@ export default function LeagueScreen() {
     return (
 <SafeAreaView style={{ flex: 1}}>
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
-            <Text style={theme.colors.h1}>Forge Leagues</Text>
+            <Text style={styles.header}>Forge Leagues</Text>
 
             {LEAGUES.map((league, index) => {
                 const usersInLeague = MOCK_USERS.filter(
