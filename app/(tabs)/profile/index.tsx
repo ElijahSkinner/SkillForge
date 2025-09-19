@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import {useTheme} from "@/context/ThemeContext";
+const { theme, themeName, changeTheme, availableThemes } = useTheme();
 
 export default function ProfileScreen() {
     const router = useRouter();
