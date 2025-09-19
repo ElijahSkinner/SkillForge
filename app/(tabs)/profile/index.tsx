@@ -56,7 +56,7 @@ export default function ProfileScreen() {
                     marginBottom: theme.spacing.md,
                 }}>
                     <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Overview</Text>
-                    <Text> Streak: {streak} 🔥</Text>
+                    <Text> style Streak: {streak} 🔥</Text>
 
                     {/* Test buttons */}
                     <View style={{ flexDirection: "row", marginTop: 10, gap: 10 }}>
