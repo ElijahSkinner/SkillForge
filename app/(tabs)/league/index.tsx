@@ -73,8 +73,7 @@ export default function LeagueScreen() {
                                     <View key={user.name} style={styles.userRow}>
                                         <Text style={{ color: theme.colors.text, textAlign: 'center', fontWeight: '600',
                                             width: 30, }}>{i + 1}</Text>
-                                        <Text style={{ color: theme.colors.text, textAlign: 'center', fontWeight: '600',
-                                            width: 30, }}>{user.name}</Text>
+                                        <Text style={{ color: theme.colors.text, flex: 1}}>{user.name}</Text>
                                         <Text style={styles.xp}>{user.xp} XP</Text>
                                     </View>
                                 ))
