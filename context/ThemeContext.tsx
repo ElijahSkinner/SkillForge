@@ -1,53 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { forgeTheme } from "@/app/themes/forge";
-// We'll create these properly
-// import { spaceTheme } from "@/app/themes/space";
-// import { oceanTheme } from "@/app/themes/ocean";
-
-// For now, let's create placeholder themes until you build the full ones
-const spaceTheme = {
-    name: 'space',
-    colors: {
-        background: '#0a0a0f',
-        primary: '#4a90e2',
-        secondary: '#2d3748',
-        accent: '#63b3ed',
-        text: '#ffffff',
-        textSecondary: '#a0aec0',
-        success: '#27b0b9',
-        error: '#ff4d4d',
-    },
-    typography: {
-        title: { fontSize: 24, fontWeight: 'bold' as const },
-        subtitle: { fontSize: 18, fontWeight: '600' as const },
-        body: { fontSize: 16, fontWeight: 'normal' as const },
-        caption: { fontSize: 14, fontWeight: 'normal' as const },
-    },
-    spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 },
-    assets: {},
-};
-
-const oceanTheme = {
-    name: 'ocean',
-    colors: {
-        background: '#0d1b2a',
-        primary: '#006d75',
-        secondary: '#1b4965',
-        accent: '#62b6cb',
-        text: '#ffffff',
-        textSecondary: '#bee9e8',
-        success: '#27b0b9',
-        error: '#ff4d4d',
-    },
-    typography: {
-        title: { fontSize: 24, fontWeight: 'bold' as const },
-        subtitle: { fontSize: 18, fontWeight: '600' as const },
-        body: { fontSize: 16, fontWeight: 'normal' as const },
-        caption: { fontSize: 14, fontWeight: 'normal' as const },
-    },
-    spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 },
-    assets: {},
-};
+import { spaceTheme } from "@/app/themes/space";
+import { oceanTheme } from "@/app/themes/ocean";
 
 const themes = {
     forge: forgeTheme,
@@ -71,9 +25,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [themeName, setThemeName] = useState<ThemeName>('forge');
     const [theme, setTheme] = useState<Theme>(themes.forge);
 
-    // TODO: Load from Appwrite user preferences instead of AsyncStorage
+    // TODO: Move this to Appwrite user preferences later
     useEffect(() => {
-        // For now, keeping AsyncStorage but you should migrate this to Appwrite
         const loadTheme = async () => {
             try {
                 const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
@@ -95,7 +48,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             setThemeName(name);
             setTheme(themes[name]);
 
-            // TODO: Save to Appwrite user preferences
+            // TODO: Save to Appwrite user preferences instead
             try {
                 const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
                 await AsyncStorage.setItem("theme", name);
