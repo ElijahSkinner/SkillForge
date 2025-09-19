@@ -16,7 +16,6 @@ import { CERTS_ROADMAP } from '@/constants/certs';
 import {ModuleType} from "@/types/certs";
 import path from "@/assets/forge/path.png";
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 60, TILE_SPACING: 8 };
-import { useTheme} from '@/context/ThemeContext';
 
 export default function RoadmapScreen() {
     const { selectedCert } = useCert();
