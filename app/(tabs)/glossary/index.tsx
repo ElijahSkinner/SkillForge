@@ -120,7 +120,7 @@ export default function GlossaryScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: theme.colors,
+        backgroundColor: theme.colors.cardBackground,
         padding: 16,
     },
 
