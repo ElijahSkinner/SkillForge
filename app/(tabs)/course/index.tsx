@@ -16,7 +16,7 @@ export default function CourseScreen() {
             style={{ flex: 1, backgroundColor: theme.colors.background }}
             contentContainerStyle={{ alignItems: 'center', paddingVertical: 20 }}
             >
-            <Text style={styles.title}>
+            <Text style={[theme.typography]}>
                 Select a Certification
             </Text>
 
