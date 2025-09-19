@@ -59,7 +59,12 @@ export default function ProfileScreen() {
                     <Text>Streak: {streak} 🔥</Text>
 
                     {/* Test buttons */}
-                    <View style={{ flexDirection: "row", marginTop: 10, gap: 10 }}>
+                    <View style=style={{
+                        backgroundColor: theme.colors.surface,
+                        borderRadius: theme.borderRadius.lg,
+                        padding: theme.spacing.md,
+                        marginBottom: theme.spacing.md,
+                    }}>
                         <Pressable
                             onPress={() => updateStreak(streak + 1)}
                             android_ripple={{ color: theme.colors.ripple }}
