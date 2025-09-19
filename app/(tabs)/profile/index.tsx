@@ -41,7 +41,7 @@ export default function ProfileScreen() {
             <ScrollView contentContainerStyle={{ padding: theme.spacing.md }}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Text style={theme.typography.forge.title}>Profile</Text>
+                    <Text style={theme.typography.h1}>Profile</Text>
 
                     <Pressable onPress={() => router.push('/settings')}>
                         <Ionicons name="settings-outline" size={28} color="#fff" />
