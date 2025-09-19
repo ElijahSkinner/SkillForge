@@ -39,7 +39,7 @@ export default function LeagueScreen() {
         <Text style={{
             fontSize: 26,
             fontWeight: '700',
-            color: theme.colors.primary,
+            color: theme.colors.pr,
             marginBottom: 20,
             textAlign: 'center'
         }}>
@@ -71,7 +71,7 @@ export default function LeagueScreen() {
                                 .sort((a, b) => b.xp - a.xp)
                                 .map((user, i) => (
                                     <View key={user.name} style={styles.userRow}>
-                                        <Text style={<Text style={{color: theme.colors.text}}>{i + 1}</Text>}>{i + 1}</Text>
+                                        <Text style={styles.rank}>{i + 1}</Text>
                                         <Text style={styles.username}>{user.name}</Text>
                                         <Text style={styles.xp}>{user.xp} XP</Text>
                                     </View>
