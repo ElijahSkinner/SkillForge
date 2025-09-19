@@ -2,117 +2,92 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { forgeTheme } from "@/app/themes/forge";
 import { spaceTheme } from "@/app/themes/space";
 import { oceanTheme } from "@/app/themes/ocean";
+import { useAuth } from "@/context/AuthContext";
 
-// Define the base theme type structure that all themes must follow
-type BaseTheme = {
-    name: string;
-    colors: {
-        background: string;
-        surface: string;
-        surfaceVariant: string;
-        primary: string;
-        primaryDark: string;
-        primaryLight: string;
-        secondary: string;
-        secondaryDark: string;
-        secondaryLight: string;
-        accent: string;
-        accentDark: string;
-        accentLight: string;
-        text: string;
-        textSecondary: string;
-        textMuted: string;
-        textOnPrimary: string;
-        success: string;
-        error: string;
-        warning: string;
-        info: string;
-        cardBackground: string;
-        borderColor: string;
-        ripple: string;
-        [key: string]: any; // Allow additional theme-specific colors
-    };
-    typography: {
-        [key: string]: any; // Flexible typography structure
-    };
-    spacing: {
-        xs: number;
-        sm: number;
-        md: number;
-        lg: number;
-        xl: number;
-        xxl: number;
-    };
-    borderRadius: {
-        xs: number;
-        sm: number;
-        md: number;
-        lg: number;
-        xl: number;
-        round: number;
-    };
-    shadows: {
-        [key: string]: any;
-    };
-    gamification: {
-        [key: string]: any;
-    };
-    assets: {
-        [key: string]: any;
-    };
-};
-
-const themes: Record<string, BaseTheme> = {
-    forge: forgeTheme as BaseTheme,
-    space: spaceTheme as BaseTheme,
-    ocean: oceanTheme as BaseTheme,
+const themes = {
+    forge: forgeTheme,
+    space: spaceTheme,
+    ocean: oceanTheme,
 };
 
 type ThemeName = keyof typeof themes;
+type ThemeMode = 'light' | 'dark';
 
 interface ThemeContextType {
-    theme: BaseTheme;
+    theme: any; // Current active theme (light or dark variant)
     themeName: ThemeName;
+    isDarkMode: boolean;
     changeTheme: (name: ThemeName) => Promise<void>;
+    toggleDarkMode: () => Promise<void>;
     availableThemes: ThemeName[];
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+    const { progress, updateProgressField } = useAuth();
     const [themeName, setThemeName] = useState<ThemeName>('forge');
-    const [theme, setTheme] = useState<BaseTheme>(themes.forge);
+    const [isDarkMode, setIsDarkMode] = useState(true);
+    const [theme, setTheme] = useState(themes.forge.dark);
 
-    // TODO: Move this to Appwrite user preferences later
+    // Load theme preferences from Appwrite when user data is available
     useEffect(() => {
-        const loadTheme = async () => {
-            try {
-                const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
-                const stored = await AsyncStorage.getItem("theme");
-                if (stored && stored in themes) {
-                    const storedTheme = stored as ThemeName;
-                    setThemeName(storedTheme);
-                    setTheme(themes[storedTheme]);
-                }
-            } catch (error) {
-                console.log("Could not load theme preference:", error);
+        if (progress) {
+            const savedTheme = progress.selectedTheme || 'forge';
+            const savedDarkMode = progress.darkModeEnabled !== undefined ? progress.darkModeEnabled : true;
+
+            if (savedTheme in themes) {
+                setThemeName(savedTheme as ThemeName);
+                setIsDarkMode(savedDarkMode);
+                updateCurrentTheme(savedTheme as ThemeName, savedDarkMode);
             }
+        }
+    }, [progress]);
+
+    // Helper function to update the current active theme
+    const updateCurrentTheme = (name: ThemeName, darkMode: boolean) => {
+        const selectedTheme = themes[name];
+        const themeVariant = darkMode ? selectedTheme.dark : selectedTheme.light;
+
+        // Merge shared properties with the light/dark variant
+        const mergedTheme = {
+            ...selectedTheme,
+            ...themeVariant,
+            // Keep shared properties from the theme root
+            spacing: selectedTheme.spacing,
+            borderRadius: selectedTheme.borderRadius,
+            shadows: selectedTheme.shadows,
+            gamification: selectedTheme.gamification,
+            assets: selectedTheme.assets,
         };
-        loadTheme();
-    }, []);
+
+        setTheme(mergedTheme);
+    };
 
     const changeTheme = async (name: ThemeName) => {
         if (themes[name]) {
             setThemeName(name);
-            setTheme(themes[name]);
+            updateCurrentTheme(name, isDarkMode);
 
-            // TODO: Save to Appwrite user preferences instead
+            // Save to Appwrite
             try {
-                const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
-                await AsyncStorage.setItem("theme", name);
+                await updateProgressField('selectedTheme', name);
             } catch (error) {
                 console.log("Could not save theme preference:", error);
             }
+        }
+    };
+
+    const toggleDarkMode = async () => {
+        const newDarkMode = !isDarkMode;
+        setIsDarkMode(newDarkMode);
+        updateCurrentTheme(themeName, newDarkMode);
+
+        // Save to Appwrite
+        try {
+            await updateProgressField('darkModeEnabled', newDarkMode);
+        } catch (error) {
+            console.log("Could not save dark mode preference:", error);
         }
     };
 
@@ -120,7 +95,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         <ThemeContext.Provider value={{
             theme,
             themeName,
+            isDarkMode,
             changeTheme,
+            toggleDarkMode,
             availableThemes: Object.keys(themes) as ThemeName[]
         }}>
             {children}
