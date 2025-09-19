@@ -9,11 +9,7 @@ const LEAGUE_ORDER = [
     'adamantine', 'mithril'
 ];
 
-const LEAGUES = LEAGUE_ORDER.map((key, index) => ({
-    name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
-    color: theme.colors.leagues[key],
-    minXP: index * 300,
-}));
+
 
 // Mock user XP data
 const MOCK_USERS = [
@@ -29,7 +25,11 @@ const MOCK_USERS = [
 
 export default function LeagueScreen() {
     const { theme } = useTheme();
-
+    const LEAGUES = LEAGUE_ORDER.map((key, index) => ({
+        name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
+        color: theme.colors.leagues[key],
+        minXP: index * 300,
+    }));
     return (
 <SafeAreaView style={{ flex: 1}}>
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
