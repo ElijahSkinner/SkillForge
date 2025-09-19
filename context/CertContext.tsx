@@ -8,7 +8,7 @@ type Course = {
 };
 
 type CertContextType = {
-    selectedCert: string | null;
+    selectedCert: string ;
     setSelectedCert: (cert: string) => void;
     enrolledCourses: Course[];
     addCourse: (course: Course) => void;
