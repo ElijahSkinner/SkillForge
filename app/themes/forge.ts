@@ -225,7 +225,7 @@ export const forgeTheme = {
             locked: '#444444',
             available: '#708090', // Steel
             inProgress: '#ffa500', // Gold
-            completed: '#27b0b9', // Your success color
+            completed: '#27b0b9', // success color
         }
     },
     assets: {
