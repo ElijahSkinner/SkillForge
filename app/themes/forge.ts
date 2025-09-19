@@ -238,7 +238,7 @@ export const forgeTheme = {
     assets: {
         // These will be your theme-specific assets once organized
         logo: require('@/assets/images/new-logo.png'),
-        // roadmapBackground: require('@/assets/themes/forge/roadmap-bg.png'),
+        roadmapBackground: require('@/assets/themes/forge/roadmap-bg.png'),
         // When you organize assets:
         // badge: require('@/assets/themes/forge/badge.png'),
         // hammer: require('@/assets/themes/forge/hammer.png'),
