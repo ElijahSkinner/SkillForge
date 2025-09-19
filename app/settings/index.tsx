@@ -1,5 +1,5 @@
-// app/(tabs)/settings/index.tsx
-import React, { useState } from 'react';
+// app/(tabs)/profile/settings/index.tsx
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,11 +21,12 @@ import {
 
 export default function SettingsScreen() {
     const router = useRouter();
-    const { user, logout } = useAuth();
-    const { theme, themeName } = useTheme();
+    const { user, logout, progress, updateProgressField } = useAuth();
+    const { theme, themeName, isDarkMode, toggleDarkMode } = useTheme();
 
-    const [darkMode, setDarkMode] = useState(true);
+    // Local state for settings (synced with Appwrite)
     const [notifications, setNotifications] = useState(true);
+    const [soundEnabled, setSoundEnabled] = useState(true);
 
     // Modal states
     const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -34,6 +35,14 @@ export default function SettingsScreen() {
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
 
+    // Load settings from Appwrite when progress data is available
+    useEffect(() => {
+        if (progress) {
+            setNotifications(progress.notificationsEnabled ?? true);
+            setSoundEnabled(progress.soundEnabled ?? true);
+        }
+    }, [progress]);
+
     const handleLogout = async () => {
         try {
             await logout();
@@ -41,6 +50,30 @@ export default function SettingsScreen() {
             router.replace('/(auth)/home');
         } catch (err) {
             console.error('Logout failed:', err);
+        }
+    };
+
+    // Handle notifications toggle
+    const handleNotificationsToggle = async (value: boolean) => {
+        setNotifications(value);
+        try {
+            await updateProgressField('notificationsEnabled', value);
+        } catch (error) {
+            console.error('Failed to update notifications setting:', error);
+            // Revert on error
+            setNotifications(!value);
+        }
+    };
+
+    // Handle sound toggle
+    const handleSoundToggle = async (value: boolean) => {
+        setSoundEnabled(value);
+        try {
+            await updateProgressField('soundEnabled', value);
+        } catch (error) {
+            console.error('Failed to update sound setting:', error);
+            // Revert on error
+            setSoundEnabled(!value);
         }
     };
 
@@ -112,8 +145,13 @@ export default function SettingsScreen() {
 
                     <SettingCard>
                         <View style={styles.settingRow}>
-                            <ThemedText variant="body1">Dark Mode</ThemedText>
-                            <ThemedSwitch value={darkMode} onValueChange={setDarkMode} />
+                            <View style={{ flex: 1 }}>
+                                <ThemedText variant="body1">Dark Mode</ThemedText>
+                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                    {isDarkMode ? 'Dark theme enabled' : 'Light theme enabled'}
+                                </ThemedText>
+                            </View>
+                            <ThemedSwitch value={isDarkMode} onValueChange={toggleDarkMode} />
                         </View>
                     </SettingCard>
 
@@ -122,18 +160,67 @@ export default function SettingsScreen() {
 
                     <SettingCard>
                         <View style={styles.settingRow}>
-                            <ThemedText variant="body1">Notifications</ThemedText>
-                            <ThemedSwitch value={notifications} onValueChange={setNotifications} />
+                            <View style={{ flex: 1 }}>
+                                <ThemedText variant="body1">Notifications</ThemedText>
+                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                    Push notifications and reminders
+                                </ThemedText>
+                            </View>
+                            <ThemedSwitch value={notifications} onValueChange={handleNotificationsToggle} />
+                        </View>
+                    </SettingCard>
+
+                    <SettingCard>
+                        <View style={styles.settingRow}>
+                            <View style={{ flex: 1 }}>
+                                <ThemedText variant="body1">Sound Effects</ThemedText>
+                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                    App sounds and audio feedback
+                                </ThemedText>
+                            </View>
+                            <ThemedSwitch value={soundEnabled} onValueChange={handleSoundToggle} />
                         </View>
                     </SettingCard>
 
                     <SettingCard>
                         <Pressable onPress={() => alert('Privacy settings coming soon')}>
                             <View style={styles.settingRow}>
-                                <ThemedText variant="body1">Privacy</ThemedText>
+                                <View style={{ flex: 1 }}>
+                                    <ThemedText variant="body1">Privacy</ThemedText>
+                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                        Data and privacy controls
+                                    </ThemedText>
+                                </View>
                                 <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
                             </View>
                         </Pressable>
+                    </SettingCard>
+
+                    {/* Study Preferences */}
+                    <SectionHeader title="Study Preferences" />
+
+                    <SettingCard>
+                        <View style={styles.settingRow}>
+                            <View style={{ flex: 1 }}>
+                                <ThemedText variant="body1">Daily XP Goal</ThemedText>
+                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                    {progress?.dailyGoalXP || 50} XP per day
+                                </ThemedText>
+                            </View>
+                            <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
+                        </View>
+                    </SettingCard>
+
+                    <SettingCard>
+                        <View style={styles.settingRow}>
+                            <View style={{ flex: 1 }}>
+                                <ThemedText variant="body1">Study Reminder</ThemedText>
+                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                    Daily at {progress?.reminderTime || '4:20 PM'}
+                                </ThemedText>
+                            </View>
+                            <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
+                        </View>
                     </SettingCard>
 
                     {/* Logout Button */}
@@ -185,6 +272,7 @@ export default function SettingsScreen() {
             </SafeAreaView>
         </ThemedView>
     );
+}
 }
 
 // Helper Components
