@@ -1,9 +1,10 @@
 // components/modals/ReminderTimeModal.tsx
 import React, { useState } from 'react';
-import {View, Alert, Pressable, ScrollView} from 'react-native';
+import { View, Alert, ScrollView } from 'react-native';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
+import { notificationService } from '@/services/NotificationService';
 
 interface ReminderTimeModalProps {
     visible: boolean;
@@ -12,7 +13,7 @@ interface ReminderTimeModalProps {
 }
 
 export function ReminderTimeModal({ visible, onClose, currentTime }: ReminderTimeModalProps) {
-    const { updateProgressField } = useAuth();
+    const { updateProgressField, progress } = useAuth();
     const { theme } = useTheme();
 
     const [selectedHour, setSelectedHour] = useState(() => {
@@ -30,8 +31,40 @@ export function ReminderTimeModal({ visible, onClose, currentTime }: ReminderTim
 
         setLoading(true);
         try {
+            // Update time in database
             await updateProgressField('reminderTime', newTime);
-            Alert.alert('Success', `Study reminder set for ${formatTime12Hour(selectedHour, selectedMinute)}`);
+
+            // Schedule/reschedule notification if notifications are enabled
+            const notificationsEnabled = progress?.notificationsEnabled ?? true;
+            const soundEnabled = progress?.soundEnabled ?? true;
+
+            if (notificationsEnabled) {
+                const success = await notificationService.scheduleStudyReminder(
+                    newTime,
+                    notificationsEnabled,
+                    soundEnabled
+                );
+
+                if (success) {
+                    Alert.alert(
+                        'Reminder Set!',
+                        `Study reminder set for ${formatTime12Hour(selectedHour, selectedMinute)}. We'll send you a daily notification.`,
+                        [{ text: 'Got it!', style: 'default' }]
+                    );
+                } else {
+                    Alert.alert(
+                        'Reminder Saved',
+                        `Time saved, but we couldn't set up notifications. Please check your notification settings.`,
+                        [{ text: 'OK', style: 'default' }]
+                    );
+                }
+            } else {
+                Alert.alert(
+                    'Reminder Time Saved',
+                    `Time saved as ${formatTime12Hour(selectedHour, selectedMinute)}. Enable notifications in settings to receive reminders.`
+                );
+            }
+
             onClose();
         } catch (err: any) {
             Alert.alert('Error', err.message || 'Failed to update reminder time');
