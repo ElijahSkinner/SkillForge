@@ -40,7 +40,7 @@ export default function LeagueScreen() {
                         textAlign: "center",
                     }}
                 >
-                    Forge Leagues
+                    Leader
                 </Text>
 
                 {LEAGUES.map((league, index) => {
