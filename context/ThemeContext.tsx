@@ -36,7 +36,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
                     setThemeName(storedTheme);
                     setTheme(themes[storedTheme]);
                 }
-            } catch (error) {
+            } catch (error) {=
                 console.log("Could not load theme preference:", error);
             }
         };
