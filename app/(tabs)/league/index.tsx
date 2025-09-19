@@ -104,10 +104,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 15,
     },
-    noUsers: {
-        color: '#aaa',
-        fontStyle: 'italic',
-    },
+
 
     xp: {
         color: '#7ed321',
