@@ -10,7 +10,7 @@ interface StreakData {
 
 export class StreakService {
     private static instance: StreakService;
-    private updateProgressField: (field: string, value: any) => Promise<void>;
+    private updateProgressField?: (field: string, value: any) => Promise<void>;
 
     static getInstance(): StreakService {
         if (!StreakService.instance) {
@@ -278,3 +278,4 @@ export class StreakService {
 }
 
 // Export singleton instance
+export const streakService = StreakService.getInstance();
