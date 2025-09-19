@@ -53,7 +53,7 @@ export default function ProfileScreen() {
                     <Text>Streak: {streak} 🔥</Text>
 
                     {/* Test buttons */}
-                    <View style={{ flexDirection: "row", marginTop: 10, gap: 10 }}>
+                    <View style={{color: theme.colors.ripple, flexDirection: "row", marginTop: 10, gap: 10 }}>
                         <Button title="➕ Increase" onPress={() => updateStreak(streak + 1)} />
                         <Button title="➖ Decrease" onPress={() => updateStreak(Math.max(0, streak - 1))} />
                     </View>
