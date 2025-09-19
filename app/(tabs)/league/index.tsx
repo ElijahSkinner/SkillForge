@@ -41,8 +41,16 @@ export default function LeagueScreen() {
                 );
 
                 return (
-                    <View key={league.name} style={[styles.leagueSection, { backgroundColor: league.color + '33' }]}>
-                        <Text style={[styles.leagueTitle, { color: league.color }]}>{league.name}</Text>
+                    <View
+                        key={league.name}
+                        style={[
+                            styles.leagueSection,
+                            { backgroundColor: league.color + '33' } // using theme color
+                        ]}
+                    >
+                        <Text style={[styles.leagueTitle, { color: league.color }]}>
+                            {league.name}
+                        </Text>
                         {usersInLeague.length === 0 ? (
                             <Text style={styles.noUsers}>No users in this league yet</Text>
                         ) : (
