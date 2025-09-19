@@ -65,10 +65,7 @@ export const oceanTheme = {
         }
     },
     typography: {
-        h1: { fontSize: 32, fontWeight: '800' as const, color: '#006d75', flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 20 }, },
+        h1: { fontSize: 32, fontWeight: '800' as const, color: '#006d75'  },
         h2: { fontSize: 28, fontWeight: '700' as const, color: '#006d75' },
         h3: { fontSize: 24, fontWeight: '600' as const, color: '#ffffff' },
         h4: { fontSize: 20, fontWeight: '600' as const, color: '#ffffff' },
