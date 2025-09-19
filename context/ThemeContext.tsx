@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import forge from "@/themes/forge.json";
+import forge from "@/app/themes/forge.json";
 import space from "../themes/space.json";
 import ocean from "../themes/ocean.json";
 
