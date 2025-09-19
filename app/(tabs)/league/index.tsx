@@ -1,5 +1,7 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import {SafeAreaView} from "react-native-safe-area-context";
+import { useTheme } from '@/context/ThemeContext';
+
 
 // Forge-themed leagues (10 total) with individual colors
 const LEAGUES = [
