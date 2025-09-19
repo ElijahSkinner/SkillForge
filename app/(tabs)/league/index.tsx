@@ -3,19 +3,17 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import { useTheme } from '@/context/ThemeContext';
 
 
-// Forge-themed leagues (10 total) with individual colors
-const LEAGUES = [
-    { name: 'Copper League', minXP: 0, color: '#b87333' },
-    { name: 'Bronze League', minXP: 100, color: '#cd7f32' },
-    { name: 'Iron League', minXP: 300, color: '#a19d94' },
-    { name: 'Steel League', minXP: 600, color: '#7b8a8b' },
-    { name: 'Silver League', minXP: 900, color: '#c0c0c0' },
-    { name: 'Gold League', minXP: 1200, color: '#ffd700' },
-    { name: 'Platinum League', minXP: 1500, color: '#e5e4e2' },
-    { name: 'Titanium League', minXP: 1800, color: '#878681' },
-    { name: 'Adamantine League', minXP: 2200, color: '#6e6e70' },
-    { name: 'Mithril League', minXP: 2600, color: '#a3d2ca' },
+const LEAGUE_ORDER = [
+    'copper', 'bronze', 'iron', 'steel',
+    'silver', 'gold', 'platinum', 'titanium',
+    'adamantine', 'mithril'
 ];
+
+const LEAGUES = LEAGUE_ORDER.map((key, index) => ({
+    name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
+    color: theme.colors.leagues[key],
+    minXP: index * 300, // or whatever XP thresholds you want
+}));
 
 // Mock user XP data
 const MOCK_USERS = [
