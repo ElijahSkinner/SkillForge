@@ -96,15 +96,9 @@ export default function ProfileScreen() {
                 </View>
 
                 {/* Friends Box */}
-                <View style={{
-                    backgroundColor: theme.colors.surface,
-                    borderRadius: theme.borderRadius.lg,
-                    padding: theme.spacing.md,
-                    marginBottom: theme.spacing.md,
-                }}>
-                    <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Overview</Text>
-                    <Text style= {{ color: theme.colors.textSecondary}}> Streak 🔥: {streak}</Text>
-
+                <View style={styles.box}>
+                    <Text style={styles.boxTitle}>Friends</Text>
+                    <Text>No friends added yet</Text>
                 </View>
 
                 {/* Monthly Badges */}
