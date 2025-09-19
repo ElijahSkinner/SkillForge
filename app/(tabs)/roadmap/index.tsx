@@ -8,6 +8,7 @@ import { ImageBackground,
     Animated,
     ScrollView,
 } from 'react-native';
+import { useTheme} from '@/context/ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TopBar from '@/components/TopBar';
 import { useCert } from '@/context/CertContext';
