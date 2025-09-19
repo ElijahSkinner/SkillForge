@@ -175,7 +175,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 updateEmail,
                 updatePassword,
                 databases,
-                account
+                account,
+                updateUserProgress
             }}
         >
             {children}
