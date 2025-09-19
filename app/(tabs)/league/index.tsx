@@ -74,7 +74,7 @@ export default function LeagueScreen() {
                                             key={user.name}
                                             style={[
                                                 styles.userRow,
-                                                { borderBottomColor: theme.colors.border },
+                                                { borderBottomColor: theme.colors.border  },
                                             ]}
                                         >
                                             <Text
