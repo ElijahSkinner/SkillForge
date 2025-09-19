@@ -63,7 +63,7 @@ export default function GlossaryScreen() {
                         padding: 10,
                         backgroundColor: theme.colors.cardBackground,
                         borderRadius: 8,
-                        marginHorizontal: theme,
+                        marginHorizontal: theme.,
                     }}
                     onPress={() => {
                         setTab(t as any);
