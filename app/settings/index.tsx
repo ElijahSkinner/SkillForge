@@ -18,6 +18,7 @@ import {
     ChangePasswordModal,
     LogoutConfirmModal,
 } from '@/components/modals';
+import { XPGoalModal, ReminderTimeModal } from '@/components/modals/StudyPreferences';
 
 export default function SettingsScreen() {
     const router = useRouter();
@@ -34,6 +35,8 @@ export default function SettingsScreen() {
     const [showAccountModal, setShowAccountModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
+    const [showXPGoalModal, setShowXPGoalModal] = useState(false);
+    const [showReminderModal, setShowReminderModal] = useState(false);
 
     // Load settings from Appwrite when progress data is available
     useEffect(() => {
@@ -200,27 +203,31 @@ export default function SettingsScreen() {
                     <SectionHeader title="Study Preferences" />
 
                     <SettingCard>
-                        <View style={styles.settingRow}>
-                            <View style={{ flex: 1 }}>
-                                <ThemedText variant="body1">Daily XP Goal</ThemedText>
-                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                    {progress?.dailyGoalXP || 50} XP per day
-                                </ThemedText>
+                        <Pressable onPress={() => setShowXPGoalModal(true)}>
+                            <View style={styles.settingRow}>
+                                <View style={{ flex: 1 }}>
+                                    <ThemedText variant="body1">Daily XP Goal</ThemedText>
+                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                        {progress?.dailyGoalXP || 50} XP per day
+                                    </ThemedText>
+                                </View>
+                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
                             </View>
-                            <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
-                        </View>
+                        </Pressable>
                     </SettingCard>
 
                     <SettingCard>
-                        <View style={styles.settingRow}>
-                            <View style={{ flex: 1 }}>
-                                <ThemedText variant="body1">Study Reminder</ThemedText>
-                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                    Daily at {progress?.reminderTime || '4:20 PM'}
-                                </ThemedText>
+                        <Pressable onPress={() => setShowReminderModal(true)}>
+                            <View style={styles.settingRow}>
+                                <View style={{ flex: 1 }}>
+                                    <ThemedText variant="body1">Study Reminder</ThemedText>
+                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                        Daily at {progress?.reminderTime || '4:20 PM'}
+                                    </ThemedText>
+                                </View>
+                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
                             </View>
-                            <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
-                        </View>
+                        </Pressable>
                     </SettingCard>
 
                     {/* Logout Button */}
@@ -269,11 +276,23 @@ export default function SettingsScreen() {
                     onClose={() => setShowLogoutModal(false)}
                     onConfirm={handleLogout}
                 />
+
+                <XPGoalModal
+                    visible={showXPGoalModal}
+                    onClose={() => setShowXPGoalModal(false)}
+                    currentGoal={progress?.dailyGoalXP || 50}
+                />
+
+                <ReminderTimeModal
+                    visible={showReminderModal}
+                    onClose={() => setShowReminderModal(false)}
+                    currentTime={progress?.reminderTime || '16:20'}
+                />
             </SafeAreaView>
         </ThemedView>
     );
 }
-
+}
 
 // Helper Components
 function SectionHeader({ title }: { title: string }) {
