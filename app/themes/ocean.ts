@@ -102,5 +102,5 @@ export const oceanTheme = {
         progress: { background: '#415a77', fill: '#006d75', fillSecondary: '#62b6cb' },
         modules: { locked: '#415a77', available: '#1b4965', inProgress: '#006d75', completed: '#2dd4bf' }
     },
-    assets: { logo: require('@/assets/images/new-logo.png') }
+    assets: { logo: require('@/assets/images/new-logo.png',) }
 };
