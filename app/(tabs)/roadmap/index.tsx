@@ -15,7 +15,7 @@ import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
 import {ModuleType} from "@/types/certs";
-import path from "@/assets/forge/path.png";
+//import path from "@/assets/forge/path.png";
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 60, TILE_SPACING: 8 };
 
 export default function RoadmapScreen() {
