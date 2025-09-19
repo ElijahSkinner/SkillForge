@@ -1,6 +1,5 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import {SafeAreaView} from "react-native-safe-area-context";
-import { useTheme} from '@/context/ThemeContext';
 
 // Forge-themed leagues (10 total) with individual colors
 const LEAGUES = [
@@ -16,7 +15,6 @@ const LEAGUES = [
     { name: 'Mithril League', minXP: 2600, color: '#a3d2ca' },
 ];
 
-
 // Mock user XP data
 const MOCK_USERS = [
     { name: 'Elijah', xp: 350 },
@@ -30,7 +28,6 @@ const MOCK_USERS = [
 
 export default function LeagueScreen() {
     return (
-
 <SafeAreaView style={{ flex: 1}}>
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
             <Text style={theme.colors.h1}>Forge Leagues</Text>
