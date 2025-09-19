@@ -1,6 +1,13 @@
 // themes/forge.ts
 export const forgeTheme = {
     name: 'forge',
+    userRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 6,
+        borderBottomColor: '#333',
+        borderBottomWidth: 1,
+    },
     colors: {
         // Base colors - Dark forge aesthetic
         background: '#0d0e12',        // Very dark blue-black (your current bg)
