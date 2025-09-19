@@ -16,7 +16,8 @@ export default function CourseScreen() {
             style={{ flex: 1, backgroundColor: theme.colors.background }}
             contentContainerStyle={{ alignItems: 'center', paddingVertical: 20 }}
             >
-            <Text style={styles.title}>Select a Certification</Text>
+            <Text style={styles.title}>
+                Select a Certification</Text>
 
             {certs.map((cert) => (
                 <Pressable
