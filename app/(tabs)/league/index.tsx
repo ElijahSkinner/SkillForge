@@ -16,6 +16,17 @@ const MOCK_USERS = [
 export default function LeagueScreen() {
     const { theme } = useTheme();
 
+    // Add null check for theme.colors.leagues
+    if (!theme || !theme.colors || !theme.colors.leagues) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: '#fff', fontSize: 16 }}>Loading leagues...</Text>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
     // Build leagues dynamically from theme
     const LEAGUES = Object.entries(theme.colors.leagues).map(
         ([key, color], index) => ({
@@ -74,7 +85,7 @@ export default function LeagueScreen() {
                                             key={user.name}
                                             style={[
                                                 styles.userRow,
-                                                { borderBottomColor: theme.colors.border },
+                                                { borderBottomColor: theme.colors.borderColor },
                                             ]}
                                         >
                                             <Text
