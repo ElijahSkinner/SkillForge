@@ -134,10 +134,3 @@ export default function ProfileScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#121212' },
-    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-    title: { color: '#fee37f', fontSize: 24, fontWeight: 'bold' },
-    box: { backgroundColor: '#fee37f', borderRadius: 15, padding: 15, marginBottom: 15 },
-    boxTitle: { color: '#222222', fontWeight: '700', marginBottom: 8 },
-});
