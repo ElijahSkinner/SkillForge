@@ -39,7 +39,7 @@ export default function LeagueScreen() {
         <Text style={{
             fontSize: 26,
             fontWeight: '700',
-            color: theme.colors.pr,
+            color: theme.colors.primary,
             marginBottom: 20,
             textAlign: 'center'
         }}>
