@@ -9,7 +9,7 @@ import {useTheme} from "@/context/ThemeContext";
 export default function ProfileScreen() {
     const router = useRouter();
     const { progress, databases } = useAuth();
-    const { theme, themeName, changeTheme, availableThemes } = useTheme();
+    const { theme } = useTheme();
 
     const [streak, setStreak] = useState(0);
 
