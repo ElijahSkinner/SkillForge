@@ -126,8 +126,8 @@ export default function ProfileScreen() {
                     marginBottom: theme.spacing.md,
                 }}>
                     <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Achievements</Text>
-                    <Text>✅ Completed 1 module</Text>
-                    <Text>✅ Logged in 5 days in a row</Text>
+                    <Text style= {{ color: theme.colors.textSecondary}}>✅ Completed 1 module</Text>
+                    <Text style= {{ color: theme.colors.textSecondary}}>✅ Logged in 5 days in a row</Text>
                 </View>
             </ScrollView>
         </SafeAreaView>
