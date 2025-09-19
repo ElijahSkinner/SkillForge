@@ -21,16 +21,14 @@ export default function CourseScreen() {
             </Text>
 
             {certs.map((cert) => (
-                <Pressable
+                <ThemedButton
                     key={cert}
-                    style={styles.certButton}
+                    title={cert}
                     onPress={() => {
                         setSelectedCert(cert);
-                        router.push('/(tabs)/roadmap');
+                        router.push("/(tabs)/roadmap");
                     }}
-                >
-                    <Text style={styles.certButtonText}>{cert}</Text>
-                </Pressable>
+                />
             ))}
         </ScrollView>
     );
