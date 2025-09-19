@@ -40,16 +40,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [progress, setProgress] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    // Initialize services after login/registration
+    // Initialize services after login/registration - Fixed order
     useEffect(() => {
-        if (progress && updateProgressField) {
-            // Initialize streak service with update function
+        if (progress) {
+            // Initialize streak service first (after updateProgressField is defined)
             streakService.initialize(updateProgressField);
 
-            // Initialize background streak monitoring
+            // Then initialize background streak monitoring
             backgroundStreakService.initialize(() => progress);
         }
-    }, [progress, updateProgressField]);
+    }, [progress]); // Removed updateProgressField dependency since it's defined in this component
 
     useEffect(() => {
         const checkSession = async () => {
