@@ -15,7 +15,6 @@ const LEAGUES = [
     { name: 'Adamantine League', minXP: 2200, color: '#6e6e70' },
     { name: 'Mithril League', minXP: 2600, color: '#a3d2ca' },
 ];
-const { theme } = useTheme();
 
 
 // Mock user XP data
