@@ -14,7 +14,7 @@ export default function CourseScreen() {
     return (
         <ScrollView
             style={{ flex: 1, backgroundColor: theme.colors.background }}
-            content
+            contentContainerStyle={{ alignItems: 'center', paddingVertical: 20 }}
             >
             <Text style={styles.title}>Select a Certification</Text>
 
