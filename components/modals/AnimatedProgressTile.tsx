@@ -1,17 +1,18 @@
 // components/AnimatedProgressTile.tsx
 import React, { useEffect, useRef } from 'react';
-import { Pressable, Animated, View, PressableProps } from 'react-native';
+import { Pressable, Animated, View, PressableProps, ViewStyle } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-interface AnimatedProgressTileProps extends PressableProps {
+interface AnimatedProgressTileProps extends Omit<PressableProps, 'style'> {
     size: number;
     progress: number; // 0 to 1
     backgroundColor?: string;
     progressColor?: string;
     strokeWidth?: number;
     children?: React.ReactNode;
+    style?: ViewStyle;
 }
 
 export default function AnimatedProgressTile({
