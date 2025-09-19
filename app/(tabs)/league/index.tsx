@@ -2,7 +2,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import {SafeAreaView} from "react-native-safe-area-context";
 import { useTheme } from '@/context/ThemeContext';
 
-
+const { theme } = useTheme();
 const LEAGUE_ORDER = [
     'copper', 'bronze', 'iron', 'steel',
     'silver', 'gold', 'platinum', 'titanium',
@@ -25,7 +25,7 @@ const MOCK_USERS = [
     { name: 'Isabella', xp: 2800 },
     { name: 'Oliver', xp: 1900 },
 ];
-const { theme } = useTheme();
+
 
 export default function LeagueScreen() {
     return (
@@ -45,7 +45,7 @@ export default function LeagueScreen() {
                         key={league.name}
                         style={[
                             styles.leagueSection,
-                            { backgroundColor: league.color + '33' } 
+                            { backgroundColor: league.color + '33' }
                         ]}
                     >
                         <Text style={[styles.leagueTitle, { color: league.color }]}>
