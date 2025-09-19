@@ -1,3 +1,4 @@
+// app/(tabs)/profile/settings/index.tsx
 import React, { useState } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -8,20 +9,30 @@ import { useTheme } from '@/context/ThemeContext';
 import {
     ThemedView,
     ThemedText,
-    ThemedButton,
     ThemedSwitch,
-    ThemedModal
 } from '@/components/themed';
+import {
+    ThemeSelectionModal,
+    AccountInfoModal,
+    ChangeEmailModal,
+    ChangePasswordModal,
+    LogoutConfirmModal,
+} from '@/components/modals';
 
 export default function SettingsScreen() {
     const router = useRouter();
     const { user, logout } = useAuth();
-    const { theme, themeName, changeTheme, availableThemes } = useTheme();
+    const { theme, themeName } = useTheme();
 
     const [darkMode, setDarkMode] = useState(true);
     const [notifications, setNotifications] = useState(true);
+
+    // Modal states
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showThemeModal, setShowThemeModal] = useState(false);
+    const [showAccountModal, setShowAccountModal] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [showEmailModal, setShowEmailModal] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -33,22 +44,8 @@ export default function SettingsScreen() {
         }
     };
 
-    const handleThemeChange = async (newTheme: string) => {
-        await changeTheme(newTheme as any);
-        setShowThemeModal(false);
-    };
-
     const getThemeDisplayName = (theme: string) => {
         return theme.charAt(0).toUpperCase() + theme.slice(1);
-    };
-
-    const getThemeDescription = (theme: string) => {
-        const descriptions = {
-            forge: 'Fire and steel - Traditional blacksmith aesthetic',
-            space: 'Cosmic exploration - Futuristic space theme',
-            ocean: 'Deep sea adventure - Marine exploration theme'
-        };
-        return descriptions[theme as keyof typeof descriptions] || '';
     };
 
     const getThemeIcon = (theme: string) => {
@@ -72,23 +69,32 @@ export default function SettingsScreen() {
                         Settings
                     </ThemedText>
 
-                    {/* Theme Selection */}
+                    {/* Account Section */}
+                    <SectionHeader title="Account" />
+
                     <SettingCard>
-                        <Pressable
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }}
-                            onPress={() => setShowThemeModal(true)}
-                        >
+                        <Pressable onPress={() => setShowAccountModal(true)}>
+                            <View style={styles.settingRow}>
+                                <View style={{ flex: 1 }}>
+                                    <ThemedText variant="body1">Account Information</ThemedText>
+                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                        {user?.email}
+                                        {!user?.emailVerification && ' (Unverified)'}
+                                    </ThemedText>
+                                </View>
+                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
+                            </View>
+                        </Pressable>
+                    </SettingCard>
+
+                    {/* Appearance Section */}
+                    <SectionHeader title="Appearance" />
+
+                    <SettingCard>
+                        <Pressable style={styles.settingRow} onPress={() => setShowThemeModal(true)}>
                             <View style={{ flex: 1 }}>
                                 <ThemedText variant="body1">Theme</ThemedText>
-                                <ThemedText
-                                    variant="body2"
-                                    color="textSecondary"
-                                    style={{ marginTop: 2 }}
-                                >
+                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
                                     {getThemeDisplayName(themeName)}
                                 </ThemedText>
                             </View>
@@ -99,210 +105,107 @@ export default function SettingsScreen() {
                                     color={theme.colors.primary}
                                     style={{ marginRight: theme.spacing.sm }}
                                 />
-                                <Ionicons
-                                    name="chevron-forward"
-                                    size={20}
-                                    color={theme.colors.textMuted}
-                                />
+                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
                             </View>
                         </Pressable>
                     </SettingCard>
 
-                    {/* Dark Mode Toggle */}
                     <SettingCard>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
+                        <View style={styles.settingRow}>
                             <ThemedText variant="body1">Dark Mode</ThemedText>
-                            <ThemedSwitch
-                                value={darkMode}
-                                onValueChange={setDarkMode}
-                            />
+                            <ThemedSwitch value={darkMode} onValueChange={setDarkMode} />
                         </View>
                     </SettingCard>
 
-                    {/* Notifications Toggle */}
+                    {/* Preferences Section */}
+                    <SectionHeader title="Preferences" />
+
                     <SettingCard>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
+                        <View style={styles.settingRow}>
                             <ThemedText variant="body1">Notifications</ThemedText>
-                            <ThemedSwitch
-                                value={notifications}
-                                onValueChange={setNotifications}
-                            />
+                            <ThemedSwitch value={notifications} onValueChange={setNotifications} />
                         </View>
                     </SettingCard>
 
-                    {/* Account Settings */}
                     <SettingCard>
-                        <Pressable onPress={() => alert('Account Settings coming soon')}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }}>
-                                <ThemedText variant="body1">Account</ThemedText>
-                                <Ionicons
-                                    name="chevron-forward"
-                                    size={20}
-                                    color={theme.colors.textMuted}
-                                />
-                            </View>
-                        </Pressable>
-                    </SettingCard>
-
-                    {/* Privacy Settings */}
-                    <SettingCard>
-                        <Pressable onPress={() => alert('Privacy Settings coming soon')}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }}>
+                        <Pressable onPress={() => alert('Privacy settings coming soon')}>
+                            <View style={styles.settingRow}>
                                 <ThemedText variant="body1">Privacy</ThemedText>
-                                <Ionicons
-                                    name="chevron-forward"
-                                    size={20}
-                                    color={theme.colors.textMuted}
-                                />
+                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
                             </View>
                         </Pressable>
                     </SettingCard>
 
                     {/* Logout Button */}
                     <View style={{ marginTop: theme.spacing.xl }}>
-                        <ThemedButton
-                            title="Logout"
-                            variant="danger"
+                        <Pressable
+                            style={{
+                                backgroundColor: theme.colors.error,
+                                padding: theme.spacing.md,
+                                borderRadius: theme.borderRadius.md,
+                                alignItems: 'center',
+                            }}
                             onPress={() => setShowLogoutModal(true)}
-                        />
+                        >
+                            <ThemedText variant="button" style={{ color: '#fff' }}>
+                                Logout
+                            </ThemedText>
+                        </Pressable>
                     </View>
                 </ScrollView>
 
-                {/* Theme Selection Modal */}
-                <ThemedModal
+                {/* All Modals */}
+                <ThemeSelectionModal
                     visible={showThemeModal}
                     onClose={() => setShowThemeModal(false)}
-                >
-                    <ThemedText variant="h3" style={{ marginBottom: theme.spacing.lg }}>
-                        Choose Theme
-                    </ThemedText>
+                />
 
-                    {availableThemes.map((themeOption) => (
-                        <Pressable
-                            key={themeOption}
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                padding: theme.spacing.md,
-                                borderRadius: theme.borderRadius.md,
-                                marginBottom: theme.spacing.sm,
-                                backgroundColor: themeName === themeOption
-                                    ? `${theme.colors.primary}20`
-                                    : 'transparent',
-                                borderWidth: themeName === themeOption ? 1 : 0,
-                                borderColor: theme.colors.primary,
-                            }}
-                            onPress={() => handleThemeChange(themeOption)}
-                        >
-                            <View style={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: 20,
-                                backgroundColor: theme.colors.primary,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginRight: theme.spacing.md,
-                            }}>
-                                <Ionicons
-                                    name={getThemeIcon(themeOption)}
-                                    size={20}
-                                    color={theme.colors.textOnPrimary}
-                                />
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <ThemedText variant="body1">
-                                    {getThemeDisplayName(themeOption)}
-                                </ThemedText>
-                                <ThemedText
-                                    variant="caption"
-                                    color="textSecondary"
-                                    style={{ marginTop: 2 }}
-                                >
-                                    {getThemeDescription(themeOption)}
-                                </ThemedText>
-                            </View>
-                            {themeName === themeOption && (
-                                <Ionicons
-                                    name="checkmark-circle"
-                                    size={24}
-                                    color={theme.colors.primary}
-                                />
-                            )}
-                        </Pressable>
-                    ))}
+                <AccountInfoModal
+                    visible={showAccountModal}
+                    onClose={() => setShowAccountModal(false)}
+                    onChangeEmail={() => setShowEmailModal(true)}
+                    onChangePassword={() => setShowPasswordModal(true)}
+                />
 
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                        marginTop: theme.spacing.lg
-                    }}>
-                        <ThemedButton
-                            title="Cancel"
-                            variant="outline"
-                            onPress={() => setShowThemeModal(false)}
-                        />
-                    </View>
-                </ThemedModal>
+                <ChangeEmailModal
+                    visible={showEmailModal}
+                    onClose={() => setShowEmailModal(false)}
+                />
 
-                {/* Logout Confirmation Modal */}
-                <ThemedModal
+                <ChangePasswordModal
+                    visible={showPasswordModal}
+                    onClose={() => setShowPasswordModal(false)}
+                />
+
+                <LogoutConfirmModal
                     visible={showLogoutModal}
                     onClose={() => setShowLogoutModal(false)}
-                >
-                    <ThemedText variant="h4" style={{ marginBottom: theme.spacing.md }}>
-                        Confirm Logout
-                    </ThemedText>
-                    <ThemedText
-                        variant="body1"
-                        color="textSecondary"
-                        style={{
-                            marginBottom: theme.spacing.lg,
-                            textAlign: 'center'
-                        }}
-                    >
-                        Are you sure you want to logout, {user?.name || 'User'}?
-                    </ThemedText>
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        gap: theme.spacing.md,
-                    }}>
-                        <ThemedButton
-                            title="Cancel"
-                            variant="outline"
-                            style={{ flex: 1 }}
-                            onPress={() => setShowLogoutModal(false)}
-                        />
-                        <ThemedButton
-                            title="Logout"
-                            variant="danger"
-                            style={{ flex: 1 }}
-                            onPress={handleLogout}
-                        />
-                    </View>
-                </ThemedModal>
+                    onConfirm={handleLogout}
+                />
             </SafeAreaView>
         </ThemedView>
     );
 }
 
-// Helper component for consistent setting cards
+// Helper Components
+function SectionHeader({ title }: { title: string }) {
+    const { theme } = useTheme();
+
+    return (
+        <ThemedText
+            variant="h4"
+            color="textSecondary"
+            style={{
+                marginTop: theme.spacing.lg,
+                marginBottom: theme.spacing.sm,
+                paddingLeft: theme.spacing.xs
+            }}
+        >
+            {title}
+        </ThemedText>
+    );
+}
+
 function SettingCard({ children }: { children: React.ReactNode }) {
     const { theme } = useTheme();
 
@@ -312,7 +215,7 @@ function SettingCard({ children }: { children: React.ReactNode }) {
             style={{
                 padding: theme.spacing.md,
                 borderRadius: theme.borderRadius.md,
-                marginBottom: theme.spacing.md,
+                marginBottom: theme.spacing.sm,
                 ...theme.shadows.small,
             }}
         >
@@ -320,3 +223,12 @@ function SettingCard({ children }: { children: React.ReactNode }) {
         </ThemedView>
     );
 }
+
+// Styles
+const styles = {
+    settingRow: {
+        flexDirection: 'row' as const,
+        justifyContent: 'space-between' as const,
+        alignItems: 'center' as const,
+    },
+};
