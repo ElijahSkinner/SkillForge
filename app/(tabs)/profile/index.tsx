@@ -38,7 +38,7 @@ export default function ProfileScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ScrollView style={theme.container.backgroundColor} contentContainerStyle={{ padding: 20 }}>
+            <ScrollView style={styles.container} contentContainerStyle={{ padding: 20 }}>
                 {/* Header */}
                 <View style={styles.header}>
                     <Text style={styles.title}>Profile</Text>
