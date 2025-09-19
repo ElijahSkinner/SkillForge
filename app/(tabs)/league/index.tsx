@@ -87,7 +87,6 @@ export default function LeagueScreen() {
 }
 
 const styles = StyleSheet.create({
-
     leagueSection: {
         marginBottom: 25,
         borderRadius: 12,
