@@ -21,6 +21,7 @@ const OBJECTIVES = [
 
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
+    const { theme } = useTheme();
     const [tab, setTab] = useState<'terms' | 'acronyms' | 'ports'>('terms');
     const [selectedObjective, setSelectedObjective] = useState<string | null>(null);
     const [showFlashcards, setShowFlashcards] = useState(false);
@@ -60,7 +61,7 @@ export default function GlossaryScreen() {
                     style={{
                         flex: 1,
                         padding: 10,
-                        backgroundColor: tab === t ? '#27b0b9' : '#444',
+                        backgroundColor: theme.colors.cardBackground,
                         borderRadius: 8,
                         marginHorizontal: 4,
                     }}
