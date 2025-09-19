@@ -147,7 +147,7 @@ export default function RoadmapScreen() {
 
     return (
         <ImageBackground
-            source={theme.assets.roadmapBackground || require('@/assets/images/path.png')}
+            source={theme.assets.roadmapBackground }
             style={styles.backgroundImage}
             resizeMode="cover"
             imageStyle={styles.backgroundImageStyle}
