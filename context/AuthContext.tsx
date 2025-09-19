@@ -1,94 +1,193 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { Account, Client, Databases, ID, Query } from "appwrite";
+import { Image, StyleSheet, View, TouchableOpacity, Text, Dimensions, TextInput, ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect, useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from "@/context/AuthContext"; // adjust import if needed
 
-const client = new Client()
-    .setEndpoint("http://192.168.40.142/v1") // Tailscale IP
-    .setProject("68c99e72002c3fb21bdf");
+const { width } = Dimensions.get('window');
 
-const databases = new Databases(client);
-const DATABASE_ID = "68c9a6a6000cf7733309";
-const COLLECTION_ID = "68c9a6b7002dfd514488";
-const account = new Account(client);
-
-const AuthContext = createContext<any>(null);
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<any>(null);
-    const [progress, setProgress] = useState<any>(null);
-    const [loading, setLoading] = useState(true); //  add loading
-
+export default function RootHomeScreen() {
+    const router = useRouter();
+    const { login } = useAuth(); // your auth hook
+    const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+    const [showForm, setShowForm] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+//This is old redirect stuff. use for testing as needed.
     useEffect(() => {
-        const checkSession = async () => {
-            try {
-                const res = await account.get();
-                setUser(res);
-
-                // Fetch progress doc
-                const result = await databases.listDocuments(
-                    DATABASE_ID,
-                    COLLECTION_ID,
-                    [Query.equal("userID", res.$id)]
-                );
-
-                if (result.total > 0) {
-                    setProgress(result.documents[0]);
-                }
-            } catch {
-                setUser(null);
-                setProgress(null);
-            } finally {
-                setLoading(false); //  stop loading once check is complete
+        const checkFirstLaunch = async () => {
+            const value = await AsyncStorage.getItem('alreadyLaunched');
+            if (value === null) {
+                await AsyncStorage.setItem('alreadyLaunched', 'true');
+                setIsFirstLaunch(true);
+            } else {
+                setIsFirstLaunch(false);
+                // if logged in, skip straight to roadmap
+                //router.replace('/roadmap');
             }
         };
-        checkSession();
+        checkFirstLaunch();
     }, []);
 
-    const login = async (email: string, password: string) => {
-        await account.createEmailPasswordSession(email, password);
-        const user = await account.get();
-        setUser(user);
-
-        // Look for existing progress doc
-        const result = await databases.listDocuments(
-            DATABASE_ID,
-            COLLECTION_ID,
-            [Query.equal("userID", user.$id)]
-        );
-
-        if (result.total > 0) {
-            setProgress(result.documents[0]);
-        } else {
-            const newDoc = await databases.createDocument(
-                DATABASE_ID,
-                COLLECTION_ID,
-                ID.unique(),
-                {
-                    userID: user.$id,
-                    currentCert: "",
-                    xp: 0,
-                    completedLessons: [],
-                    completedModules: [],
-                    maxStreakAllTime: 0,
-                    currentStreak: 0,
-                }
-            );
-            setProgress(newDoc);
+    const handleLogin = async () => {
+        setError("");
+        setLoading(true);
+        try {
+            await login(email, password);
+            router.replace('/roadmap');
+        } catch (err: any) {
+            setError(err.message || "Login failed. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
-    const logout = async () => {
-        await account.deleteSession("current");
-        setUser(null);
-        setProgress(null);
-    };
+    //if (isFirstLaunch === null) return null;
 
     return (
-        <AuthContext.Provider
-            value={{ user, progress, login, logout, databases, account, loading }}
+        <LinearGradient
+            colors={['#0d0e12', '#27b0b9', '#27f9c8']}
+            style={styles.container}
         >
-            {children}
-        </AuthContext.Provider>
+            {/* Logo */}
+            <Image
+                source={require('@/assets/images/new-logo.png')}
+                style={styles.logo}
+                resizeMode="contain"
+            />
+
+            {/* Welcome Text */}
+            <Text style={styles.title}>Welcome to SkillForge!</Text>
+            <Text style={styles.subtitle}>
+                Learn, practice, and master your tech certifications
+            </Text>
+
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+
+            {!showForm ? (
+                // Splash with login options
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={[styles.button, { backgroundColor: '#27b0b9' }]}
+                        onPress={() => setShowForm(true)}
+                    >
+                        <Text style={styles.buttonText}>Login with Email</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[styles.button, { backgroundColor: '#444' }]}
+                        onPress={() => alert("Google login coming soon")}
+                    >
+                        <Text style={styles.buttonText}>Continue with Google</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[styles.button, { backgroundColor: '#555' }]}
+                        onPress={() => alert("GitHub login coming soon")}
+                    >
+                        <Text style={styles.buttonText}>Continue with GitHub</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                // Email/password login form
+                <View style={{ width: "100%" }}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Email"
+                        placeholderTextColor="#888"
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Password"
+                        placeholderTextColor="#888"
+                        secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+
+                    <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+                        {loading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text style={styles.buttonText}>Login</Text>
+                        )}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setShowForm(false)}>
+                        <Text style={styles.link}>← Back to login options</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+        </LinearGradient>
     );
 }
 
-export const useAuth = () => useContext(AuthContext);
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20,
+    },
+    logo: {
+        width: width * 0.6,
+        height: width * 0.6,
+        marginBottom: 30,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 10,
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#f0f0f0',
+        textAlign: 'center',
+        marginBottom: 40,
+    },
+    buttonContainer: {
+        width: '100%',
+        gap: 20,
+    },
+    button: {
+        paddingVertical: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    input: {
+        width: "100%",
+        padding: 12,
+        borderWidth: 1,
+        borderColor: "#333",
+        borderRadius: 8,
+        marginBottom: 15,
+        color: "#fff",
+        backgroundColor: "#1e1e1e",
+    },
+    link: {
+        color: "#27b0b9",
+        marginTop: 12,
+        textAlign: "center",
+    },
+    error: {
+        color: "red",
+        marginBottom: 15,
+        textAlign: "center",
+    },
+});
