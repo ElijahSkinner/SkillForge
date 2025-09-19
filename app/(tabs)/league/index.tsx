@@ -21,7 +21,7 @@ export default function LeagueScreen() {
         ([key, color], index) => ({
             name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
             color,
-            minXP: index * 300, 
+            minXP: index * 300,
         })
     );
 
