@@ -317,7 +317,7 @@ export default function SettingsScreen() {
         </ThemedView>
     );
 }
-}
+
 
 // Helper Components
 function SectionHeader({ title }: { title: string }) {
