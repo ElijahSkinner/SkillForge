@@ -27,6 +27,7 @@ const MOCK_USERS = [
     { name: 'Isabella', xp: 2800 },
     { name: 'Oliver', xp: 1900 },
 ];
+const { theme } = useTheme();
 
 export default function LeagueScreen() {
     return (
