@@ -92,8 +92,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 15,
     },
-
-
+    
     xp: {
         color: '#7ed321',
         fontWeight: '600',
