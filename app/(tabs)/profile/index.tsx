@@ -108,8 +108,7 @@ export default function ProfileScreen() {
                 </View>
 
                 {/* Monthly Badges */}
-                <View style={styles.box}>
-                    <Text style={styles.boxTitle}>Monthly Badges</Text>
+                <Text style= {{ color: theme.colors.textSecondary}}>
                     <Text>🏅 3 Badges earned</Text>
                 </View>
 
