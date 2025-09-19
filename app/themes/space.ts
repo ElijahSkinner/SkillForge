@@ -1,11 +1,6 @@
 // app/themes/space.ts
 export const spaceTheme = {
     name: 'space',
-    container: {
-        flex: 1,
-        backgroundColor: '#121212',
-        padding: 16,
-    },
     colors: {
         // Deep space colors
         background: '#0a0a0f',
