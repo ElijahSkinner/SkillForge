@@ -65,10 +65,10 @@ export default function ProfileScreen() {
                             android_ripple={{ color: theme.colors.ripple }}
                             style={{
                                 flex: 1,
-                                padding: 12,
+                                padding: theme.spacing.sm,
                                 borderRadius: theme.borderRadius.md,
                                 backgroundColor: theme.colors.primary,
-                                alignItems: "center",
+                                alignItems: 'center',
                             }}
                         >
                             <Text style={{ color: theme.colors.textOnPrimary, fontWeight: "600" }}>➕ Increase</Text>
