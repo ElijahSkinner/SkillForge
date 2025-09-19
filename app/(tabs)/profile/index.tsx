@@ -5,11 +5,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import {useTheme} from "@/context/ThemeContext";
-const { theme, themeName, changeTheme, availableThemes } = useTheme();
 
 export default function ProfileScreen() {
     const router = useRouter();
     const { progress, databases } = useAuth();
+    const { theme, themeName, changeTheme, availableThemes } = useTheme();
 
     const [streak, setStreak] = useState(0);
 
