@@ -53,9 +53,34 @@ export default function ProfileScreen() {
                     <Text>Streak: {streak} 🔥</Text>
 
                     {/* Test buttons */}
-                    <View style={{color: theme.colors.ripple, flexDirection: "row", marginTop: 10, gap: 10 }}>
-                        <Button title="➕ Increase" onPress={() => updateStreak(streak + 1)} />
-                        <Button title="➖ Decrease" onPress={() => updateStreak(Math.max(0, streak - 1))} />
+                    <View style={{ flexDirection: "row", marginTop: 10, gap: 10 }}>
+                        <Pressable
+                            onPress={() => updateStreak(streak + 1)}
+                            android_ripple={{ color: theme.colors.ripple }}
+                            style={{
+                                flex: 1,
+                                padding: 12,
+                                borderRadius: theme.borderRadius.md,
+                                backgroundColor: theme.colors.primary,
+                                alignItems: "center",
+                            }}
+                        >
+                            <Text style={{ color: theme.colors.textOnPrimary, fontWeight: "600" }}>➕ Increase</Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={() => updateStreak(Math.max(0, streak - 1))}
+                            android_ripple={{ color: theme.colors.ripple }}
+                            style={{
+                                flex: 1,
+                                padding: 12,
+                                borderRadius: theme.borderRadius.md,
+                                backgroundColor: theme.colors.primary,
+                                alignItems: "center",
+                            }}
+                        >
+                            <Text style={{ color: theme.colors.textOnPrimary, fontWeight: "600" }}>➖ Decrease</Text>
+                        </Pressable>
                     </View>
 
                     {/* Other overview info */}
