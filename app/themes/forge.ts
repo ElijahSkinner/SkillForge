@@ -1,4 +1,4 @@
-// app/themes/forge.ts
+// themes/forge.ts
 export const forgeTheme = {
     name: 'forge',
     colors: {
