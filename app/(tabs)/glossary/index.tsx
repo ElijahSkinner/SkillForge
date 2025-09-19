@@ -123,10 +123,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#121212',
         padding: 16,
     },
-    message: {
-        color: '#aaa',
-        fontSize: 16,
-        textAlign: 'center',
-        marginTop: 20,
-    },
+
 });
