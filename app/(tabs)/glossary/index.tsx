@@ -18,10 +18,10 @@ const OBJECTIVES = [
     '4.0 Network Security',
     '5.0 Network Troubleshooting',
 ];
+const { theme } = useTheme();
 
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
-    const { theme } = useTheme();
     const [tab, setTab] = useState<'terms' | 'acronyms' | 'ports'>('terms');
     const [selectedObjective, setSelectedObjective] = useState<string | null>(null);
     const [showFlashcards, setShowFlashcards] = useState(false);
