@@ -64,7 +64,7 @@ export default function ProfileScreen() {
                         borderRadius: theme.borderRadius.lg,
                         padding: theme.spacing.md,
                         marginBottom: theme.spacing.md,
-                    }}>
+                    }}>>
                         <Pressable
                             onPress={() => updateStreak(streak + 1)}
                             android_ripple={{ color: theme.colors.ripple }}
