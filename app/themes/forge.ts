@@ -66,6 +66,7 @@ export const forgeTheme = {
     typography: {
         // Headers
         h1: {
+            
             fontSize: 32,
             fontWeight: '800' as const,
             color: '#ffa500',
