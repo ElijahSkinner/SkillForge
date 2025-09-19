@@ -1,297 +1,364 @@
-import React, { useRef, useState } from 'react';
-import { ImageBackground,
+import React, { useRef, useState, useEffect } from 'react';
+import {
+    ImageBackground,
     View,
-    Text,
     Pressable,
-    StyleSheet,
     Dimensions,
     Animated,
     ScrollView,
 } from 'react-native';
-import { useTheme} from '@/context/ThemeContext';
+import { useTheme } from '@/context/ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TopBar from '@/components/TopBar';
+import { useAuth } from '@/context/AuthContext';
 import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
-import {ModuleType} from "@/types/certs";
-//import path from "@/assets/forge/path.png";
-const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 60, TILE_SPACING: 8 };
+import { ModuleType } from "@/types/certs";
+import { ThemedView, ThemedText } from '@/components/themed';
+import TopBar from '@/components/TopBar';
+import LessonSelectionModal from '@/components/modals/LessonSelectionModal';
+import AnimatedProgressTile from '@/components/AnimatedProgressTile';
+
+const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 70, TILE_SPACING: 12 };
 
 export default function RoadmapScreen() {
     const { selectedCert } = useCert();
+    const { progress, databases, updateUserProgress } = useAuth();
+    const { theme } = useTheme();
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
     const scrollViewRef = useRef<ScrollView | null>(null);
-    const { theme } = useTheme();
 
-    //For Tile Modal data
-    const [selectedLesson, setSelectedLesson] = React.useState<{
+    // Modal state for lesson selection
+    const [selectedLesson, setSelectedLesson] = useState<{
         modId: number;
         lessonIndex: number;
         lessonName: string;
-    } | null>(null);
-    function getLessonXP(mod: ModuleType, lessonIndex: number) {
-        const lessonCount = mod.lessons.length;
-        const lessonWeight = mod.weight / lessonCount;
-        return Math.round(lessonWeight); // Round to whole number
-    }
-
-    // For tooltip popup
-    const [popup, setPopup] = useState<{
-        x: number;
-        y: number;
-        width: number;
-        data: any;
+        moduleWeight: number;
+        totalLessons: number;
     } | null>(null);
 
-    if (!selectedCert)
+    // Loading state for progress updates
+    const [updatingProgress, setUpdatingProgress] = useState<string | null>(null);
+
+    // Get user's progress for lessons and modules
+    const completedLessons = progress?.completedLessons || [];
+    const completedModules = progress?.completedModules || [];
+
+    // Helper function to get lesson completion status
+    const getLessonProgress = (moduleId: number, lessonIndex: number) => {
+        const lessonKey = `${selectedCert}_${moduleId}_${lessonIndex}`;
+        return completedLessons.includes(lessonKey);
+    };
+
+    // Helper function to get module completion percentage
+    const getModuleProgress = (module: ModuleType) => {
+        const totalLessons = module.lessons.length;
+        let completedCount = 0;
+
+        for (let i = 1; i <= totalLessons; i++) {
+            if (getLessonProgress(module.id, i)) {
+                completedCount++;
+            }
+        }
+
+        return totalLessons > 0 ? completedCount / totalLessons : 0;
+    };
+
+    // Helper function to calculate XP for lesson
+    const getLessonXP = (module: ModuleType, lessonIndex: number) => {
+        const lessonCount = module.lessons.length;
+        const lessonWeight = module.weight / lessonCount;
+        return Math.round(lessonWeight);
+    };
+
+    // Handle lesson start - update progress in Appwrite
+    const handleLessonStart = async (lesson: typeof selectedLesson) => {
+        if (!lesson || !progress) return;
+
+        setUpdatingProgress(`${lesson.modId}_${lesson.lessonIndex}`);
+
+        try {
+            const lessonKey = `${selectedCert}_${lesson.modId}_${lesson.lessonIndex}`;
+            const newCompletedLessons = [...completedLessons];
+
+            if (!newCompletedLessons.includes(lessonKey)) {
+                newCompletedLessons.push(lessonKey);
+
+                // Update in Appwrite
+                await databases.updateDocument(
+                    process.env.EXPO_PUBLIC_DATABASE_ID!,
+                    process.env.EXPO_PUBLIC_COLLECTION_ID!,
+                    progress.$id,
+                    {
+                        completedLessons: newCompletedLessons,
+                        xp: progress.xp + getLessonXP(
+                            modules.find(m => m.id === lesson.modId)!,
+                            lesson.lessonIndex
+                        )
+                    }
+                );
+
+                // Update local context
+                await updateUserProgress();
+            }
+
+            // Navigate to quiz
+            router.push({
+                pathname: '/quiz/[cert]/[id]',
+                params: { cert: selectedCert, id: String(lesson.modId) },
+            });
+        } catch (error) {
+            console.error('Failed to update lesson progress:', error);
+        } finally {
+            setUpdatingProgress(null);
+            setSelectedLesson(null);
+        }
+    };
+
+    if (!selectedCert) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.message}>Please select a certification first.</Text>
-                <Pressable style={styles.button} onPress={() => router.push('../course')}>
-                    <Text style={{ color: '#fff', fontWeight: 'bold' }}>Select a Cert</Text>
+            <ThemedView variant="background" style={styles.container}>
+                <ThemedText
+                    variant="body1"
+                    color="textSecondary"
+                    style={styles.message}
+                >
+                    Please select a certification first.
+                </ThemedText>
+                <Pressable
+                    style={[styles.button, { backgroundColor: theme.colors.primary }]}
+                    onPress={() => router.push('../course')}
+                >
+                    <ThemedText variant="button" color="textOnPrimary">
+                        Select a Cert
+                    </ThemedText>
                 </Pressable>
-            </View>
+            </ThemedView>
         );
+    }
 
     const modules = CERTS_ROADMAP[selectedCert];
     const enrolledCourses = Object.keys(CERTS_ROADMAP).map((name, idx) => ({
         id: idx + 1,
         name,
-        score: 0,
+        score: Math.round(getModuleProgress({ lessons: [], weight: 100, id: idx, name, completed: false }) * 100),
     }));
 
     return (
         <ImageBackground
-            source={theme.assets.roadmapBackground}
-            style={{ flex: 1, width: 'auto' }}
+            source={theme.assets.roadmapBackground || require('@/assets/images/path.png')}
+            style={styles.backgroundImage}
             resizeMode="cover"
-            imageStyle={{ resizeMode: 'cover', alignSelf: 'center' }}
+            imageStyle={styles.backgroundImageStyle}
         >
-        <SafeAreaView style={{ flex: 1 }}>
-            <TopBar
-                currentStreak={123}
-                currency={456}
-                selectedCourse={{ id: 0, name: selectedCert }}
-                enrolledCourses={enrolledCourses}
-            />
+            <ThemedView variant="background" style={styles.overlay}>
+                <SafeAreaView style={styles.safeArea}>
+                    <TopBar
+                        currentStreak={progress?.currentStreak || 0}
+                        currency={progress?.xp || 0}
+                        selectedCourse={{ id: 0, name: selectedCert }}
+                        enrolledCourses={enrolledCourses}
+                    />
 
-            <Animated.ScrollView
-                ref={scrollViewRef}
-                contentContainerStyle={{
-                    flexDirection: 'column-reverse',
-                    alignItems: 'center',
-                    paddingVertical: 30,
-                }}
-                onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
-                scrollEventThrottle={16}
-                onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
-            >
-                {modules.map((mod) => (
-                    <View key={mod.id} style={{ marginBottom: 30, alignItems: 'center' }}>
-                        {/* Q Tile */}
-                        <Pressable
-                            style={{
-                                width: TILE_SIZE,
-                                height: TILE_SIZE,
-                                borderRadius: 12,
-                                marginBottom: TILE_SPACING,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: '#444', // Q tile color
-                            }}
-                            onPress={() =>
-                                setSelectedLesson({
-                                    modId: mod.id,
-                                    lessonIndex: 0, // 0 = Unit Review
-                                    lessonName: `${mod.name} Unit Review`,
-                                })
-                            }
-                        >
-                            <Text style={styles.tileText}>Q</Text>
-                        </Pressable>
-
-
-                        {/* Lesson Tiles */}
-                        {mod.lessons.map((lesson, index) => {
-                            const number = mod.lessons.length - index; // dynamic
-                            return (
-                                <Pressable
-                                    key={`${mod.id}-${number}`}
-                                    style={{
-                                        width: TILE_SIZE,
-                                        height: TILE_SIZE,
-                                        marginBottom: TILE_SPACING,
-                                        borderRadius: 12,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: mod.completed ? '#27b0b9' : '#1a1b1f',
-                                    }}
-                                    onPress={() =>
-                                        setSelectedLesson({
-                                            modId: mod.id,
-                                            lessonIndex: number,
-                                            lessonName: lesson.name,
-                                        })
-                                    }
-                                >
-                                    <Text style={styles.tileText}>{number}</Text>
-                                </Pressable>
-                        );
-                        })}
-
-                        {/* Module Name */}
-                        <Text style={styles.sectionTitle}>{mod.name}</Text>
-                    </View>
-                ))}
-            </Animated.ScrollView>
-
-            {/* Tooltip Popup */}
-            {popup && (
-                <Pressable style={styles.popupOverlay} onPress={() => setPopup(null)}>
-                    <View
-                        style={[
-                            styles.popup,
-                            {
-                                top: popup.y,
-                                left: popup.x,
-                                width: popup.width + 60,
-                            },
+                    <Animated.ScrollView
+                        ref={scrollViewRef}
+                        contentContainerStyle={[
+                            styles.scrollContent,
+                            { paddingVertical: theme.spacing.xl }
                         ]}
-                    >
-                        {popup.data.type === 'quiz' ? (
-                            <>
-                                <Text style={styles.popupTitle}>{popup.data.moduleName} - Unit Review</Text>
-                                <Text style={styles.popupText}>XP: {popup.data.xp}</Text>
-                                <Text style={styles.popupText}>{popup.data.info}</Text>
-                            </>
-                        ) : (
-                            <>
-                                <Text style={styles.popupTitle}>
-                                    {popup.data.moduleName} - Lesson {popup.data.lessonNumber}
-                                </Text>
-                                <Text style={styles.popupText}>{popup.data.lessonName}</Text>
-                                <Text style={styles.popupText}>XP: {popup.data.xp}</Text>
-                            </>
+                        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
+                        scrollEventThrottle={16}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: false }
                         )}
-                    </View>
-                </Pressable>
-            )}
-            {selectedLesson && (() => {
-                const mod = modules.find(m => m.id === selectedLesson.modId)!;
-                const lessonCount = mod.lessons.length;
+                    >
+                        {modules.map((module) => {
+                            const moduleProgress = getModuleProgress(module);
+                            const isModuleComplete = moduleProgress === 1;
 
-                // Determine display name and number
-                const isUnitReview = selectedLesson.lessonIndex === 0;
-                const lessonNum = isUnitReview
-                    ? 'Unit Review'
-                    : selectedLesson.lessonIndex;
-                const xp = isUnitReview
-                    ? mod.weight // Full module XP
-                    : Math.round(mod.weight / lessonCount);
+                            return (
+                                <View
+                                    key={module.id}
+                                    style={[styles.moduleContainer, { marginBottom: theme.spacing.xl }]}
+                                >
+                                    {/* Unit Review Tile (Q) */}
+                                    <AnimatedProgressTile
+                                        size={TILE_SIZE}
+                                        progress={isModuleComplete ? 1 : 0}
+                                        onPress={() => setSelectedLesson({
+                                            modId: module.id,
+                                            lessonIndex: 0,
+                                            lessonName: `${module.name} Unit Review`,
+                                            moduleWeight: module.weight,
+                                            totalLessons: module.lessons.length
+                                        })}
+                                        backgroundColor={theme.colors.secondary}
+                                        progressColor={theme.colors.success}
+                                        style={[styles.tile, { marginBottom: TILE_SPACING }]}
+                                    >
+                                        <ThemedText variant="h4" color="text">Q</ThemedText>
+                                    </AnimatedProgressTile>
 
-                return (
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.modalTitle}>
-                                {isUnitReview ? 'Unit Review' : `Lesson ${lessonNum} / ${lessonCount}`}
-                            </Text>
-                            <Text style={styles.modalLessonName}>
-                                {selectedLesson.lessonName}
-                            </Text>
-                            <Text style={styles.modalXP}>XP: {xp}</Text>
+                                    {/* Individual Lesson Tiles */}
+                                    {module.lessons.map((lesson, index) => {
+                                        const lessonNumber = module.lessons.length - index;
+                                        const isLessonComplete = getLessonProgress(module.id, lessonNumber);
+                                        const lessonProgress = isLessonComplete ? 1 : 0;
 
-                            <Pressable
-                                style={styles.startButton}
-                                onPress={() => {
-                                    // Start lesson logic
-                                    router.push({
-                                        pathname: '/quiz/[cert]/[id]',
-                                        params: { cert: selectedCert, id: String(mod.id) },
-                                    });
-                                    setSelectedLesson(null);
-                                }}
-                            >
-                                <Text style={{ color: '#fff', fontWeight: 'bold' }}>Start</Text>
-                            </Pressable>
+                                        return (
+                                            <AnimatedProgressTile
+                                                key={`${module.id}-${lessonNumber}`}
+                                                size={TILE_SIZE}
+                                                progress={lessonProgress}
+                                                onPress={() => setSelectedLesson({
+                                                    modId: module.id,
+                                                    lessonIndex: lessonNumber,
+                                                    lessonName: lesson.name,
+                                                    moduleWeight: module.weight,
+                                                    totalLessons: module.lessons.length
+                                                })}
+                                                backgroundColor={isLessonComplete
+                                                    ? theme.colors.success
+                                                    : theme.colors.surface
+                                                }
+                                                progressColor={theme.colors.primary}
+                                                style={[styles.tile, { marginBottom: TILE_SPACING }]}
+                                                disabled={updatingProgress === `${module.id}_${lessonNumber}`}
+                                            >
+                                                <ThemedText
+                                                    variant="h4"
+                                                    color={isLessonComplete ? "textOnPrimary" : "text"}
+                                                >
+                                                    {lessonNumber}
+                                                </ThemedText>
+                                            </AnimatedProgressTile>
+                                        );
+                                    })}
 
-                            <Pressable
-                                style={styles.closeButton}
-                                onPress={() => setSelectedLesson(null)}
-                            >
-                                <Text style={{ color: '#fff' }}>Close</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                );
+                                    {/* Module Name */}
+                                    <ThemedText
+                                        variant="h3"
+                                        color="text"
+                                        style={[
+                                            styles.sectionTitle,
+                                            {
+                                                marginTop: theme.spacing.md,
+                                                textAlign: 'center',
+                                                color: theme.colors.text
+                                            }
+                                        ]}
+                                    >
+                                        {module.name}
+                                    </ThemedText>
 
-            })()}
-        </SafeAreaView>
-            </ImageBackground>
+                                    {/* Module Progress Indicator */}
+                                    <View style={[styles.progressContainer, { marginTop: theme.spacing.sm }]}>
+                                        <View
+                                            style={[
+                                                styles.progressBar,
+                                                { backgroundColor: theme.colors.borderColor }
+                                            ]}
+                                        >
+                                            <View
+                                                style={[
+                                                    styles.progressFill,
+                                                    {
+                                                        backgroundColor: theme.colors.primary,
+                                                        width: `${moduleProgress * 100}%`
+                                                    }
+                                                ]}
+                                            />
+                                        </View>
+                                        <ThemedText variant="caption" color="textSecondary" style={styles.progressText}>
+                                            {Math.round(moduleProgress * 100)}% Complete
+                                        </ThemedText>
+                                    </View>
+                                </View>
+                            );
+                        })}
+                    </Animated.ScrollView>
+
+                    {/* Lesson Selection Modal */}
+                    <LessonSelectionModal
+                        visible={selectedLesson !== null}
+                        lesson={selectedLesson}
+                        onClose={() => setSelectedLesson(null)}
+                        onStart={() => selectedLesson && handleLessonStart(selectedLesson)}
+                        loading={updatingProgress !== null}
+                    />
+                </SafeAreaView>
+            </ThemedView>
+        </ImageBackground>
     );
 }
 
-const styles = StyleSheet.create({
-    modalOverlay: {
-        position: 'absolute',
-        top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 100,
+const styles = {
+    container: {
+        flex: 1,
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
+        padding: 16,
     },
-    modalContent: {
-        width: '80%',
-        backgroundColor: '#1a1b1f',
-        padding: 20,
-        borderRadius: 12,
-        alignItems: 'center',
+    backgroundImage: {
+        flex: 1,
+        width: '100%' as const,
     },
-    modalTitle: { fontSize: 18, fontWeight: 'bold', color: '#fee37f', marginBottom: 10 },
-    modalLessonName: { fontSize: 16, color: '#fff', marginBottom: 10, textAlign: 'center' },
-    modalXP: { fontSize: 14, color: '#ccc', marginBottom: 20 },
-    startButton: {
-        backgroundColor: '#27b0b9',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 8,
-        marginBottom: 10,
+    backgroundImageStyle: {
+        resizeMode: 'cover' as const,
+        alignSelf: 'center' as const,
     },
-    closeButton: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.3)', // Semi-transparent overlay
     },
-
+    safeArea: {
+        flex: 1,
+    },
+    scrollContent: {
+        flexDirection: 'column-reverse' as const,
+        alignItems: 'center' as const,
+        paddingHorizontal: 16,
+    },
+    moduleContainer: {
+        alignItems: 'center' as const,
+        width: '100%' as const,
+    },
+    tile: {
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
+        borderRadius: 16,
+    },
     sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginTop: 12,
-        marginBottom: 10,
-        color: '222222',
+        fontWeight: 'bold' as const,
+        textAlign: 'center' as const,
     },
-    tileText: { color: '#fff', fontWeight: '600' },
-    container: { flex: 1, backgroundColor: '#121212', justifyContent: 'center', alignItems: 'center', padding: 16 },
-    message: { color: '#aaa', fontSize: 16, textAlign: 'center', marginBottom: 20 },
-    button: { paddingHorizontal: 20, paddingVertical: 12, backgroundColor: '#27b0b9', borderRadius: 8 },
-    qTile: { width: TILE_SIZE, height: TILE_SIZE, borderRadius: 12, marginBottom: TILE_SPACING, justifyContent: 'center', alignItems: 'center', backgroundColor: '#444' },
-    lessonTile: { width: TILE_SIZE, height: TILE_SIZE, marginBottom: TILE_SPACING, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
-    popupOverlay: {
-        ...StyleSheet.absoluteFillObject,
-        zIndex: 10,
+    progressContainer: {
+        width: '80%' as const,
+        alignItems: 'center' as const,
     },
-    popup: {
-        position: 'absolute',
-        backgroundColor: '#1e1e1e',
-        padding: 12,
-        borderRadius: 12,
-        zIndex: 20,
-        shadowColor: '#000',
-        shadowOpacity: 0.25,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
-        elevation: 5,
+    progressBar: {
+        width: '100%' as const,
+        height: 4,
+        borderRadius: 2,
+        overflow: 'hidden' as const,
     },
-    popupTitle: { fontSize: 16, fontWeight: 'bold', color: '#fff', marginBottom: 6 },
-    popupText: { color: '#fff', fontSize: 14 },
-});
+    progressFill: {
+        height: '100%' as const,
+        borderRadius: 2,
+    },
+    progressText: {
+        marginTop: 4,
+        fontSize: 12,
+    },
+    message: {
+        textAlign: 'center' as const,
+        marginBottom: 20,
+    },
+    button: {
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 8,
+    },
+};
