@@ -65,7 +65,7 @@ export const spaceTheme = {
         }
     },
     typography: {
-        h1: { fontSize: 32, fontWeight: '800' as const, color: '#4a90e2',  },
+        h1: { fontSize: 32, fontWeight: '800' as const, color: '#4a90e2' },
         h2: { fontSize: 28, fontWeight: '700' as const, color: '#4a90e2' },
         h3: { fontSize: 24, fontWeight: '600' as const, color: '#ffffff' },
         h4: { fontSize: 20, fontWeight: '600' as const, color: '#ffffff' },
