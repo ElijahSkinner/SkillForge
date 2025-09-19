@@ -55,7 +55,7 @@ export default function ProfileScreen() {
                     padding: theme.spacing.md,
                     marginBottom: theme.spacing.md,
                 }}>
-                    <Text style={{ color: theme.colors.text, fontWeight: "600" }}>Overview</Text>
+                    <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Overview</Text>
                     <Text>Streak: {streak} 🔥</Text>
 
                     {/* Test buttons */}
