@@ -16,7 +16,7 @@ export default function RootLayout() {
 
     return (
         <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <AppThemeProvider></AppThemeProvider>
+            <AppThemeProvider>
             <CertProvider>
                 <AuthProvider>
                     <Stack>
@@ -24,7 +24,7 @@ export default function RootLayout() {
                         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
                     </Stack>
                 </AuthProvider> </CertProvider>
-            <StatusBar style="auto" />
+            <StatusBar style="auto" /></AppThemeProvider>
         </NavigationThemeProvider>
     );
 }
