@@ -97,5 +97,7 @@ export const oceanTheme = {
     },
     assets: {
         logo: require('@/assets/images/new-logo.png'),
+        roadmapBackground: require('@/assets/themes/forge/path.png'),
+
     }
 };
