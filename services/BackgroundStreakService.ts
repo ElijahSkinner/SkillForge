@@ -5,7 +5,7 @@ import { streakService } from './StreakService';
 export class BackgroundStreakService {
     private static instance: BackgroundStreakService;
     private appStateSubscription: any = null;
-    private streakCheckInterval: NodeJS.Timeout | null = null;
+    private streakCheckInterval: any = null; // Changed from NodeJS.Timeout
     private getUserProgress: (() => any) | null = null;
     private isInitialized = false;
 
