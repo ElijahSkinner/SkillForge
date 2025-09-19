@@ -120,11 +120,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#333',
         borderBottomWidth: 1,
     },
-    rank: {
-        color: '#fff',
-        fontWeight: '600',
-        width: 30,
-    },
+ 
     username: {
         color: '#fff',
         flex: 1,
