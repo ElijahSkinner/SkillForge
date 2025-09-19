@@ -17,14 +17,14 @@ export default function RootLayout() {
     return (
         <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <AppThemeProvider>
-            <CertProvider>
-                <AuthProvider>
-                    <Stack>
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-                    </Stack>
-                </AuthProvider> </CertProvider>
-            <StatusBar style="auto" />
+                <CertProvider>
+                    <AuthProvider>
+                        <Stack>
+                            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+                        </Stack>
+                    </AuthProvider> </CertProvider>
+                <StatusBar style="auto" />
             </AppThemeProvider>
         </NavigationThemeProvider>
     );
