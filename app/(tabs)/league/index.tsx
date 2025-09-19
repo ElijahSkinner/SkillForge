@@ -3,11 +3,20 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import { useTheme } from '@/context/ThemeContext';
 
 
-const LEAGUE_ORDER = [
-    'copper', 'bronze', 'iron', 'steel',
-    'silver', 'gold', 'platinum', 'titanium',
-    'adamantine', 'mithril'
-];
+const LeagueList = () => {
+    return (
+        <View style={styles.container}>
+            {Object.entries(theme.leagues).map(([leagueName, color]) => (
+                <Text
+                    key={leagueName} // The unique key for each item
+                    style={[styles.leagueText, { color: color }]} // Apply the dynamic color
+                >
+                    {leagueName.toUpperCase()}
+                </Text>
+            ))}
+        </View>
+    );
+};
 
 
 
