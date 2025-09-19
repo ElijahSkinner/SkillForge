@@ -14,7 +14,7 @@ export default function CourseScreen() {
     return (
         <ScrollView
             style={{ flex: 1, backgroundColor: theme.colors.background }}
-
+            content
             >
             <Text style={styles.title}>Select a Certification</Text>
 
