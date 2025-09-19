@@ -59,7 +59,7 @@ export default function ProfileScreen() {
                     <Text>Streak: {streak} 🔥</Text>
 
                     {/* Test buttons */}
-                    <View style={{
+                    <View style=style={{
                         backgroundColor: theme.colors.surface,
                         borderRadius: theme.borderRadius.lg,
                         padding: theme.spacing.md,
