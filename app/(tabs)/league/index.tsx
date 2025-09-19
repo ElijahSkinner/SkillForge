@@ -87,12 +87,8 @@ export default function LeagueScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#121212',
-        padding: 20,
-    },
  
+
     leagueSection: {
         marginBottom: 25,
         borderRadius: 12,
