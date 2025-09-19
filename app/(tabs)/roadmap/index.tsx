@@ -62,7 +62,7 @@ export default function RoadmapScreen() {
 
     return (
         <ImageBackground
-            source={them.assets.roadmapBackground}
+            source={theme.assets.roadmapBackground}
             style={{ flex: 1, width: 'auto' }}
             resizeMode="cover"
             imageStyle={{ resizeMode: 'cover', alignSelf: 'center' }}
