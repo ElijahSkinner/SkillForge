@@ -7,29 +7,7 @@ import { useTheme } from '@/context/ThemeContext';
 
 export default function LeagueScreen() {
     return (
-    const { theme } = useTheme();
-    const LEAGUE_ORDER = [
-        'copper', 'bronze', 'iron', 'steel',
-        'silver', 'gold', 'platinum', 'titanium',
-        'adamantine', 'mithril'
-    ];
 
-    const LEAGUES = LEAGUE_ORDER.map((key, index) => ({
-        name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
-        color: theme.colors.leagues[key],
-        minXP: index * 300,
-    }));
-
-// Mock user XP data
-    const MOCK_USERS = [
-        { name: 'Elijah', xp: 350 },
-        { name: 'Ava', xp: 1250 },
-        { name: 'Liam', xp: 750 },
-        { name: 'Sophia', xp: 450 },
-        { name: 'Noah', xp: 50 },
-        { name: 'Isabella', xp: 2800 },
-        { name: 'Oliver', xp: 1900 },
-    ];
 
 <SafeAreaView style={{ flex: 1}}>
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
