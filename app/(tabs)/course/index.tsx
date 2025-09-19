@@ -12,7 +12,10 @@ export default function CourseScreen() {
     const { theme } = useTheme();
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center', paddingVertical: 20 }}>
+        <ScrollView
+            style={{ flex: 1, backgroundColor: theme.colors.background }}
+
+            >
             <Text style={styles.title}>Select a Certification</Text>
 
             {certs.map((cert) => (
