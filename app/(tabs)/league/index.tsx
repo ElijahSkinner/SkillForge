@@ -99,7 +99,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
     },
-  
+    leagueSection: {
+        marginBottom: 25,
+        borderRadius: 12,
+        padding: 15,
+    },
 
 
     xp: {
