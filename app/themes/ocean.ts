@@ -1,7 +1,7 @@
 // app/themes/ocean.ts
 export const oceanTheme = {
     name: 'ocean',
-    
+
     colors: {
         // Deep ocean colors
         background: '#0d1b2a',
