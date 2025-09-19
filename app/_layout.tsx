@@ -15,7 +15,7 @@ export default function RootLayout() {
     const colorScheme = useColorScheme();
 
     return (
-        
+        <AuthProvider>
         <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <AppThemeProvider>
                 <CertProvider>
@@ -28,5 +28,6 @@ export default function RootLayout() {
                 <StatusBar style="auto" />
             </AppThemeProvider>
         </NavigationThemeProvider>
+    </AuthProvider>
     );
 }
