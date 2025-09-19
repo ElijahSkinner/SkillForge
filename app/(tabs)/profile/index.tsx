@@ -108,15 +108,8 @@ export default function ProfileScreen() {
                 </View>
 
                 {/* Monthly Badges */}
-                <View style={{
-                    backgroundColor: theme.colors.surface,
-                    borderRadius: theme.borderRadius.lg,
-                    padding: theme.spacing.md,
-                    marginBottom: theme.spacing.md,
-                }}>
-                    <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Overview</Text>
-                    <Text style= {{ color: theme.colors.textSecondary}}> Streak 🔥: {streak}</Text>
-
+                <View style={styles.box}>
+                    <Text style={styles.boxTitle}>Monthly Badges</Text>
                     <Text>🏅 3 Badges earned</Text>
                 </View>
 
