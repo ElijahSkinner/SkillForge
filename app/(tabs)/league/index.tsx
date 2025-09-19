@@ -28,6 +28,7 @@ const MOCK_USERS = [
 
 
 export default function LeagueScreen() {
+    
     return (
 <SafeAreaView style={{ flex: 1}}>
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
