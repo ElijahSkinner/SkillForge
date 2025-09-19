@@ -113,13 +113,6 @@ const styles = StyleSheet.create({
         color: '#aaa',
         fontStyle: 'italic',
     },
-    userRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 6,
-        borderBottomColor: '#333',
-        borderBottomWidth: 1,
-    },
 
     xp: {
         color: '#7ed321',
