@@ -1,11 +1,12 @@
 // app/(tabs)/profile/settings/index.tsx
 import React, { useState, useEffect } from 'react';
-import {View, ScrollView, Pressable, Alert} from 'react-native';
+import { View, ScrollView, Pressable, Alert, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
+import { notificationService } from '@/services/NotificationService';
 import {
     ThemedView,
     ThemedText,
@@ -19,12 +20,20 @@ import {
     LogoutConfirmModal,
 } from '@/components/modals';
 import { XPGoalModal, ReminderTimeModal } from '@/components/modals/StudyPreferences';
-import {notificationService} from "@/services/NotificationService";
 
 export default function SettingsScreen() {
     const router = useRouter();
     const { user, logout, progress, updateProgressField } = useAuth();
     const { theme, themeName, isDarkMode, toggleDarkMode } = useTheme();
+
+    // Add null check for theme
+    if (!theme || !theme.spacing || !theme.colors) {
+        return (
+            <View style={{ flex: 1, backgroundColor: '#121212', justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#fff', fontSize: 16 }}>Loading settings...</Text>
+            </View>
+        );
+    }
 
     // Local state for settings (synced with Appwrite)
     const [notifications, setNotifications] = useState(true);
@@ -317,7 +326,6 @@ export default function SettingsScreen() {
         </ThemedView>
     );
 }
-
 
 // Helper Components
 function SectionHeader({ title }: { title: string }) {
