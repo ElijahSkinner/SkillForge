@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import {SafeAreaView} from "react-native-safe-area-context";
-import { themes } from '@/context/ThemeContext';
+import {themes, useTheme} from '@/context/ThemeContext';
 
 // Forge-themed leagues (10 total) with individual colors
 const LEAGUES = [
@@ -15,6 +15,8 @@ const LEAGUES = [
     { name: 'Adamantine League', minXP: 2200, color: '#6e6e70' },
     { name: 'Mithril League', minXP: 2600, color: '#a3d2ca' },
 ];
+const { theme } = useTheme();
+
 
 // Mock user XP data
 const MOCK_USERS = [
