@@ -201,7 +201,7 @@ export function StreakDetails() {
                 flexDirection: 'row',
                 justifyContent: 'space-around',
                 marginBottom: theme.spacing.lg
-            }}>
+            }}></View>
                 {/* Stats Grid */}
                 <View style={{
                     flexDirection: 'row',
@@ -242,5 +242,5 @@ export function StreakDetails() {
                     </ThemedText>
                 </View>
         </ThemedView>
-);
+    );
 }
