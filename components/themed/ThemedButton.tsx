@@ -61,7 +61,7 @@ export function ThemedButton({
                     ...buttonStyles[variant],
                     ...sizes[size],
                 },
-                style
+               // style
             ]}
             {...props}
         >
