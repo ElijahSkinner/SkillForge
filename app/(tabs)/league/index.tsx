@@ -5,7 +5,7 @@ import { useTheme } from '@/context/ThemeContext';
 
 const LeagueList = () => {
     return (
-        <View style={styles}>
+        <View>
             {Object.entries(theme.leagues).map(([leagueName, color]) => (
                 <Text
                     key={leagueName} // The unique key for each item
