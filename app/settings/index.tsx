@@ -1,4 +1,4 @@
-// app/(tabs)/profile/settings/index.tsx
+// app/(tabs)/settings/index.tsx
 import React, { useState } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
