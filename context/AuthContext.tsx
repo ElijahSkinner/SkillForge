@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
+import { streakService } from "@/services/StreakService";
+import { backgroundStreakService } from "@/services/BackgroundStreakService";
 
 const client = new Client()
     .setEndpoint("http://192.168.40.142/v1") // TODO: Move to environment variables
@@ -37,6 +39,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<any>(null);
     const [progress, setProgress] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+
+    // Initialize services after login/registration
+    useEffect(() => {
+        if (progress && updateProgressField) {
+            // Initialize streak service with update function
+            streakService.initialize(updateProgressField);
+
+            // Initialize background streak monitoring
+            backgroundStreakService.initialize(() => progress);
+        }
+    }, [progress, updateProgressField]);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -144,7 +157,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Add a completed lesson and update XP
+    // Add a completed lesson and update XP + Streak
     const addCompletedLesson = async (certName: string, moduleId: number, lessonIndex: number, xpGained: number) => {
         if (!progress) return;
 
@@ -171,6 +184,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 }
             );
             setProgress(updatedDoc);
+
+            // Record study activity for streak tracking
+            await backgroundStreakService.onUserActivity();
+
         } catch (error) {
             console.error('Failed to add completed lesson:', error);
             throw error;
