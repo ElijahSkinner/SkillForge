@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#333',
         borderBottomWidth: 1,
     },
-    
+
     xp: {
         color: '#7ed321',
         fontWeight: '600',
