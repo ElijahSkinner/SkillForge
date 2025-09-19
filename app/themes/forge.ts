@@ -3,7 +3,7 @@ export const forgeTheme = {
     name: 'forge',
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: 'ffa',
         padding: '10px',
     },
     colors: {
