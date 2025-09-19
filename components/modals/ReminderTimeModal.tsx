@@ -1,6 +1,6 @@
 // components/modals/ReminderTimeModal.tsx
 import React, { useState } from 'react';
-import {View, Alert, Pressable} from 'react-native';
+import {View, Alert, Pressable, ScrollView} from 'react-native';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
