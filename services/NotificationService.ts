@@ -1,20 +1,9 @@
 // services/NotificationService.ts
-import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
+// Mock implementation for Expo Go development
 import { Platform } from 'react-native';
-
-// Configure how notifications are handled when app is in foreground
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true, // Will respect user's soundEnabled setting
-        shouldSetBadge: false,
-    }),
-});
 
 export class NotificationService {
     private static instance: NotificationService;
-    private notificationPermission: Notifications.NotificationPermissionsStatus | null = null;
 
     static getInstance(): NotificationService {
         if (!NotificationService.instance) {
@@ -23,160 +12,85 @@ export class NotificationService {
         return NotificationService.instance;
     }
 
-    // Request notification permissions
+    // Mock permission request
     async requestPermissions(): Promise<boolean> {
-        if (!Device.isDevice) {
-            console.log('Notifications not supported on simulator/emulator');
-            return false;
-        }
-
-        // Check current permissions
-        let permission = await Notifications.getPermissionsAsync();
-
-        if (!permission.granted) {
-            // Request permissions if not granted
-            permission = await Notifications.requestPermissionsAsync({
-                ios: {
-                    allowAlert: true,
-                    allowBadge: true,
-                    allowSound: true,
-                    allowAnnouncements: false,
-                },
-            });
-        }
-
-        this.notificationPermission = permission;
-        return permission.granted;
+        console.log('Mock: Notification permissions requested');
+        return true; // Always grant in mock
     }
 
-    // Check if notifications are enabled (both permission and user setting)
+    // Mock notification check
     async areNotificationsEnabled(userNotificationsEnabled: boolean): Promise<boolean> {
-        if (!userNotificationsEnabled) {
-            return false;
-        }
-
-        const permission = await Notifications.getPermissionsAsync();
-        return permission.granted;
+        return userNotificationsEnabled;
     }
 
-    // Schedule daily study reminder
+    // Mock schedule reminder
     async scheduleStudyReminder(
-        time: string, // Format: "HH:MM"
+        time: string,
         notificationsEnabled: boolean,
         soundEnabled: boolean = true
     ): Promise<boolean> {
-        try {
-            // Cancel existing reminder first
-            await this.cancelStudyReminder();
-
-            if (!notificationsEnabled) {
-                console.log('Notifications disabled by user');
-                return false;
-            }
-
-            // Request permissions
-            const hasPermission = await this.requestPermissions();
-            if (!hasPermission) {
-                console.log('Notification permission denied');
-                return false;
-            }
-
-            // Parse time
-            const [hour, minute] = time.split(':').map(Number);
-            if (isNaN(hour) || isNaN(minute)) {
-                throw new Error('Invalid time format');
-            }
-
-            // Schedule the notification
-            const notificationId = await Notifications.scheduleNotificationAsync({
-                content: {
-                    title: "Time to forge your skills! 🔥",
-                    body: "Ready to earn some XP? Let's continue your learning journey.",
-                    data: {
-                        type: 'study_reminder',
-                        timestamp: new Date().toISOString()
-                    },
-                    sound: soundEnabled ? 'default' : false,
-                },
-                trigger: {
-                    hour,
-                    minute,
-                    repeats: true, // Daily repetition
-                },
-            });
-
-            console.log('Study reminder scheduled:', notificationId);
-            return true;
-
-        } catch (error) {
-            console.error('Failed to schedule study reminder:', error);
+        if (!notificationsEnabled) {
+            console.log('Mock: Notifications disabled by user');
             return false;
         }
+
+        console.log(`Mock: Study reminder scheduled for ${time} (sound: ${soundEnabled})`);
+        return true;
     }
 
-    // Cancel the study reminder
+    // Mock cancel reminder
     async cancelStudyReminder(): Promise<void> {
-        try {
-            // Get all scheduled notifications
-            const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
-
-            // Find and cancel study reminder notifications
-            for (const notification of scheduledNotifications) {
-                if (notification.content.data?.type === 'study_reminder') {
-                    await Notifications.cancelScheduledNotificationAsync(notification.identifier);
-                    console.log('Cancelled study reminder:', notification.identifier);
-                }
-            }
-        } catch (error) {
-            console.error('Failed to cancel study reminder:', error);
-        }
+        console.log('Mock: Study reminder cancelled');
     }
 
-    // Schedule achievement notification (for when user completes lessons)
+    // Mock achievement notification
     async scheduleAchievementNotification(
         title: string,
         body: string,
-        delay: number = 0, // seconds
+        delay: number = 0,
         soundEnabled: boolean = true
     ): Promise<boolean> {
-        try {
-            const hasPermission = await Notifications.getPermissionsAsync();
-            if (!hasPermission.granted) {
-                return false;
-            }
-
-            await Notifications.scheduleNotificationAsync({
-                content: {
-                    title,
-                    body,
-                    data: { type: 'achievement' },
-                    sound: soundEnabled ? 'default' : false,
-                },
-                trigger: delay > 0 ? { seconds: delay } : null,
-            });
-
-            return true;
-        } catch (error) {
-            console.error('Failed to schedule achievement notification:', error);
-            return false;
-        }
+        console.log(`Mock: Achievement notification - ${title}: ${body}`);
+        return true;
     }
 
-    // Handle notification response (when user taps notification)
-    addNotificationResponseListener(callback: (response: Notifications.NotificationResponse) => void) {
-        return Notifications.addNotificationResponseReceivedListener(callback);
+    // Mock listener
+    addNotificationResponseListener(callback: (response: any) => void) {
+        console.log('Mock: Notification response listener added');
+        return { remove: () => console.log('Mock: Listener removed') };
     }
 
-    // Get notification permission status
-    async getPermissionStatus(): Promise<Notifications.NotificationPermissionsStatus> {
-        return await Notifications.getPermissionsAsync();
+    // Mock permission status
+    async getPermissionStatus(): Promise<any> {
+        return { granted: true };
     }
 
     // Check if device supports notifications
     isDeviceSupported(): boolean {
-        return Device.isDevice && Platform.OS !== 'web';
+        return Platform.OS !== 'web';
     }
 }
 
 // Export singleton instance
 export const notificationService = NotificationService.getInstance();
+
+// For production builds, you would use the real implementation:
+/*
+// Uncomment this section when building for production
+
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+
+// Configure notifications
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+export class NotificationService {
+  // ... real implementation here
+}
+*/
