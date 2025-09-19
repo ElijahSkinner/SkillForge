@@ -3,20 +3,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import { useTheme } from '@/context/ThemeContext';
 
 
-const LeagueList = () => {
-    return (
-        <View>
-            {Object.entries(theme.leagues).map(([leagueName, color]) => (
-                <Text
-                    key={leagueName} // The unique key for each item
-                    style={[styles.leagueText, { color: color }]} // Apply the dynamic color
-                >
-                    {leagueName.toUpperCase()}
-                </Text>
-            ))}
-        </View>
-    );
-};
+
 
 
 
@@ -33,7 +20,20 @@ const MOCK_USERS = [
 
 
 export default function LeagueScreen() {
-    const { theme } = useTheme();
+    const { theme } = useTheme();const LeagueList = () => {
+        return (
+            <View>
+                {Object.entries(theme.leagues).map(([leagueName, color]) => (
+                    <Text
+                        key={leagueName} // The unique key for each item
+                        style={[styles.leagueText, { color: color }]} // Apply the dynamic color
+                    >
+                        {leagueName.toUpperCase()}
+                    </Text>
+                ))}
+            </View>
+        );
+    };
     const LEAGUES = LEAGUE_ORDER.map((key, index) => ({
         name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
         color: theme.colors.leagues[key],
