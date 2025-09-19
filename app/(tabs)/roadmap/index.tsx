@@ -17,13 +17,13 @@ import { ModuleType } from "@/types/certs";
 import { ThemedView, ThemedText } from '@/components/themed';
 import TopBar from '@/components/TopBar';
 import LessonSelectionModal from '@/components/modals/LessonSelectionModal';
-import AnimatedProgressTile from '@/components/modals/AnimatedProgressTile';
+import AnimatedProgressTile from '@/components/AnimatedProgressTile';
 
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 70, TILE_SPACING: 12 };
 
 export default function RoadmapScreen() {
     const { selectedCert } = useCert();
-    const { progress, databases, updateUserProgress } = useAuth();
+    const { progress, addCompletedLesson } = useAuth();
     const { theme } = useTheme();
     const router = useRouter();
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -141,7 +141,7 @@ export default function RoadmapScreen() {
 
     return (
         <ImageBackground
-            source={theme.assets.roadmapBackground || require('@/assets/forge/path.png')}
+            source={theme.assets.roadmapBackground || require('@/assets/images/path.png')}
             style={styles.backgroundImage}
             resizeMode="cover"
             imageStyle={styles.backgroundImageStyle}
@@ -168,7 +168,7 @@ export default function RoadmapScreen() {
                             { useNativeDriver: false }
                         )}
                     >
-                        {modules.slice().reverse().map((module) => {
+                        {modules.map((module) => {
                             const moduleProgress = getModuleProgress(module);
                             const isModuleComplete = moduleProgress === 1;
 
@@ -195,8 +195,9 @@ export default function RoadmapScreen() {
                                         <ThemedText variant="h4" color="text">Q</ThemedText>
                                     </AnimatedProgressTile>
 
-                                    {/* Individual Lesson Tiles */}
-                                    {module.lessons.map((lesson, index) => {
+                                    {/* Individual Lesson Tiles - CORRECTED ORDER */}
+                                    {module.lessons.slice().reverse().map((lesson, index) => {
+                                        // Since we reversed the lessons, index 0 is now the last lesson
                                         const lessonNumber = module.lessons.length - index;
                                         const isLessonComplete = getLessonProgress(module.id, lessonNumber);
                                         const lessonProgress = isLessonComplete ? 1 : 0;
