@@ -103,6 +103,6 @@ export const oceanTheme = {
         modules: { locked: '#415a77', available: '#1b4965', inProgress: '#006d75', completed: '#2dd4bf' }
     },
     assets: { logo: require('@/assets/images/new-logo.png'),
-        roadmapBackground: require('@/assets/space/spacebg.png'),
+        roadmapBackground: require('@/assets/ocean/oceanbg.png'),
     }
 };
