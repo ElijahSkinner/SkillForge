@@ -48,7 +48,12 @@ export default function ProfileScreen() {
                 </View>
 
                 {/* Overview Box */}
-                <View style={styles.box}>
+                <View style={{
+                    backgroundColor: theme.colors.surface,
+                    borderRadius: theme.borderRadius.lg,
+                    padding: theme.spacing.md,
+                    marginBottom: theme.spacing.md,
+                }}>
                     <Text style={styles.boxTitle}>Overview</Text>
                     <Text>Streak: {streak} 🔥</Text>
 
