@@ -1,6 +1,13 @@
 // app/themes/space.ts
 export const spaceTheme = {
     name: 'space',
+    userRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 6,
+        borderBottomColor: '#333',
+        borderBottomWidth: 1,
+    },
     colors: {
         // Deep space colors
         background: '#0a0a0f',
