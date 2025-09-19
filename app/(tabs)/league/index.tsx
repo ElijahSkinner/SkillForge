@@ -65,7 +65,7 @@ export default function LeagueScreen() {
                             {league.name}
                         </Text>
                         {usersInLeague.length === 0 ? (
-                            <Text style={{ color: theme.colors.error, }}> No users in this league yet</Text>
+                            <Text style={{ color: theme.colors.warning, }}> No users in this league yet</Text>
                         ) : (
                             usersInLeague
                                 .sort((a, b) => b.xp - a.xp)
