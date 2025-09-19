@@ -91,7 +91,7 @@ export default function ProfileScreen() {
 
                     {/* Other overview info */}
                     <Text style= {{ color: theme.colors.textSecondary}}>Total XP: {progress?.xp || 0}</Text>
-                    <Text>Current League: BAB</Text>
+                    <Text style= {{ color: theme.colors.textSecondary}}>Current League: BAB</Text>
                     <Text>Top Score: CompTIA Net+ - 95%</Text>
                 </View>
 
