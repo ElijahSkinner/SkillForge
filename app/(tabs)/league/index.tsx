@@ -104,11 +104,6 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 15,
     },
-    leagueTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-        marginBottom: 10,
-    },
     noUsers: {
         color: '#aaa',
         fontStyle: 'italic',
