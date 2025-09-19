@@ -35,7 +35,7 @@ export default function LeagueScreen() {
             </View>
         );
     };
-    const LEAGUES = LEAGUE_ORDER.map((key, index) => ({
+    const LEAGUES = LeagueList.map((key, index) => ({
         name: `${key.charAt(0).toUpperCase() + key.slice(1)} League`,
         color: theme.colors.leagues[key],
         minXP: index * 300,
