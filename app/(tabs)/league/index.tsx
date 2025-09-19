@@ -61,7 +61,7 @@ export default function LeagueScreen() {
                             { backgroundColor: league.color + '33' }
                         ]}
                     >
-                        <Text style={[theme.typography.h1, { color: league.color }]}>
+                        <Text style={[theme.typography.h3, { color: league.color }]}>
                             {league.name}
                         </Text>
                         {usersInLeague.length === 0 ? (
