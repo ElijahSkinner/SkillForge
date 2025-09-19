@@ -11,10 +11,67 @@ const themes = {
 };
 
 type ThemeName = keyof typeof themes;
-type ThemeMode = 'light' | 'dark';
+
+// Define proper theme structure for TypeScript
+interface ThemeStructure {
+    colors: {
+        background: string;
+        surface: string;
+        surfaceVariant: string;
+        primary: string;
+        primaryDark: string;
+        primaryLight: string;
+        secondary: string;
+        secondaryDark: string;
+        secondaryLight: string;
+        accent: string;
+        accentDark: string;
+        accentLight: string;
+        text: string;
+        textSecondary: string;
+        textMuted: string;
+        textOnPrimary: string;
+        success: string;
+        error: string;
+        warning: string;
+        info: string;
+        cardBackground: string;
+        borderColor: string;
+        ripple: string;
+        [key: string]: any; // Allow additional colors
+    };
+    typography: {
+        [key: string]: any;
+    };
+    spacing: {
+        xs: number;
+        sm: number;
+        md: number;
+        lg: number;
+        xl: number;
+        xxl: number;
+    };
+    borderRadius: {
+        xs: number;
+        sm: number;
+        md: number;
+        lg: number;
+        xl: number;
+        round: number;
+    };
+    shadows: {
+        [key: string]: any;
+    };
+    gamification: {
+        [key: string]: any;
+    };
+    assets: {
+        [key: string]: any;
+    };
+}
 
 interface ThemeContextType {
-    theme: any; // Current active theme (light or dark variant)
+    theme: ThemeStructure;
     themeName: ThemeName;
     isDarkMode: boolean;
     changeTheme: (name: ThemeName) => Promise<void>;
@@ -28,7 +85,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const { progress, updateProgressField } = useAuth();
     const [themeName, setThemeName] = useState<ThemeName>('forge');
     const [isDarkMode, setIsDarkMode] = useState(true);
-    const [theme, setTheme] = useState(themes.forge.dark);
+    const [theme, setTheme] = useState<ThemeStructure>(themes.forge.dark as ThemeStructure);
 
     // Load theme preferences from Appwrite when user data is available
     useEffect(() => {
@@ -46,14 +103,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     // Helper function to update the current active theme
     const updateCurrentTheme = (name: ThemeName, darkMode: boolean) => {
-        const selectedTheme = themes[name];
+        const selectedTheme = themes[name] as any;
         const themeVariant = darkMode ? selectedTheme.dark : selectedTheme.light;
 
         // Merge shared properties with the light/dark variant
-        const mergedTheme = {
-            ...selectedTheme,
-            ...themeVariant,
-            // Keep shared properties from the theme root
+        const mergedTheme: ThemeStructure = {
+            colors: themeVariant.colors,
+            typography: themeVariant.typography,
             spacing: selectedTheme.spacing,
             borderRadius: selectedTheme.borderRadius,
             shadows: selectedTheme.shadows,
