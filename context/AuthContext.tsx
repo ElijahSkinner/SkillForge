@@ -22,6 +22,11 @@ interface AuthContextType {
     resendVerification: () => Promise<void>;
     updateEmail: (newEmail: string, password: string) => Promise<void>;
     updatePassword: (newPassword: string, oldPassword: string) => Promise<void>;
+    updateUserProgress: () => Promise<void>;
+    updateProgressField: (field: string, value: any) => Promise<void>;
+    addCompletedLesson: (certName: string, moduleId: number, lessonIndex: number, xpGained: number) => Promise<void>;
+    addCompletedModule: (certName: string, moduleId: number) => Promise<void>;
+    updateStreak: (newStreak: number) => Promise<void>;
     databases: Databases;
     account: Account;
 }
@@ -59,6 +64,174 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         checkSession();
     }, []);
 
+    // Helper function to create initial progress document with all fields
+    const createInitialProgress = async (userId: string) => {
+        const initialProgress = {
+            userID: userId,
+            currentCert: "",
+            xp: 0,
+            completedLessons: [],
+            completedModules: [],
+            maxStreakAllTime: 0,
+            currentStreak: 0,
+            selectedTheme: "forge",
+            darkModeEnabled: true,
+            enrolledCourses: [],
+            dailyGoalXP: 50,
+            weeklyGoalXP: 350,
+            studyTimeMinutes: 0,
+            averageSessionLength: 0,
+            lastActiveDate: new Date().toISOString(),
+            longestStudyStreak: 0,
+            friendsList: [],
+            friendRequests: [],
+            leagueRank: 0,
+            weeklyXP: 0,
+            achievements: [],
+            badgesEarned: [],
+            mistakesReview: [],
+            favoriteTopics: [],
+            weakTopics: [],
+            notificationsEnabled: true,
+            reminderTime: "19:00",
+            soundEnabled: true,
+            language: "en",
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
+        };
+
+        return await databases.createDocument(
+            DATABASE_ID,
+            COLLECTION_ID,
+            ID.unique(),
+            initialProgress
+        );
+    };
+
+    // Refresh user progress from database
+    const updateUserProgress = async () => {
+        if (!user) return;
+
+        try {
+            const result = await databases.listDocuments(
+                DATABASE_ID,
+                COLLECTION_ID,
+                [Query.equal("userID", user.$id)]
+            );
+
+            if (result.total > 0) {
+                setProgress(result.documents[0]);
+            }
+        } catch (error) {
+            console.error('Failed to update user progress:', error);
+        }
+    };
+
+    // Update a specific field in the progress document
+    const updateProgressField = async (field: string, value: any) => {
+        if (!progress) return;
+
+        try {
+            const updatedDoc = await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                progress.$id,
+                { [field]: value }
+            );
+            setProgress(updatedDoc);
+        } catch (error) {
+            console.error(`Failed to update ${field}:`, error);
+            throw error;
+        }
+    };
+
+    // Add a completed lesson and update XP
+    const addCompletedLesson = async (certName: string, moduleId: number, lessonIndex: number, xpGained: number) => {
+        if (!progress) return;
+
+        const lessonKey = `${certName}_${moduleId}_${lessonIndex}`;
+        const currentLessons = progress.completedLessons || [];
+
+        // Don't add if already completed
+        if (currentLessons.includes(lessonKey)) return;
+
+        const newCompletedLessons = [...currentLessons, lessonKey];
+        const newXP = (progress.xp || 0) + xpGained;
+        const newWeeklyXP = (progress.weeklyXP || 0) + xpGained;
+
+        try {
+            const updatedDoc = await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                progress.$id,
+                {
+                    completedLessons: newCompletedLessons,
+                    xp: newXP,
+                    weeklyXP: newWeeklyXP,
+                    lastActiveDate: new Date().toISOString()
+                }
+            );
+            setProgress(updatedDoc);
+        } catch (error) {
+            console.error('Failed to add completed lesson:', error);
+            throw error;
+        }
+    };
+
+    // Add a completed module
+    const addCompletedModule = async (certName: string, moduleId: number) => {
+        if (!progress) return;
+
+        const moduleKey = `${certName}_${moduleId}`;
+        const currentModules = progress.completedModules || [];
+
+        // Don't add if already completed
+        if (currentModules.includes(moduleKey)) return;
+
+        const newCompletedModules = [...currentModules, moduleKey];
+
+        try {
+            const updatedDoc = await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                progress.$id,
+                {
+                    completedModules: newCompletedModules,
+                    lastActiveDate: new Date().toISOString()
+                }
+            );
+            setProgress(updatedDoc);
+        } catch (error) {
+            console.error('Failed to add completed module:', error);
+            throw error;
+        }
+    };
+
+    // Update streak information
+    const updateStreak = async (newStreak: number) => {
+        if (!progress) return;
+
+        const maxStreak = Math.max(progress.maxStreakAllTime || 0, newStreak);
+        const longestStudyStreak = Math.max(progress.longestStudyStreak || 0, newStreak);
+
+        try {
+            const updatedDoc = await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                progress.$id,
+                {
+                    currentStreak: newStreak,
+                    maxStreakAllTime: maxStreak,
+                    longestStudyStreak: longestStudyStreak,
+                    lastActiveDate: new Date().toISOString()
+                }
+            );
+            setProgress(updatedDoc);
+        } catch (error) {
+            console.error('Failed to update streak:', error);
+            throw error;
+        }
+    };
+
     const login = async (email: string, password: string) => {
         await account.createEmailPasswordSession(email, password);
         const user = await account.get();
@@ -74,21 +247,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (result.total > 0) {
             setProgress(result.documents[0]);
         } else {
-            const newDoc = await databases.createDocument(
-                DATABASE_ID,
-                COLLECTION_ID,
-                ID.unique(),
-                {
-                    userID: user.$id,
-                    currentCert: "",
-                    xp: 0,
-                    completedLessons: [],
-                    completedModules: [],
-                    maxStreakAllTime: 0,
-                    currentStreak: 0,
-                    selectedTheme: "forge", // Add theme preference
-                }
-            );
+            const newDoc = await createInitialProgress(user.$id);
             setProgress(newDoc);
         }
     };
@@ -105,22 +264,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const loggedInUser = await account.get();
         setUser(loggedInUser);
 
-        // Create initial progress document
-        const newDoc = await databases.createDocument(
-            DATABASE_ID,
-            COLLECTION_ID,
-            ID.unique(),
-            {
-                userID: user.$id,
-                currentCert: "",
-                xp: 0,
-                completedLessons: [],
-                completedModules: [],
-                maxStreakAllTime: 0,
-                currentStreak: 0,
-                selectedTheme: "forge",
-            }
-        );
+        // Create initial progress document with all fields
+        const newDoc = await createInitialProgress(user.$id);
         setProgress(newDoc);
     };
 
@@ -174,9 +319,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 resendVerification,
                 updateEmail,
                 updatePassword,
+                updateUserProgress,
+                updateProgressField,
+                addCompletedLesson,
+                addCompletedModule,
+                updateStreak,
                 databases,
-                account,
-                updateUserProgress
+                account
             }}
         >
             {children}
