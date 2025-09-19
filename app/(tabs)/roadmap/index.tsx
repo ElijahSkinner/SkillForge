@@ -141,7 +141,7 @@ export default function RoadmapScreen() {
 
     return (
         <ImageBackground
-            source={theme.assets.roadmapBackground || require('@/assets/images/forde/path.png')}
+            source={theme.assets.roadmapBackground || require('@/assets/forge/path.png')}
             style={styles.backgroundImage}
             resizeMode="cover"
             imageStyle={styles.backgroundImageStyle}
