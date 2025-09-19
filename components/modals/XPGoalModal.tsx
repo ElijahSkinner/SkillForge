@@ -1,7 +1,7 @@
 
 // components/modals/XPGoalModal.tsx
 import React, { useState } from 'react';
-import { View, TextInput, Alert } from 'react-native';
+import {View, TextInput, Alert, Pressable} from 'react-native';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
