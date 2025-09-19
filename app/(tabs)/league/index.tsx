@@ -92,13 +92,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#121212',
         padding: 20,
     },
-    header: {
-        fontSize: 26,
-        fontWeight: '700',
-        color: '#fff',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
+ 
     leagueSection: {
         marginBottom: 25,
         borderRadius: 12,
