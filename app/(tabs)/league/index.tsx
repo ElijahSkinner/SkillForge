@@ -70,11 +70,11 @@ export default function LeagueScreen() {
                             usersInLeague
                                 .sort((a, b) => b.xp - a.xp)
                                 .map((user, i) => (
-                                    <View key={user.name} style={themes.userRow}>
+                                    <View key={user.name} style={theme.userRow}>
                                         <Text style={{ color: theme.colors.text, textAlign: 'center', fontWeight: '600',
                                             width: 30, }}>{i + 1}</Text>
                                         <Text style={{ color: theme.colors.text, flex: 1}}>{user.name}</Text>
-                                        <Text style={styles.xp}>{user.xp} XP</Text>
+                                        <Text style={{ color: theme.colors.text, flex: 1}}>{user.xp} XP</Text>
                                     </View>
                                 ))
                         )}
