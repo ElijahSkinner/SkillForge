@@ -1,11 +1,6 @@
 // app/themes/ocean.ts
 export const oceanTheme = {
     name: 'ocean',
-    container: {
-        flex: 1,
-        backgroundColor: '#121212',
-        padding: 16,
-    },
     colors: {
         // Deep ocean colors
         background: '#0d1b2a',
