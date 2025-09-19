@@ -4,12 +4,12 @@ import { useCert } from '@/context/CertContext';
 import { CERTS_ROADMAP } from '../../../constants/certs';
 import {useTheme} from "@/context/ThemeContext";
 
-const { theme } = useTheme();
 
 export default function CourseScreen() {
     const router = useRouter();
     const { setSelectedCert } = useCert();
     const certs = Object.keys(CERTS_ROADMAP);
+    const { theme } = useTheme();
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center', paddingVertical: 20 }}>
