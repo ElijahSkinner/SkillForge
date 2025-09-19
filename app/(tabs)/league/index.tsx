@@ -20,7 +20,8 @@ const MOCK_USERS = [
 
 
 export default function LeagueScreen() {
-    const { theme } = useTheme();const LeagueList = () => {
+    const { theme } = useTheme();
+    const LeagueList = () => {
         return (
             <View>
                 {Object.entries(theme.leagues).map(([leagueName, color]) => (
