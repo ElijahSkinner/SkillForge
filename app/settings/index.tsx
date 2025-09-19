@@ -1,6 +1,6 @@
 // app/(tabs)/profile/settings/index.tsx
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Pressable } from 'react-native';
+import {View, ScrollView, Pressable, Alert} from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,6 +19,7 @@ import {
     LogoutConfirmModal,
 } from '@/components/modals';
 import { XPGoalModal, ReminderTimeModal } from '@/components/modals/StudyPreferences';
+import {notificationService} from "@/services/NotificationService";
 
 export default function SettingsScreen() {
     const router = useRouter();
@@ -61,6 +62,30 @@ export default function SettingsScreen() {
         setNotifications(value);
         try {
             await updateProgressField('notificationsEnabled', value);
+
+            // Handle notification scheduling based on the toggle
+            if (value) {
+                // Enable notifications - schedule reminder if time is set
+                const reminderTime = progress?.reminderTime || '19:00';
+                const soundEnabled = progress?.soundEnabled ?? true;
+
+                const success = await notificationService.scheduleStudyReminder(
+                    reminderTime,
+                    true,
+                    soundEnabled
+                );
+
+                if (!success) {
+                    Alert.alert(
+                        'Permission Required',
+                        'Please allow notifications in your device settings to receive study reminders.',
+                        [{ text: 'OK' }]
+                    );
+                }
+            } else {
+                // Disable notifications - cancel all scheduled reminders
+                await notificationService.cancelStudyReminder();
+            }
         } catch (error) {
             console.error('Failed to update notifications setting:', error);
             // Revert on error
@@ -292,7 +317,7 @@ export default function SettingsScreen() {
         </ThemedView>
     );
 }
-
+}
 
 // Helper Components
 function SectionHeader({ title }: { title: string }) {
