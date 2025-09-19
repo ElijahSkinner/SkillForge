@@ -102,7 +102,7 @@ export default function ProfileScreen() {
                     padding: theme.spacing.md,
                     marginBottom: theme.spacing.md,
                 }}>
-                    <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Overview</Text>
+                    <Text style={{ color: theme.colors.textSecondary, fontWeight: "600" }}>Friends</Text>
                     <Text style= {{ color: theme.colors.textSecondary}}> Streak 🔥: {streak}</Text>
 
                 </View>
