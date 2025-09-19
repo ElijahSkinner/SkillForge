@@ -33,17 +33,3 @@ export default function CourseScreen() {
         </ScrollView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#0d0e12' },
-    title: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 20 },
-    certButton: {
-        width: '90%',
-        padding: 15,
-        borderRadius: 15,
-        backgroundColor: '#27b0b9',
-        marginBottom: 15,
-        alignItems: 'center',
-    },
-    certButtonText: { color: '#fff', fontWeight: '600', fontSize: 16 },
-});
