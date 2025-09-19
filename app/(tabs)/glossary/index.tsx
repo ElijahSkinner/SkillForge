@@ -70,7 +70,7 @@ export default function GlossaryScreen() {
                         setSelectedObjective(t === 'ports' ? 'all_ports' : null);
                     }}
                 >
-                    <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
+                    <Text style={{ color: theme.colors, textAlign: 'center', fontWeight: 'bold' }}>
                         {t.charAt(0).toUpperCase() + t.slice(1)}
                     </Text>
                 </Pressable>
