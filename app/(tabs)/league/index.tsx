@@ -2,7 +2,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import {SafeAreaView} from "react-native-safe-area-context";
 import { useTheme } from '@/context/ThemeContext';
 
-const { theme } = useTheme();
+
 const LEAGUE_ORDER = [
     'copper', 'bronze', 'iron', 'steel',
     'silver', 'gold', 'platinum', 'titanium',
