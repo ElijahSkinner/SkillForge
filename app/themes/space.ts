@@ -97,5 +97,7 @@ export const spaceTheme = {
     },
     assets: {
         logo: require('@/assets/images/new-logo.png'),
+        roadmapBackground: require('@/assets/ocean/oceanbg.png'),
+
     }
 };
