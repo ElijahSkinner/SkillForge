@@ -96,7 +96,7 @@ export default function GlossaryScreen() {
                         }}
                         onPress={() => setSelectedObjective(obj)}
                     >
-                        <Text style={{ color: theme.colors.text, fontSize: 18, fontWeight: 'bold' }}>
+                        <Text style={{ color: theme.colors.textSecondary, fontSize: 18, fontWeight: 'bold' }}>
                             {obj}
                         </Text>
                     </Pressable>
