@@ -66,10 +66,6 @@ export const forgeTheme = {
     typography: {
         // Headers
         h1: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 20 },
             fontSize: 32,
             fontWeight: '800' as const,
             color: '#ffa500',
