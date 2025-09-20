@@ -75,7 +75,7 @@ export default {
                 {
                     "icon": "./assets/images/notification-icon.png",
                     "color": "#ffffff",
-                    "sounds": ["./assets/sounds/notification.wav"]
+                    //"sounds": ["./assets/sounds/notification.wav"]
                 }
             ]
         ],
