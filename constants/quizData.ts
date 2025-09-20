@@ -355,7 +355,6 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                         { id: "multilayer", text: "Multiple Layers", correct: "firewall" }
                     ],
                     explanation: "Switches create separate collision domains for each port, while hubs create one large collision domain."
-
                 },
                 {
                     id: 4,
