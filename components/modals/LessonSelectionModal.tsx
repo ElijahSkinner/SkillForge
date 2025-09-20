@@ -115,7 +115,7 @@ export default function LessonSelectionModal({
                                     router.push({
                                         pathname: '/quiz/[objective]/[quizType]' as any,
                                         params: {
-                                            objective: `1.${lesson.lessonIndex}`,
+                                            objective: `${lesson.modId}.${lesson.lessonIndex}`,  // Fixed
                                             quizType: 'quizA'
                                         }
                                     });
@@ -129,9 +129,9 @@ export default function LessonSelectionModal({
                                     router.push({
                                         pathname: '/quiz/[objective]/[quizType]' as any,
                                         params: {
-                                            objective: `${lesson.modId}.${lesson.lessonIndex}`,
-                                            quizType: 'quizA',
-                                        },
+                                            objective: `${lesson.modId}.${lesson.lessonIndex}`,  // Fixed
+                                            quizType: 'quizB'
+                                        }
                                     });
                                     onClose();
                                 }}
