@@ -1,10 +1,10 @@
 export interface QuizQuestion {
     id: number;
-    type: 'multiple-choice' | 'drag-drop' | 'true-false' | 'fill-blank' | 'scenario';
+    type: "multiple-choice" | "drag-drop" | "true-false" | "fill-blank" | "scenario";
     question: string;
     options?: string[];
-    correct: number | boolean | string[] | string;
-    explanation: string;
+    correct?: number | boolean | string[] | string;
+    explanation?: string;
     items?: Array<{ id: string; text: string }>;
     targets?: Array<{ id: string; text: string; correct: string }>;
     correctOrder?: string[];
