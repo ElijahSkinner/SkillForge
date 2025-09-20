@@ -97,7 +97,7 @@ export default function RoadmapScreen() {
                 }
             }
 
-            // ✅ Check if this lesson has quizzes
+            //Check if this lesson has quizzes
             const hasQuizzes = DOMAIN_1_QUIZZES[`1.${lesson.lessonIndex}`] !== undefined;
 
             if (hasQuizzes) {
