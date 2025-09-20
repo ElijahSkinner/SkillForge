@@ -98,7 +98,7 @@ export default function RoadmapScreen() {
             }
 
             // ✅ Check if this lesson has quizzes
-            const hasQuizzes = QUIZ_DATA[`1.${lesson.lessonIndex}`] !== undefined;
+            const hasQuizzes = DOMAIN_1_QUIZZES[`1.${lesson.lessonIndex}`] !== undefined;
 
             if (hasQuizzes) {
                 // Go straight to first quiz (or open a quiz selection modal if you want)
