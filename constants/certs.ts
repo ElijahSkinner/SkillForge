@@ -28,7 +28,6 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                 {
                     id: 1,
                     name: '1.1 OSI Reference Model',
-                    
                     quizzes: DOMAIN_1_QUIZZES["1.1"]
                 },
                 {
