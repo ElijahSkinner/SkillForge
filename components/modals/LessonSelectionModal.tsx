@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
 import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
 import { useRouter } from 'expo-router';
-import { DOMAIN_1_QUIZZES } from '@/constants/quizData';
+import { DOMAIN_1_QUIZZES, DOMAIN_2_QUIZZES } from '@/constants/quizData';
 
 interface LessonSelectionModalProps {
     visible: boolean;
