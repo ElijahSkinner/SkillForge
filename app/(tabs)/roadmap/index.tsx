@@ -74,9 +74,8 @@ export default function RoadmapScreen() {
     };
 
     // Handle lesson start - update progress in Appwrite
-    const handleLessonStart = async (lesson: typeof selectedLesson) => {
-        if (!lesson || !progress) return;
-
+    const handleLessonStart = (lesson: typeof selectedLesson) => {
+        if (!lesson) return;
         setUpdatingProgress(`${lesson.modId}_${lesson.lessonIndex}`);
 
         try {
