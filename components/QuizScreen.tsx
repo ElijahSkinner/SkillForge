@@ -1,4 +1,4 @@
-// components/quiz/QuizScreen.tsx - NEW FILE
+// components/quiz/QuizScreen.tsx 
 console.log('QuizScreen.tsx file is being loaded');
 
 import React, { useState } from 'react';
