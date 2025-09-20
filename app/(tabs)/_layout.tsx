@@ -2,7 +2,6 @@ import { Tabs, Redirect } from 'expo-router';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { View, ActivityIndicator } from 'react-native';
-import { View, ActivityIndicator } from 'react-native';
 
 
 export default function TabLayout() {
