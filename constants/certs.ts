@@ -6,7 +6,7 @@ import {DOMAIN_1_QUIZZES} from "@/constants/quizData";
 export type LessonType = {
     id: number;
     name: string;
-    // content: any;
+    content?: any;
     quizzes?: any;
 };
 
