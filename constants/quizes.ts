@@ -1,5 +1,598 @@
-export const COMPLETE_DOMAIN_1_QUIZZES = {
-    ...DOMAIN_1_QUIZZES,
+export const DOMAIN_1_QUIZZES = {
+    "1.1": {
+        quizA: {
+            title: "OSI Model Fundamentals - Quiz A",
+            questions: [
+                {
+                    id: 1,
+                    type: "multiple-choice",
+                    question: "Which OSI layer is responsible for routing packets between different networks?",
+                    options: [
+                        "Layer 2 - Data Link",
+                        "Layer 3 - Network",
+                        "Layer 4 - Transport",
+                        "Layer 5 - Session"
+                    ],
+                    correct: 1,
+                    explanation: "Layer 3 (Network) handles logical addressing and routing between different networks using IP addresses."
+                },
+                {
+                    id: 2,
+                    type: "multiple-choice",
+                    question: "At which layer would you troubleshoot a problem with a damaged Ethernet cable?",
+                    options: [
+                        "Layer 1 - Physical",
+                        "Layer 2 - Data Link",
+                        "Layer 3 - Network",
+                        "Layer 4 - Transport"
+                    ],
+                    correct: 0,
+                    explanation: "Layer 1 (Physical) deals with the actual physical medium including cables, connectors, and electrical signals."
+                },
+                {
+                    id: 3,
+                    type: "drag-drop",
+                    question: "Match each OSI layer with its primary function:",
+                    items: [
+                        { id: "layer7", text: "Application" },
+                        { id: "layer4", text: "Transport" },
+                        { id: "layer3", text: "Network" },
+                        { id: "layer1", text: "Physical" }
+                    ],
+                    targets: [
+                        { id: "function1", text: "Provides network services to applications", correct: "layer7" },
+                        { id: "function2", text: "Ensures reliable data delivery", correct: "layer4" },
+                        { id: "function3", text: "Handles routing and logical addressing", correct: "layer3" },
+                        { id: "function4", text: "Manages electrical signals and physical medium", correct: "layer1" }
+                    ]
+                },
+                {
+                    id: 4,
+                    type: "multiple-choice",
+                    question: "Which layer is responsible for encryption and compression?",
+                    options: [
+                        "Layer 5 - Session",
+                        "Layer 6 - Presentation",
+                        "Layer 7 - Application",
+                        "Layer 4 - Transport"
+                    ],
+                    correct: 1,
+                    explanation: "Layer 6 (Presentation) handles data formatting, encryption, compression, and character encoding."
+                },
+                {
+                    id: 5,
+                    type: "true-false",
+                    question: "The Data Link layer uses MAC addresses for addressing.",
+                    correct: true,
+                    explanation: "Layer 2 (Data Link) uses MAC addresses for physical addressing within the same network segment."
+                },
+                {
+                    id: 6,
+                    type: "multiple-choice",
+                    question: "TCP and UDP operate at which OSI layer?",
+                    options: [
+                        "Layer 3 - Network",
+                        "Layer 4 - Transport",
+                        "Layer 5 - Session",
+                        "Layer 2 - Data Link"
+                    ],
+                    correct: 1,
+                    explanation: "TCP and UDP are transport layer protocols that provide different levels of reliability and service."
+                },
+                {
+                    id: 7,
+                    type: "fill-blank",
+                    question: "Layer __ manages sessions between applications and handles session establishment and termination.",
+                    correct: ["5", "five", "session"],
+                    explanation: "Layer 5 (Session) manages communication sessions between applications."
+                },
+                {
+                    id: 8,
+                    type: "multiple-choice",
+                    question: "When data travels down the OSI stack for transmission, what happens at each layer?",
+                    options: [
+                        "Data is decrypted",
+                        "Headers are removed",
+                        "Headers are added (encapsulation)",
+                        "Data is compressed"
+                    ],
+                    correct: 2,
+                    explanation: "During transmission, each layer adds its own header (and sometimes trailer) to the data in a process called encapsulation."
+                },
+                {
+                    id: 9,
+                    type: "scenario",
+                    question: "A user cannot access a website. The network cable is connected, the switch shows a link light, but the user cannot ping the default gateway. Which OSI layers should you check first?",
+                    options: [
+                        "Layers 1 and 2 only",
+                        "Layers 3 and 4 only",
+                        "Layers 1, 2, and 3",
+                        "Layer 7 only"
+                    ],
+                    correct: 2,
+                    explanation: "Since physical connectivity exists but Layer 3 (ping) fails, check Physical (cable quality), Data Link (switch config), and Network (IP configuration)."
+                },
+                {
+                    id: 10,
+                    type: "multiple-choice",
+                    question: "Which layer would handle the HTTP protocol?",
+                    options: [
+                        "Layer 6 - Presentation",
+                        "Layer 7 - Application",
+                        "Layer 5 - Session",
+                        "Layer 4 - Transport"
+                    ],
+                    correct: 1,
+                    explanation: "HTTP is an application layer protocol that provides web services to applications and users."
+                }
+            ]
+        },
+
+        quizB: {
+            title: "OSI Model Advanced - Quiz B",
+            questions: [
+                {
+                    id: 1,
+                    type: "multiple-choice",
+                    question: "Which layer adds the source and destination MAC addresses to frames?",
+                    options: [
+                        "Layer 1 - Physical",
+                        "Layer 2 - Data Link",
+                        "Layer 3 - Network",
+                        "Layer 4 - Transport"
+                    ],
+                    correct: 1,
+                    explanation: "Layer 2 (Data Link) adds MAC addresses to create frames for local network delivery."
+                },
+                {
+                    id: 2,
+                    type: "scenario",
+                    question: "A network administrator can ping local devices but cannot reach the internet. Which layers are likely functioning correctly?",
+                    options: [
+                        "Layers 1-2 only",
+                        "Layers 1-3 locally",
+                        "All layers",
+                        "Layers 4-7 only"
+                    ],
+                    correct: 1,
+                    explanation: "Local ping works (Layers 1-3 functional locally), but internet access suggests routing or higher layer issues."
+                },
+                {
+                    id: 3,
+                    type: "drag-drop",
+                    question: "Order these protocols by their OSI layer (lowest to highest):",
+                    items: [
+                        { id: "http", text: "HTTP" },
+                        { id: "tcp", text: "TCP" },
+                        { id: "ip", text: "IP" },
+                        { id: "ethernet", text: "Ethernet" }
+                    ],
+                    correctOrder: ["ethernet", "ip", "tcp", "http"],
+                    explanation: "Ethernet (L2), IP (L3), TCP (L4), HTTP (L7)"
+                },
+                {
+                    id: 4,
+                    type: "multiple-choice",
+                    question: "What is the main difference between Layer 6 and Layer 7?",
+                    options: [
+                        "Layer 6 handles routing, Layer 7 handles switching",
+                        "Layer 6 handles data formatting, Layer 7 provides application services",
+                        "Layer 6 handles sessions, Layer 7 handles encryption",
+                        "There is no functional difference"
+                    ],
+                    correct: 1,
+                    explanation: "Layer 6 (Presentation) formats data for the application, while Layer 7 (Application) provides network services to applications."
+                },
+                {
+                    id: 5,
+                    type: "true-false",
+                    question: "SSL/TLS encryption primarily operates at the Transport layer.",
+                    correct: false,
+                    explanation: "SSL/TLS primarily operates at the Presentation layer (Layer 6), though it's implemented between Transport and Application layers."
+                },
+                {
+                    id: 6,
+                    type: "multiple-choice",
+                    question: "Which process occurs when data moves UP the OSI stack (receiving)?",
+                    options: [
+                        "Encapsulation - headers are added",
+                        "De-encapsulation - headers are removed",
+                        "Encryption - data is secured",
+                        "Compression - data is reduced"
+                    ],
+                    correct: 1,
+                    explanation: "When receiving, data moves up the stack and each layer removes its header (de-encapsulation)."
+                },
+                {
+                    id: 7,
+                    type: "fill-blank",
+                    question: "The _______ layer is responsible for establishing, managing, and terminating connections between applications.",
+                    correct: ["session", "Session", "layer 5", "Layer 5"],
+                    explanation: "The Session layer (Layer 5) manages communication sessions between applications."
+                },
+                {
+                    id: 8,
+                    type: "multiple-choice",
+                    question: "At which layer would you configure VLANs?",
+                    options: [
+                        "Layer 1 - Physical",
+                        "Layer 2 - Data Link",
+                        "Layer 3 - Network",
+                        "Layer 4 - Transport"
+                    ],
+                    correct: 1,
+                    explanation: "VLANs are configured at Layer 2 (Data Link) as they segment broadcast domains within the same physical network."
+                },
+                {
+                    id: 9,
+                    type: "scenario",
+                    question: "An application works fine locally but fails when accessing a remote server. The network connection is stable. Which layers should you investigate?",
+                    options: [
+                        "Layers 1-3 only",
+                        "Layers 4-7 only",
+                        "Layer 7 only",
+                        "All layers equally"
+                    ],
+                    correct: 1,
+                    explanation: "Since lower layers work (stable connection), focus on Transport through Application layers for application-specific issues."
+                },
+                {
+                    id: 10,
+                    type: "multiple-choice",
+                    question: "Which layer handles flow control and error recovery?",
+                    options: [
+                        "Layer 2 - Data Link",
+                        "Layer 3 - Network",
+                        "Layer 4 - Transport",
+                        "Layer 5 - Session"
+                    ],
+                    correct: 2,
+                    explanation: "Layer 4 (Transport) provides flow control, error recovery, and reliable data delivery through protocols like TCP."
+                }
+            ]
+        }
+    },
+
+    "1.2": {
+        quizA: {
+            title: "Network Appliances & Functions - Quiz A",
+            questions: [
+                {
+                    id: 1,
+                    type: "multiple-choice",
+                    question: "What is the primary function of a router?",
+                    options: [
+                        "Forward traffic within the same network using MAC addresses",
+                        "Route traffic between different networks using IP addresses",
+                        "Filter traffic based on security policies",
+                        "Provide wireless connectivity"
+                    ],
+                    correct: 1,
+                    explanation: "Routers operate at Layer 3 and route traffic between different networks using IP addresses."
+                },
+                {
+                    id: 2,
+                    type: "multiple-choice",
+                    question: "Which device would you use to segment a LAN into multiple collision domains?",
+                    options: [
+                        "Hub",
+                        "Router",
+                        "Switch",
+                        "Firewall"
+                    ],
+                    correct: 2,
+                    explanation: "Switches create separate collision domains for each port, while hubs create one large collision domain."
+                },
+                {
+                    id: 3,
+                    type: "drag-drop",
+                    question: "Match each device with its primary operating layer:",
+                    items: [
+                        { id: "switch", text: "Switch" },
+                        { id: "router", text: "Router" },
+                        { id: "hub", text: "Hub" },
+                        { id: "firewall", text: "Firewall" }
+                    ],
+                    targets: [
+                        { id: "layer1", text: "Layer 1 (Physical)", correct: "hub" },
+                        { id: "layer2", text: "Layer 2 (Data Link)", correct: "switch" },
+                        { id: "layer3", text: "Layer 3 (Network)", correct: "router" },
+                        { id: "multilayer", text: "Multiple Layers", correct: "firewall" }
+                    ]
+                },
+                {
+                    id: 4,
+                    type: "true-false",
+                    question: "An IDS (Intrusion Detection System) can automatically block detected threats.",
+                    correct: false,
+                    explanation: "IDS only detects and alerts on threats. IPS (Intrusion Prevention System) can actively block threats."
+                },
+                {
+                    id: 5,
+                    type: "multiple-choice",
+                    question: "What is the main purpose of a load balancer?",
+                    options: [
+                        "Route traffic between networks",
+                        "Filter malicious traffic",
+                        "Distribute incoming requests across multiple servers",
+                        "Provide wireless access"
+                    ],
+                    correct: 2,
+                    explanation: "Load balancers distribute incoming network traffic across multiple backend servers to ensure availability and performance."
+                },
+                {
+                    id: 6,
+                    type: "scenario",
+                    question: "Your company needs to provide internet access to guest users while keeping them isolated from the corporate network. Which device would be most appropriate?",
+                    options: [
+                        "Router with NAT",
+                        "Switch with VLANs",
+                        "Firewall with zone-based policies",
+                        "Load balancer"
+                    ],
+                    correct: 2,
+                    explanation: "A firewall with zone-based policies can create separate security zones for guests and corporate users."
+                },
+                {
+                    id: 7,
+                    type: "fill-blank",
+                    question: "A _______ acts as an intermediary between clients and servers, often providing caching and content filtering.",
+                    correct: ["proxy", "proxy server"],
+                    explanation: "A proxy server acts as an intermediary, forwarding requests and often providing additional services like caching."
+                },
+                {
+                    id: 8,
+                    type: "multiple-choice",
+                    question: "What is the difference between NAS and SAN?",
+                    options: [
+                        "NAS is faster than SAN",
+                        "NAS provides file-level access, SAN provides block-level access",
+                        "NAS is more expensive than SAN",
+                        "There is no difference"
+                    ],
+                    correct: 1,
+                    explanation: "NAS provides file-level storage access over the network, while SAN provides block-level storage access."
+                },
+                {
+                    id: 9,
+                    type: "multiple-choice",
+                    question: "Which function helps prevent routing loops by limiting packet lifetime?",
+                    options: [
+                        "QoS (Quality of Service)",
+                        "VPN (Virtual Private Network)",
+                        "TTL (Time To Live)",
+                        "CDN (Content Delivery Network)"
+                    ],
+                    correct: 2,
+                    explanation: "TTL (Time To Live) decrements at each hop and prevents routing loops by dropping packets when TTL reaches zero."
+                },
+                {
+                    id: 10,
+                    type: "multiple-choice",
+                    question: "What is the primary benefit of a CDN (Content Delivery Network)?",
+                    options: [
+                        "Improved security through encryption",
+                        "Reduced latency by caching content closer to users",
+                        "Better routing between networks",
+                        "Increased bandwidth capacity"
+                    ],
+                    correct: 1,
+                    explanation: "CDNs cache content at edge locations closer to users, reducing latency and improving performance."
+                }
+            ]
+        },
+
+        quizB: {
+            title: "Network Appliances Advanced - Quiz B",
+            questions: [
+                {
+                    id: 1,
+                    type: "scenario",
+                    question: "A company's web application is experiencing slow response times during peak hours. Which appliance would best address this issue?",
+                    options: [
+                        "Firewall",
+                        "Load balancer",
+                        "Router",
+                        "Switch"
+                    ],
+                    correct: 1,
+                    explanation: "A load balancer can distribute traffic across multiple web servers, improving response times and availability."
+                },
+                {
+                    id: 2,
+                    type: "multiple-choice",
+                    question: "What is the key difference between a managed and unmanaged switch?",
+                    options: [
+                        "Managed switches are faster",
+                        "Managed switches support VLANs and configuration options",
+                        "Unmanaged switches are more secure",
+                        "There is no functional difference"
+                    ],
+                    correct: 1,
+                    explanation: "Managed switches offer configuration options like VLANs, QoS, and port management, while unmanaged switches operate with fixed configurations."
+                },
+                {
+                    id: 3,
+                    type: "true-false",
+                    question: "A wireless controller is necessary for all wireless access point deployments.",
+                    correct: false,
+                    explanation: "Autonomous access points can operate independently, while lightweight access points require a wireless controller."
+                },
+                {
+                    id: 4,
+                    type: "drag-drop",
+                    question: "Match each appliance with its primary security function:",
+                    items: [
+                        { id: "firewall", text: "Firewall" },
+                        { id: "ids", text: "IDS" },
+                        { id: "ips", text: "IPS" },
+                        { id: "proxy", text: "Proxy" }
+                    ],
+                    targets: [
+                        { id: "block", text: "Blocks traffic based on rules", correct: "firewall" },
+                        { id: "detect", text: "Detects and alerts on threats", correct: "ids" },
+                        { id: "prevent", text: "Actively prevents threats", correct: "ips" },
+                        { id: "filter", text: "Content filtering and caching", correct: "proxy" }
+                    ]
+                },
+                {
+                    id: 5,
+                    type: "multiple-choice",
+                    question: "Which technology allows multiple virtual appliances to run on a single physical server?",
+                    options: [
+                        "Load balancing",
+                        "Virtualization",
+                        "Clustering",
+                        "Redundancy"
+                    ],
+                    correct: 1,
+                    explanation: "Virtualization allows multiple virtual appliances (like virtual firewalls or routers) to run on a single physical server."
+                },
+                {
+                    id: 6,
+                    type: "fill-blank",
+                    question: "_______ prioritizes network traffic to ensure critical applications receive adequate bandwidth and low latency.",
+                    correct: ["QoS", "Quality of Service"],
+                    explanation: "Quality of Service (QoS) prioritizes traffic based on application requirements and business policies."
+                },
+                {
+                    id: 7,
+                    type: "scenario",
+                    question: "Your network monitoring shows unusual traffic patterns suggesting a potential security breach. Which appliance would provide detailed analysis of this traffic?",
+                    options: [
+                        "Router with access lists",
+                        "IDS with packet analysis",
+                        "Load balancer with health checks",
+                        "Switch with port mirroring"
+                    ],
+                    correct: 1,
+                    explanation: "An IDS with packet analysis capabilities can examine traffic patterns and detect potential security threats."
+                },
+                {
+                    id: 8,
+                    type: "multiple-choice",
+                    question: "What is the primary advantage of using a VPN concentrator?",
+                    options: [
+                        "Faster internet speeds",
+                        "Better wireless coverage",
+                        "Secure remote access to corporate networks",
+                        "Improved local network performance"
+                    ],
+                    correct: 2,
+                    explanation: "VPN concentrators provide secure, encrypted connections for remote users to access corporate networks over the internet."
+                },
+                {
+                    id: 9,
+                    type: "true-false",
+                    question: "PoE (Power over Ethernet) switches can provide power to wireless access points through the network cable.",
+                    correct: true,
+                    explanation: "PoE switches can provide both data and power to compatible devices like wireless access points, IP phones, and cameras through Ethernet cables."
+                },
+                {
+                    id: 10,
+                    type: "multiple-choice",
+                    question: "In a spine-leaf data center architecture, which appliances typically function as spine devices?",
+                    options: [
+                        "Access switches",
+                        "High-performance Layer 3 switches/routers",
+                        "Firewalls",
+                        "Load balancers"
+                    ],
+                    correct: 1,
+                    explanation: "Spine devices in a spine-leaf architecture are typically high-performance Layer 3 switches or routers that interconnect all leaf switches."
+                }
+            ]
+        }
+    },
+
+    // Continue with quizzes for objectives 1.3 through 1.8...
+    "1.3": {
+        quizA: {
+            title: "Cloud Concepts & Connectivity - Quiz A",
+            questions: [
+                {
+                    id: 1,
+                    type: "multiple-choice",
+                    question: "What does NFV (Network Functions Virtualization) primarily accomplish?",
+                    options: [
+                        "Virtualizes server hardware",
+                        "Virtualizes network services traditionally run on dedicated hardware",
+                        "Provides cloud storage",
+                        "Manages virtual machines"
+                    ],
+                    correct: 1,
+                    explanation: "NFV virtualizes network functions like firewalls, load balancers, and routers that traditionally required dedicated hardware appliances."
+                },
+                {
+                    id: 2,
+                    type: "drag-drop",
+                    question: "Match each service model with its description:",
+                    items: [
+                        { id: "saas", text: "SaaS" },
+                        { id: "paas", text: "PaaS" },
+                        { id: "iaas", text: "IaaS" }
+                    ],
+                    targets: [
+                        { id: "software", text: "Complete applications (Office 365, Gmail)", correct: "saas" },
+                        { id: "platform", text: "Development platforms and tools", correct: "paas" },
+                        { id: "infrastructure", text: "Virtual machines and storage", correct: "iaas" }
+                    ]
+                },
+                {
+                    id: 3,
+                    type: "true-false",
+                    question: "A VPC (Virtual Private Cloud) provides an isolated environment within a public cloud.",
+                    correct: true,
+                    explanation: "A VPC creates a logically isolated section of a public cloud where you can launch resources in a virtual network you define."
+                },
+                {
+                    id: 4,
+                    type: "multiple-choice",
+                    question: "What is the primary function of an Internet Gateway in a cloud environment?",
+                    options: [
+                        "Provide outbound-only internet access",
+                        "Enable bidirectional internet connectivity for VPC resources",
+                        "Connect multiple VPCs together",
+                        "Provide DNS resolution services"
+                    ],
+                    correct: 1,
+                    explanation: "An Internet Gateway provides bidirectional internet connectivity, allowing resources in a VPC to communicate with the internet."
+                },
+                {
+                    id: 5,
+                    type: "scenario",
+                    question: "Your company wants to provide internet access to private cloud instances without exposing them to inbound internet traffic. Which solution is most appropriate?",
+                    options: [
+                        "Internet Gateway",
+                        "NAT Gateway",
+                        "VPN Gateway",
+                        "Direct Connect"
+                    ],
+                    correct: 1,
+                    explanation: "A NAT Gateway allows outbound internet access from private instances while preventing inbound connections from the internet."
+                }
+            ]
+        },
+        quizB: {
+            title: "Cloud Concepts Advanced - Quiz B",
+            questions: [
+                // Additional questions for 1.3 Quiz B would go here
+                {
+                    id: 1,
+                    type: "multiple-choice",
+                    question: "Which deployment model combines both public and private cloud resources?",
+                    options: [
+                        "Public cloud",
+                        "Private cloud",
+                        "Hybrid cloud",
+                        "Community cloud"
+                    ],
+                    correct: 2,
+                    explanation: "Hybrid cloud combines public and private cloud resources, allowing data and applications to be shared between them."
+                }
+                // ... more questions
+            ]
+        },
 
     "1.4": {
         quizA: {
@@ -422,4 +1015,4 @@ export const COMPLETE_DOMAIN_1_QUIZZES = {
             ]
         }
     }
-};
+});

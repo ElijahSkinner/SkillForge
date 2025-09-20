@@ -43,8 +43,18 @@ export const GLOSSARY_TERMS: Record<string, Record<string, { term: string; defin
     },
     'CompTIA Network+': {
         '1.0 Networking Concepts': [
-            { term: 'OSI Model', definition: 'Conceptual model with 7 layers for network communication.' },
-            { term: 'TCP/IP', definition: 'Protocol suite for internet and network communication.' },
+            { term: "OSI Model", definition: "Open Systems Interconnection model - 7-layer conceptual framework for network communication" },
+            { term: "Encapsulation", definition: "Process of adding headers to data as it moves down the OSI stack" },
+            { term: "Router", definition: "Layer 3 device that forwards packets between different networks using IP addresses" },
+            { term: "Switch", definition: "Layer 2 device that forwards frames within a network using MAC addresses" },
+            { term: "Firewall", definition: "Security device that controls traffic flow based on predetermined security rules" },
+            { term: "Load Balancer", definition: "Device that distributes incoming network traffic across multiple servers" },
+            { term: "VPC", definition: "Virtual Private Cloud - isolated cloud computing environment within a public cloud" },
+            { term: "NFV", definition: "Network Functions Virtualization - virtualizing network services traditionally requiring dedicated hardware" },
+            { term: "VXLAN", definition: "Virtual Extensible LAN - network virtualization technology extending Layer 2 segments over Layer 3 networks" },
+            { term: "Zero Trust", definition: "Security model that requires verification for every user and device accessing network resources" },
+            { term: "SASE", definition: "Secure Access Service Edge - cloud-based security and networking services" },
+            { term: "SD-WAN", definition: "Software-Defined Wide Area Network - centralized control and management of WAN connections" }
         ],
     },
 };
