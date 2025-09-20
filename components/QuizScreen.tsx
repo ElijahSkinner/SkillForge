@@ -6,12 +6,23 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
 import { useTheme } from '@/context/ThemeContext';
-import { DOMAIN_1_QUIZZES, DOMAIN_2_QUIZZES } from '@/constants/quizData';
+import {
+    DOMAIN_1_QUIZZES,
+    DOMAIN_2_QUIZZES,
+    // when you add more:
+    // DOMAIN_3_QUIZZES,
+    // DOMAIN_4_QUIZZES,
+    // DOMAIN_5_QUIZZES,
+} from '@/constants/quizData';
 import QuizQuestionComponent from './QuizQuestion';
+
 console.log('QuizScreen.tsx file is being loaded');
 
 export default function QuizScreen() {
-    const { objective, quizType } = useLocalSearchParams<{ objective: string; quizType: 'quizA' | 'quizB' }>();
+    const { objective, quizType } = useLocalSearchParams<{
+        objective: string;
+        quizType: 'quizA' | 'quizB';
+    }>();
     const { theme } = useTheme();
     const router = useRouter();
 
@@ -20,7 +31,17 @@ export default function QuizScreen() {
     const [showResult, setShowResult] = useState(false);
     const [quizCompleted, setQuizCompleted] = useState(false);
 
-    const quiz = DOMAIN_1_QUIZZES[objective!]?.[quizType!];
+    // 🔑 Gather all domains into one lookup object
+    const ALL_DOMAINS: Record<string, any> = {
+        ...DOMAIN_1_QUIZZES,
+        ...DOMAIN_2_QUIZZES,
+        // ...DOMAIN_3_QUIZZES,
+        // ...DOMAIN_4_QUIZZES,
+        // ...DOMAIN_5_QUIZZES,
+    };
+
+    // objective comes in like "1.1", "2.2", etc.
+    const quiz = ALL_DOMAINS[objective!]?.[quizType!];
 
     if (!quiz) {
         return (
@@ -57,32 +78,33 @@ export default function QuizScreen() {
     if (quizCompleted) {
         const score = calculateScore();
         return (
-
             <ThemedView style={{ flex: 1 }}>
                 <SafeAreaView style={{ flex: 1, padding: theme.spacing.lg }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ThemedText variant="h2" style={{ marginBottom: theme.spacing.lg }}>
                             Quiz Complete!
                         </ThemedText>
-                        <ThemedText variant="h3" style={{
-                            marginBottom: theme.spacing.lg,
-                            color: score >= 70 ? theme.colors.success : theme.colors.warning
-                        }}>
+                        <ThemedText
+                            variant="h3"
+                            style={{
+                                marginBottom: theme.spacing.lg,
+                                color: score >= 70 ? theme.colors.success : theme.colors.warning,
+                            }}
+                        >
                             Your Score: {score}%
                         </ThemedText>
-                        <ThemedText variant="body1" style={{
-                            textAlign: 'center',
-                            marginBottom: theme.spacing.xl
-                        }}>
-                            {score >= 90 ?
-                                "Great job! You've mastered this topic." :
-                                "Keep studying! Review the material and try again."
-                            }
+                        <ThemedText
+                            variant="body1"
+                            style={{
+                                textAlign: 'center',
+                                marginBottom: theme.spacing.xl,
+                            }}
+                        >
+                            {score >= 90
+                                ? "Great job! You've mastered this topic."
+                                : 'Keep studying! Review the material and try again.'}
                         </ThemedText>
-                        <ThemedButton
-                            title="Continue Learning"
-                            onPress={() => router.back()}
-                        />
+                        <ThemedButton title="Continue Learning" onPress={() => router.back()} />
                     </View>
                 </SafeAreaView>
             </ThemedView>
@@ -93,24 +115,30 @@ export default function QuizScreen() {
         <ThemedView style={{ flex: 1 }}>
             <SafeAreaView style={{ flex: 1 }}>
                 {/* Header */}
-                <View style={{
-                    padding: theme.spacing.md,
-                    borderBottomWidth: 1,
-                    borderBottomColor: theme.colors.borderColor
-                }}>
+                <View
+                    style={{
+                        padding: theme.spacing.md,
+                        borderBottomWidth: 1,
+                        borderBottomColor: theme.colors.borderColor,
+                    }}
+                >
                     <ThemedText variant="h4">{quiz.title}</ThemedText>
-                    <View style={{
-                        height: 4,
-                        backgroundColor: theme.colors.borderColor,
-                        borderRadius: 2,
-                        marginTop: theme.spacing.sm
-                    }}>
-                        <View style={{
-                            height: '100%',
-                            width: `${progress}%`,
-                            backgroundColor: theme.colors.primary,
-                            borderRadius: 2
-                        }} />
+                    <View
+                        style={{
+                            height: 4,
+                            backgroundColor: theme.colors.borderColor,
+                            borderRadius: 2,
+                            marginTop: theme.spacing.sm,
+                        }}
+                    >
+                        <View
+                            style={{
+                                height: '100%',
+                                width: `${progress}%`,
+                                backgroundColor: theme.colors.primary,
+                                borderRadius: 2,
+                            }}
+                        />
                     </View>
                     <ThemedText variant="caption" style={{ marginTop: theme.spacing.xs }}>
                         Question {currentQuestionIndex + 1} of {quiz.questions.length}
@@ -128,13 +156,15 @@ export default function QuizScreen() {
                 </ScrollView>
 
                 {/* Navigation */}
-                <View style={{
-                    padding: theme.spacing.md,
-                    borderTopWidth: 1,
-                    borderTopColor: theme.colors.borderColor
-                }}>
+                <View
+                    style={{
+                        padding: theme.spacing.md,
+                        borderTopWidth: 1,
+                        borderTopColor: theme.colors.borderColor,
+                    }}
+                >
                     <ThemedButton
-                        title={currentQuestionIndex === quiz.questions.length - 1 ? "Finish Quiz" : "Next Question"}
+                        title={currentQuestionIndex === quiz.questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
                         onPress={handleNext}
                         disabled={!showResult}
                     />
