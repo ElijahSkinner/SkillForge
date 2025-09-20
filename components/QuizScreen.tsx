@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
 import { useTheme } from '@/context/ThemeContext';
-import { QUIZ_DATA } from '@/constants/quizData';
+import {  } from '@/constants/quizData';
 import QuizQuestionComponent from './QuizQuestion';
 
 export default function QuizScreen() {
