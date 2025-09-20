@@ -7,7 +7,7 @@ export type LessonType = {
     id: number;
     name: string;
     content?: any;  // Add this
-    quizzes?: any;  // Add this
+    quizzes?: any;  
 };
 
 export type ModuleType = {
