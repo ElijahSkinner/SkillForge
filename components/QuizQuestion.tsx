@@ -1,4 +1,4 @@
-// components/quiz/QuizQuestion.tsx
+// components/QuizQuestion.tsx
 import React, { useState } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
 import { ThemedText, ThemedButton } from '@/components/themed';
