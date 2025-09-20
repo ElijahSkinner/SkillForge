@@ -18,16 +18,16 @@ export type QuizQuestion =
     id: number;
     type: "fill-blank";
     question: string;
-    correct: string[]; // can be ["5", "five", "session"]
+    correct: string[];
     explanation: string;
 }
     | {
     id: number;
     type: "drag-drop";
     question: string;
-    items: Array<{ id: string; text: string }>;
-    targets: Array<{ id: string; text: string; correct: string }>;
-    explanation: string; // still keep explanation so user knows why
+    items: { id: string; text: string }[];
+    targets: { id: string; text: string; correct: string }[];
+    explanation: string;
 }
     | {
     id: number;
@@ -38,13 +38,12 @@ export type QuizQuestion =
     explanation: string;
 };
 
-
 export interface QuizData {
     title: string;
     questions: QuizQuestion[];
 }
 
-export interface QuizType{
+export interface QuizType {
     quizA: QuizData;
     quizB: QuizData;
 }
