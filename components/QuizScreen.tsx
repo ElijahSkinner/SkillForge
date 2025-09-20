@@ -1,4 +1,6 @@
 // components/quiz/QuizScreen.tsx - NEW FILE
+console.log('QuizScreen.tsx file is being loaded');
+
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
