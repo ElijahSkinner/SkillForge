@@ -1,7 +1,7 @@
 //constant/certs/ts
 import { ModuleType } from '@/types/certs';
 import {LESSON_CONTENT} from "@/constants/lessonContent";
-import {DOMAIN_1_QUIZZES} from "@/constants/quiz";
+import {DOMAIN_1_QUIZZES} from "@/constants/quizData";
 // types/certs.ts
 export type LessonType = {
     id: number;

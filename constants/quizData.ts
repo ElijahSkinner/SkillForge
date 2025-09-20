@@ -10,14 +10,14 @@ export interface QuizQuestion {
     correctOrder?: string[];
 }
 
-export interface Quiz {
+export interface QuizData {
     title: string;
     questions: QuizQuestion[];
 }
 
 export interface ObjectiveQuizzes {
-    quizA: Quiz;
-    quizB: Quiz;
+    quizA: QuizData;
+    quizB: QuizData;
 }
 export const DOMAIN_1_QUIZZES = {
     "1.1": {
