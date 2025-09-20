@@ -83,23 +83,22 @@ export default function RoadmapScreen() {
             const newCompletedLessons = [...completedLessons];
 
             if (!newCompletedLessons.includes(lessonKey)) {
-                newCompletedLessons.push(lessonKey);
-
-                // Update in Appwrite using the context helper
-                await addCompletedLesson(
-                    selectedCert,
-                    lesson.modId,
-                    lesson.lessonIndex,
-                    getLessonXP(
-                        modules.find(m => m.id === lesson.modId)!,
-                        lesson.lessonIndex
-                    )
-                );
+                // Find the module to get XP
+                const currentModule = modules.find(m => m.id === lesson.modId);
+                if (currentModule) {
+                    // Update in Appwrite using the context helper
+                    await addCompletedLesson(
+                        selectedCert || '',
+                        lesson.modId,
+                        lesson.lessonIndex,
+                        getLessonXP(currentModule, lesson.lessonIndex)
+                    );
+                }
             }
 
             // Navigate to quiz
             router.push({
-                pathname: '/quiz/[cert]/[id]',
+                pathname: '/(tabs)/quiz/[cert]/[id]' as any,
                 params: { cert: selectedCert || '', id: String(lesson.modId) },
             });
         } catch (error) {
@@ -113,35 +112,53 @@ export default function RoadmapScreen() {
     if (!selectedCert) {
         return (
             <ThemedView variant="background" style={styles.container}>
-                <ThemedText
-                    variant="body1"
-                    color="textSecondary"
-                    style={styles.message}
-                >
-                    Please select a certification first.
-                </ThemedText>
-                <Pressable
-                    style={[styles.button, { backgroundColor: theme.colors.primary }]}
-                    onPress={() => router.push('../course')}
-                >
-                    <ThemedText variant="button" color="textOnPrimary">
-                        Select a Cert
+                <SafeAreaView style={styles.safeArea}>
+                    <ThemedText
+                        variant="body1"
+                        color="textSecondary"
+                        style={styles.message}
+                    >
+                        Please select a certification first.
                     </ThemedText>
-                </Pressable>
+                    <Pressable
+                        style={[styles.button, { backgroundColor: theme.colors.primary }]}
+                        onPress={() => router.push('/(tabs)/course')}
+                    >
+                        <ThemedText variant="button" color="textOnPrimary">
+                            Select a Cert
+                        </ThemedText>
+                    </Pressable>
+                </SafeAreaView>
             </ThemedView>
         );
     }
 
-    const modules = CERTS_ROADMAP[selectedCert];
-    const enrolledCourses = Object.keys(CERTS_ROADMAP).map((name, idx) => ({
-        id: idx + 1,
-        name,
-        score: Math.round(getModuleProgress({ lessons: [], weight: 100, id: idx, name, completed: false }) * 100),
-    }));
+    const modules = CERTS_ROADMAP[selectedCert] || [];
+
+    // Create enrolled courses safely
+    const enrolledCourses = Object.keys(CERTS_ROADMAP).map((name, idx) => {
+        // Create a dummy module for progress calculation
+        const dummyModule: ModuleType = {
+            id: idx,
+            name: name,
+            weight: 100,
+            completed: false,
+            lessons: []
+        };
+
+        return {
+            id: idx + 1,
+            name,
+            score: Math.round(getModuleProgress(dummyModule) * 100),
+        };
+    });
+
+    // Get background image safely
+    const backgroundImage = theme.assets?.roadmapBackground || require('@/assets/forge/path.png');
 
     return (
         <ImageBackground
-            source={theme.assets.roadmapBackground || require('@/assets/forge/path.png')}
+            source={backgroundImage}
             style={styles.backgroundImage}
             resizeMode="cover"
             imageStyle={styles.backgroundImageStyle}
