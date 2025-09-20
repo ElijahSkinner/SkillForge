@@ -46,7 +46,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                     id: 4,
                     name: '1.4 Ports, Protocols & Traffic Types',
                     content: LESSON_CONTENT["1.4"],
-                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.4"]
+                    quizzes: DOMAIN_1_QUIZZES["1.4"]
                 },
                 {
                     id: 5,
