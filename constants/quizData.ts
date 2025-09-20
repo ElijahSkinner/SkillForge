@@ -217,6 +217,12 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                         { id: "ip", text: "IP" },
                         { id: "ethernet", text: "Ethernet" }
                     ],
+                    targets: [
+                        { id: "layer2", text: "Layer 2", correct: "ethernet" },
+                        { id: "layer3", text: "Layer 3", correct: "ip" },
+                        { id: "layer4", text: "Layer 4", correct: "tcp" },
+                        { id: "layer7", text: "Layer 7", correct: "http" }
+                    ],
                     explanation: "Ethernet (L2), IP (L3), TCP (L4), HTTP (L7)"
                 },
                 {
