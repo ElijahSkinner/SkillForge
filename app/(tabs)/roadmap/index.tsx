@@ -97,11 +97,26 @@ export default function RoadmapScreen() {
                 }
             }
 
-            // Navigate to quiz
-            router.push({
-                pathname: '/(tabs)/quiz/[cert]/[id]' as any,
-                params: { cert: selectedCert || '', id: String(lesson.modId) },
-            });
+            // ✅ Check if this lesson has quizzes
+            const hasQuizzes = QUIZ_DATA[`1.${lesson.lessonIndex}`] !== undefined;
+
+            if (hasQuizzes) {
+                // Go straight to first quiz (or open a quiz selection modal if you want)
+                router.push({
+                    pathname: '/(tabs)/quiz/[objective]/[quizType]' as any,
+                    params: {
+                        objective: `1.${lesson.lessonIndex}`,
+                        quizType: 'quizA'
+                    },
+                });
+            } else {
+                // Default navigation (your existing lesson flow)
+                router.push({
+                    pathname: '/(tabs)/quiz/[cert]/[id]' as any,
+                    params: { cert: selectedCert || '', id: String(lesson.modId) },
+                });
+            }
+
         } catch (error) {
             console.error('Failed to update lesson progress:', error);
         } finally {
