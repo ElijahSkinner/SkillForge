@@ -59,6 +59,7 @@ export default function QuizScreen() {
     if (quizCompleted) {
         const score = calculateScore();
         return (
+            
             <ThemedView style={{ flex: 1 }}>
                 <SafeAreaView style={{ flex: 1, padding: theme.spacing.lg }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
