@@ -1,4 +1,4 @@
-// components/QuizQuestion.tsx
+// components/quiz/QuizQuestion.tsx
 import React, { useState } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
 import { ThemedText, ThemedButton } from '@/components/themed';
@@ -19,7 +19,7 @@ export default function QuizQuestionComponent({
                                                   userAnswer
                                               }: QuizQuestionComponentProps) {
     const { theme } = useTheme();
-    const [selectedOption, setSelectedOption] = useState<number | null>(null);
+    const [selectedOption, setSelectedOption] = useState<number | string | null>(null);
     const [textAnswer, setTextAnswer] = useState('');
     const [draggedItems, setDraggedItems] = useState<Record<string, string>>({});
 
@@ -203,10 +203,10 @@ export default function QuizQuestionComponent({
                         {q.items.map(item => (
                             <Pressable
                                 key={item.id}
-                                onPress={() => !showResult && setSelectedOption(item.id as any)}
+                                onPress={() => !showResult && setSelectedOption(item.id)}
                                 style={{
                                     padding: theme.spacing.sm,
-                                    backgroundColor: selectedOption === item.id as any
+                                    backgroundColor: selectedOption === item.id
                                         ? theme.colors.primary
                                         : theme.colors.surface,
                                     borderRadius: theme.borderRadius.sm,
@@ -215,7 +215,7 @@ export default function QuizQuestionComponent({
                                 }}
                             >
                                 <ThemedText style={{
-                                    color: selectedOption === item.id as any
+                                    color: selectedOption === item.id
                                         ? theme.colors.textOnPrimary
                                         : theme.colors.text
                                 }}>
