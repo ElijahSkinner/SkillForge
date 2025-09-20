@@ -1602,7 +1602,6 @@ export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
         }
     },
 
-    // Continue with quizzes for objectives 1.3 through 1.8...
     "2.3": {
         quizA: {
             title: "Cloud Concepts & Connectivity - Quiz A",
