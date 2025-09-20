@@ -62,9 +62,6 @@ export default function QuizScreen() {
 
             <ThemedView style={{ flex: 1 }}>
                 <SafeAreaView style={{ flex: 1, padding: theme.spacing.lg }}>
-                    <View style={{flex: 1, backgroundColor: 'red'}}>
-                        <Text>Quiz Screen Test</Text>
-                    </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ThemedText variant="h2" style={{ marginBottom: theme.spacing.lg }}>
                             Quiz Complete!
