@@ -110,7 +110,6 @@ export default {
             "eas": {
                 "projectId": "81ebdcb7-ef55-4ae8-a4b3-d00815a2eb9e"
             }
-
         }
     }
 };
