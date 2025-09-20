@@ -300,15 +300,7 @@ export default function RoadmapScreen() {
                         visible={selectedLesson !== null}
                         lesson={selectedLesson}
                         onClose={() => setSelectedLesson(null)}
-                        onStart= const handleLessonStart = () => {
-                        router.push({
-                            pathname: '/(tabs)/quiz/[objective]/[quizType]' as any,
-                            params: {
-                                objective: '1.1',  // For OSI Model lesson
-                                quizType: 'quizA'
-                            },
-                        });
-                    };
+                        onStart={() => selectedLesson && handleLessonStart(selectedLesson)}
                         loading={updatingProgress !== null}
                     />
                 </SafeAreaView>
