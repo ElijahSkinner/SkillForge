@@ -1,4 +1,4 @@
-// components/quiz/QuizQuestion.tsx 
+// components/quiz/QuizQuestion.tsx
 import React, { useState } from 'react';
 import { View, Pressable } from 'react-native';
 import { QuizQuestion } from '@/types/quiz';
