@@ -1,5 +1,4 @@
-// components/quiz/QuizScreen.tsx 
-console.log('QuizScreen.tsx file is being loaded');
+// components/quiz/QuizScreen.tsx
 
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
@@ -9,6 +8,7 @@ import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
 import { useTheme } from '@/context/ThemeContext';
 import { DOMAIN_1_QUIZZES } from '@/constants/quizData';
 import QuizQuestionComponent from './QuizQuestion';
+console.log('QuizScreen.tsx file is being loaded');
 
 export default function QuizScreen() {
     const { objective, quizType } = useLocalSearchParams<{ objective: string; quizType: 'quizA' | 'quizB' }>();
