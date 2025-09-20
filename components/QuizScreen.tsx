@@ -9,7 +9,6 @@ import { useTheme } from '@/context/ThemeContext';
 import {
     DOMAIN_1_QUIZZES,
     DOMAIN_2_QUIZZES,
-    // when you add more:
     // DOMAIN_3_QUIZZES,
     // DOMAIN_4_QUIZZES,
     // DOMAIN_5_QUIZZES,
