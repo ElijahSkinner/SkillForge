@@ -18,6 +18,7 @@ import { ThemedView, ThemedText } from '@/components/themed';
 import TopBar from '@/components/TopBar';
 import LessonSelectionModal from '@/components/modals/LessonSelectionModal';
 import AnimatedProgressTile from '@/components/modals/AnimatedProgressTile';
+import {DOMAIN_1_QUIZZES} from "@/constants/quizData";
 
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 70, TILE_SPACING: 12 };
 
