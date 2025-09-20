@@ -40,7 +40,21 @@ export default function LessonSelectionModal({
         ? lesson.moduleWeight
         : Math.round(lesson.moduleWeight / lesson.totalLessons);
 
-    const hasQuiz = DOMAIN_1_QUIZZES[`${lesson.modId}.${lesson.lessonIndex}`] !== undefined;
+    // Check for quizzes based on the module ID
+    const getQuizData = () => {
+        switch (lesson.modId) {
+            case 1:
+                return DOMAIN_1_QUIZZES;
+            // Add other domains when you create them
+            // case 2:
+            //     return DOMAIN_2_QUIZZES;
+            default:
+                return {};
+        }
+    };
+
+    const quizData = getQuizData();
+    const hasQuiz = quizData[`${lesson.modId}.${lesson.lessonIndex}`] !== undefined;
 
     const handleLessonStart = async () => {
         if (hasQuiz) {
