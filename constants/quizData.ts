@@ -490,7 +490,9 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                         { id: "detect", text: "Detects and alerts on threats", correct: "ids" },
                         { id: "prevent", text: "Actively prevents threats", correct: "ips" },
                         { id: "filter", text: "Content filtering and caching", correct: "proxy" }
-                    ]
+                    ],
+                    //UPDATE THIS ASAP
+                    explanation: "Switches create separate collision domains for each port, while hubs create one large collision domain."
                 },
                 {
                     id: 5,
