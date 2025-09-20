@@ -6,7 +6,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
 import { useTheme } from '@/context/ThemeContext';
-import { DOMAIN_1_QUIZZES } from '@/constants/quizData';
+import { DOMAIN_1_QUIZZES, DOMAIN_2_QUIZZES } from '@/constants/quizData';
 import QuizQuestionComponent from './QuizQuestion';
 console.log('QuizScreen.tsx file is being loaded');
 
