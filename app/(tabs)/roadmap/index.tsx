@@ -252,7 +252,7 @@ export default function RoadmapScreen() {
                                                     : theme.colors.surface
                                                 }
                                                 progressColor={theme.colors.primary}
-                                                style={[styles.tile, { marginBottom: TILE_SPACING }]}
+                                                style={{ ...styles.tile, marginBottom: TILE_SPACING }}
                                                 disabled={updatingProgress === `${module.id}_${lessonNumber}`}
                                             >
                                                 <ThemedText
