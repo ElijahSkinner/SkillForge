@@ -107,9 +107,8 @@ export default {
             "app_version": process.env.EXPO_PUBLIC_APP_VERSION || "1.0.0",
             "deep_link_scheme": process.env.EXPO_PUBLIC_DEEP_LINK_SCHEME || "skillforge",
             "deep_link_url": process.env.EXPO_PUBLIC_DEEP_LINK_URL || "https://elijahskinner.com",
-            "eas": {
-                "projectId": "68c99e72-002c-3fb2-1bdf-skillforge" // You'll set this up with EAS
-            }
+
+            
         }
     }
 };
