@@ -50,14 +50,7 @@ export default function TabLayout() {
                     tabBarIcon: ({ color, size }) => <Ionicons name="book" size={size} color={color} />,
                 }}
             />
-            <Tabs.Screen
-                name="quiz/index"
-                options={{
-                    href:null,
-                    title: 'Quiz',
-                    tabBarIcon: ({ color, size }) => <Ionicons name="help-circle" size={size} color={color} />,
-                }}
-            />
+
             <Tabs.Screen
                 name="profile/index"
                 options={{
