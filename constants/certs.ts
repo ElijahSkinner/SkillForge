@@ -1,5 +1,6 @@
 //constant/certs/ts
 import { ModuleType } from '@/types/certs';
+import {LESSON_CONTENT} from "@/constants/lessonContent";
 // types/certs.ts
 export type LessonType = {
     id: number;
