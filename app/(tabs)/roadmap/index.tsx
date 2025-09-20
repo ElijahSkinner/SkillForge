@@ -356,7 +356,7 @@ const styles = {
         width: '100%' as const,
         height: 4,
         borderRadius: 2,
-        overflow: 'hidden' as const,                    A
+        overflow: 'hidden' as const,           
     },
     progressFill: {
         height: '100%' as const,
