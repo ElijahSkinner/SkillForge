@@ -6,7 +6,8 @@ import {DOMAIN_1_QUIZZES} from "@/constants/quizData";
 export type LessonType = {
     id: number;
     name: string;
-    hasQuizzes?: boolean; // Add this
+    content?: any;  // Add this
+    quizzes?: any;  // Add this
 };
 
 export type ModuleType = {
