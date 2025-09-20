@@ -651,10 +651,9 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                     correct: 2,
                     explanation: "Hybrid cloud combines public and private cloud resources, allowing data and applications to be shared between them."
                 }
-                // ... more questions
             ]
-        },
-
+        }
+    },
         "1.4": {
             quizA: {
                 title: "Ports, Protocols & Traffic Types - Quiz A",
@@ -682,7 +681,9 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                             {id: "port21", text: "Port 21", correct: "ftp"},
                             {id: "port53", text: "Port 53", correct: "dns"},
                             {id: "port25", text: "Port 25", correct: "smtp"}
-                        ]
+                        ],
+                        explanation: "HTTPS uses port 443 for secure web traffic, while HTTP uses port 80."
+
                     },
                     {
                         id: 3,
@@ -791,7 +792,9 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                             {id: "udp1", text: "UDP", correct: "fast"},
                             {id: "tcp2", text: "TCP", correct: "ordered"},
                             {id: "udp2", text: "UDP", correct: "connectionless"}
-                        ]
+                        ],
+                        explanation: "HTTPS uses port 443 for secure web traffic, while HTTP uses port 80."
+
                     },
                     {
                         id: 4,
@@ -895,7 +898,9 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                             {id: "fiber1", text: "Small form factor fiber", correct: "lc"},
                             {id: "fiber2", text: "Push-pull fiber", correct: "sc"},
                             {id: "coax", text: "Coaxial cable", correct: "bnc"}
-                        ]
+                        ],
+                        explanation: "HTTPS uses port 443 for secure web traffic, while HTTP uses port 80."
+
                     },
                     {
                         id: 4,
@@ -981,7 +986,9 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                             {id: "backbone", text: "High-speed backbone", correct: "core"},
                             {id: "policy", text: "Policy enforcement", correct: "distribution"},
                             {id: "enduser", text: "End-user connectivity", correct: "access"}
-                        ]
+                        ],
+                        explanation: "HTTPS uses port 443 for secure web traffic, while HTTP uses port 80."
+
                     }
                 ]
             }
