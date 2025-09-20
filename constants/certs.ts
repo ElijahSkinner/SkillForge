@@ -70,7 +70,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                     id: 8,
                     name: '1.8 Modern Network Environments',
                     content: LESSON_CONTENT["1.8"],
-                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.8"]
+                    quizzes: DOMAIN_1_QUIZZES["1.8"]
                 },
             ],
         },
