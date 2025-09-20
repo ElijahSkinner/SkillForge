@@ -8,14 +8,54 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
             weight: 23,
             completed: false,
             lessons: [
-                { id: 1, name: 'OSI Model' },
-                { id: 2, name: 'Networking Appliances, Applications, and Functions' },
-                { id: 3, name: 'Cloud Concepts and Connectivity' },
-                { id: 4, name: 'Ports, Protocols, and Traffic' },
-                { id: 5, name: 'Transmission Media and Transceivers' },
-                { id: 6, name: 'Network Topologies, Architectures, and Types' },
-                { id: 7, name: 'IPv4 Network Addressing' },
-                { id: 8, name: 'Modern Network Environments' },
+                {
+                    id: 1,
+                    name: '1.1 OSI Reference Model',
+                    content: LESSON_CONTENT["1.1"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.1"]
+                },
+                {
+                    id: 2,
+                    name: '1.2 Networking Appliances & Functions',
+                    content: LESSON_CONTENT["1.2"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.2"]
+                },
+                {
+                    id: 3,
+                    name: '1.3 Cloud Concepts & Connectivity',
+                    content: LESSON_CONTENT["1.3"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.3"]
+                },
+                {
+                    id: 4,
+                    name: '1.4 Ports, Protocols & Traffic Types',
+                    content: LESSON_CONTENT["1.4"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.4"]
+                },
+                {
+                    id: 5,
+                    name: '1.5 Transmission Media & Transceivers',
+                    content: LESSON_CONTENT["1.5"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.5"]
+                },
+                {
+                    id: 6,
+                    name: '1.6 Network Topologies & Architectures',
+                    content: LESSON_CONTENT["1.6"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.6"]
+                },
+                {
+                    id: 7,
+                    name: '1.7 IPv4 Network Addressing',
+                    content: LESSON_CONTENT["1.7"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.7"]
+                },
+                {
+                    id: 8,
+                    name: '1.8 Modern Network Environments',
+                    content: LESSON_CONTENT["1.8"],
+                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.8"]
+                },
             ],
         },
         {
