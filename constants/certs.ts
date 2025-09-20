@@ -1,5 +1,19 @@
 //constant/certs/ts
 import { ModuleType } from '@/types/certs';
+// types/certs.ts
+export type LessonType = {
+    id: number;
+    name: string;
+    hasQuizzes?: boolean; // Add this
+};
+
+export type ModuleType = {
+    id: number;
+    name: string;
+    weight: number;
+    completed: boolean;
+    lessons: LessonType[];
+};
 export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
     'CompTIA Network+': [
         {
