@@ -596,8 +596,8 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                         {id: "platform", text: "Development platforms and tools", correct: "paas"},
                         {id: "infrastructure", text: "Virtual machines and storage", correct: "iaas"}
                     ],
+                    //UPDATE THIS NOW
                     explanation: "Switches create separate collision domains for each port, while hubs create one large collision domain."
-
                 },
                 {
                     id: 3,
