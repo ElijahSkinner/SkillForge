@@ -1346,7 +1346,7 @@ export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
         }
     },
 
-    "1.2": {
+    "2.2": {
         quizA: {
             title: "Network Appliances & Functions - Quiz A",
             questions: [
