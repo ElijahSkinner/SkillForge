@@ -13,7 +13,6 @@ export default {
         "scheme": process.env.EXPO_PUBLIC_DEEP_LINK_SCHEME || "skillforge",
         "userInterfaceStyle": "automatic",
         "newArchEnabled": true,
-        "privacy": "unlisted",
         "platforms": ["ios", "android", "web"],
 
         // iOS Configuration
