@@ -3,6 +3,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
 import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
+import { useRouter } from 'expo-router';
+import { QUIZ_DATA } from '@/constants/quizData'; // make sure this import points to your quiz data file
 
 interface LessonSelectionModalProps {
     visible: boolean;
@@ -26,14 +28,20 @@ export default function LessonSelectionModal({
                                                  loading
                                              }: LessonSelectionModalProps) {
     const { theme } = useTheme();
+    const router = useRouter();
 
     if (!lesson) return null;
 
     const isUnitReview = lesson.lessonIndex === 0;
-    const lessonDisplayNumber = isUnitReview ? 'Unit Review' : `${lesson.lessonIndex} / ${lesson.totalLessons}`;
+    const lessonDisplayNumber = isUnitReview
+        ? 'Unit Review'
+        : `${lesson.lessonIndex} / ${lesson.totalLessons}`;
     const xp = isUnitReview
         ? lesson.moduleWeight
         : Math.round(lesson.moduleWeight / lesson.totalLessons);
+
+    // check if quizzes exist for this lesson
+    const hasQuiz = QUIZ_DATA[`1.${lesson.lessonIndex}`];
 
     return (
         <ThemedModal visible={visible} onClose={onClose}>
@@ -94,17 +102,13 @@ export default function LessonSelectionModal({
                 >
                     {isUnitReview
                         ? 'Review all concepts from this module and test your knowledge'
-                        : 'Complete this lesson to earn XP and unlock the next challenge'
-                    }
+                        : 'Complete this lesson to earn XP and unlock the next challenge'}
                 </ThemedText>
 
                 {/* Action Buttons */}
-                <View style={{
-                    width: '100%',
-                    gap: theme.spacing.md
-                }}>
+                <View style={{ width: '100%', gap: theme.spacing.md }}>
                     <ThemedButton
-                        title={loading ? "Starting..." : "Start Lesson"}
+                        title={loading ? 'Starting...' : 'Start Lesson'}
                         onPress={onStart}
                         disabled={loading}
                         variant="primary"
@@ -115,6 +119,39 @@ export default function LessonSelectionModal({
                         onPress={onClose}
                         variant="outline"
                     />
+
+                    {/* Quiz Buttons (only show if quizzes exist) */}
+                    {hasQuiz && (
+                        <View style={{ gap: theme.spacing.md, marginTop: theme.spacing.md }}>
+                            <ThemedButton
+                                title="Take Quiz A"
+                                onPress={() => {
+                                    router.push({
+                                        pathname: '/quiz/[objective]/[quizType]' as any,
+                                        params: {
+                                            objective: `1.${lesson.lessonIndex}`,
+                                            quizType: 'quizA'
+                                        }
+                                    });
+                                    onClose();
+                                }}
+                            />
+                            <ThemedButton
+                                title="Take Quiz B"
+                                variant="outline"
+                                onPress={() => {
+                                    router.push({
+                                        pathname: '/quiz/[objective]/[quizType]' as any,
+                                        params: {
+                                            objective: `1.${lesson.lessonIndex}`,
+                                            quizType: 'quizB'
+                                        }
+                                    });
+                                    onClose();
+                                }}
+                            />
+                        </View>
+                    )}
                 </View>
             </View>
         </ThemedModal>
