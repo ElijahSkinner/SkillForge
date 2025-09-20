@@ -15,7 +15,7 @@ export interface QuizData {
     questions: QuizQuestion[];
 }
 
-export interface ObjectiveQuizzes {
+export interface QuizType{
     quizA: QuizData;
     quizB: QuizData;
 }
