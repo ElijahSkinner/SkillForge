@@ -1,14 +1,43 @@
-export interface QuizQuestion {
+export type QuizQuestion =
+    | {
     id: number;
-    type: "multiple-choice" | "drag-drop" | "true-false" | "fill-blank" | "scenario";
+    type: "multiple-choice";
     question: string;
-    options?: string[];
-    correct?: number | boolean | string[] | string;
-    explanation?: string;
-    items?: Array<{ id: string; text: string }>;
-    targets?: Array<{ id: string; text: string; correct: string }>;
-    correctOrder?: string[];
+    options: string[];
+    correct: number;
+    explanation: string;
 }
+    | {
+    id: number;
+    type: "true-false";
+    question: string;
+    correct: boolean;
+    explanation: string;
+}
+    | {
+    id: number;
+    type: "fill-blank";
+    question: string;
+    correct: string[]; // can be ["5", "five", "session"]
+    explanation: string;
+}
+    | {
+    id: number;
+    type: "drag-drop";
+    question: string;
+    items: Array<{ id: string; text: string }>;
+    targets: Array<{ id: string; text: string; correct: string }>;
+    explanation: string; // still keep explanation so user knows why
+}
+    | {
+    id: number;
+    type: "scenario";
+    question: string;
+    options: string[];
+    correct: number;
+    explanation: string;
+};
+
 
 export interface QuizData {
     title: string;
