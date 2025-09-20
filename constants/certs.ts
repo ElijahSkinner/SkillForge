@@ -40,7 +40,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                     id: 3,
                     name: '1.3 Cloud Concepts & Connectivity',
                     content: LESSON_CONTENT["1.3"],
-                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.3"]
+                    quizzes: DOMAIN_1_QUIZZES["1.3"]
                 },
                 {
                     id: 4,
