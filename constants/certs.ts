@@ -34,7 +34,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                     id: 2,
                     name: '1.2 Networking Appliances & Functions',
                     content: LESSON_CONTENT["1.2"],
-                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.2"]
+                    quizzes: DOMAIN_1_QUIZZES["1.2"]
                 },
                 {
                     id: 3,
