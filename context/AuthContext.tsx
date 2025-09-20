@@ -1,16 +1,26 @@
+// context/AuthContext.tsx - UPDATE
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
 import { streakService } from "@/services/StreakService";
 import { backgroundStreakService } from "@/services/BackgroundStreakService";
+import appConfig from "@/config/AppConfig";
 
+// Initialize Appwrite client with secure configuration
 const client = new Client()
-    .setEndpoint("http://192.168.40.142/v1") // TODO: Move to environment variables
-    .setProject("68c99e72002c3fb21bdf");
+    .setEndpoint(appConfig.appwrite.endpoint)
+    .setProject(appConfig.appwrite.projectId);
 
 const databases = new Databases(client);
-const DATABASE_ID = "68c9a6a6000cf7733309";
-const COLLECTION_ID = "68c9a6b7002dfd514488";
 const account = new Account(client);
+
+// Use configuration values instead of hardcoded ones
+const DATABASE_ID = appConfig.appwrite.databaseId;
+const COLLECTION_ID = appConfig.appwrite.collectionId;
+
+// Validate configuration on startup
+if (!appConfig.validateConfig()) {
+    console.error('Invalid Appwrite configuration. App may not function correctly.');
+}
 
 interface AuthContextType {
     user: any;
@@ -40,16 +50,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [progress, setProgress] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    // Initialize services after login/registration - Fixed order
+    // Initialize services after login/registration
     useEffect(() => {
         if (progress) {
-            // Initialize streak service first (after updateProgressField is defined)
             streakService.initialize(updateProgressField);
-
-            // Then initialize background streak monitoring
             backgroundStreakService.initialize(() => progress);
         }
-    }, [progress]); // Removed updateProgressField dependency since it's defined in this component
+    }, [progress]);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -67,7 +74,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (result.total > 0) {
                     setProgress(result.documents[0]);
                 }
-            } catch {
+            } catch (error) {
+                if (appConfig.isDev) {
+                    console.log('No active session found:', error);
+                }
                 setUser(null);
                 setProgress(null);
             } finally {
@@ -77,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         checkSession();
     }, []);
 
-    // Helper function to create initial progress document with all fields
+    // Helper function to create initial progress document
     const createInitialProgress = async (userId: string) => {
         const initialProgress = {
             userID: userId,
@@ -120,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
     };
 
-    // Refresh user progress from database
+    // Update user progress from database
     const updateUserProgress = async () => {
         if (!user) return;
 
@@ -157,14 +167,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Add a completed lesson and update XP + Streak
+    // Add completed lesson and update XP + Streak
     const addCompletedLesson = async (certName: string, moduleId: number, lessonIndex: number, xpGained: number) => {
         if (!progress) return;
 
         const lessonKey = `${certName}_${moduleId}_${lessonIndex}`;
         const currentLessons = progress.completedLessons || [];
 
-        // Don't add if already completed
         if (currentLessons.includes(lessonKey)) return;
 
         const newCompletedLessons = [...currentLessons, lessonKey];
@@ -185,7 +194,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             );
             setProgress(updatedDoc);
 
-            // Record study activity for streak tracking
             await backgroundStreakService.onUserActivity();
 
         } catch (error) {
@@ -194,14 +202,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Add a completed module
+    // Add completed module
     const addCompletedModule = async (certName: string, moduleId: number) => {
         if (!progress) return;
 
         const moduleKey = `${certName}_${moduleId}`;
         const currentModules = progress.completedModules || [];
 
-        // Don't add if already completed
         if (currentModules.includes(moduleKey)) return;
 
         const newCompletedModules = [...currentModules, moduleKey];
@@ -254,7 +261,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const user = await account.get();
         setUser(user);
 
-        // Look for existing progress doc
         const result = await databases.listDocuments(
             DATABASE_ID,
             COLLECTION_ID,
@@ -270,18 +276,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const register = async (email: string, password: string, name: string) => {
-        // Create the account
         const user = await account.create(ID.unique(), email, password, name);
 
-        // Send verification email
-        await account.createVerification('http://your-app.com/verify-email');
+        // Use your domain for verification emails
+        await account.createVerification(`${appConfig.app.deepLinkUrl}/verify-email`);
 
-        // Auto-login after registration
         await account.createEmailPasswordSession(email, password);
         const loggedInUser = await account.get();
         setUser(loggedInUser);
 
-        // Create initial progress document with all fields
         const newDoc = await createInitialProgress(user.$id);
         setProgress(newDoc);
     };
@@ -295,20 +298,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const forgotPassword = async (email: string) => {
         await account.createRecovery(
             email,
-            'http://your-app.com/reset-password' // You'll need to set up deep linking for this
+            `${appConfig.app.deepLinkUrl}/reset-password`
         );
     };
 
     const verifyEmail = async (userId: string, secret: string) => {
         await account.updateVerification(userId, secret);
-        // Refresh user data after verification
         const updatedUser = await account.get();
         setUser(updatedUser);
     };
 
     const resendVerification = async () => {
         if (user) {
-            await account.createVerification('http://your-app.com/verify-email');
+            await account.createVerification(`${appConfig.app.deepLinkUrl}/verify-email`);
         }
     };
 
