@@ -41,7 +41,7 @@ export default function LessonSelectionModal({
         : Math.round(lesson.moduleWeight / lesson.totalLessons);
 
 
-    const hasQuiz = DOMAIN_1_QUIZZES[`1.${lesson.lessonIndex}`] !== undefined;
+    const hasQuiz = DOMAIN_1_QUIZZES[`${lesson.modId}.${lesson.lessonIndex}`] !== undefined;
 
     // 🟢 New handler that merges lesson start + quiz redirect
     const handleLessonStart = async () => {
