@@ -19,7 +19,7 @@ export interface ObjectiveQuizzes {
     quizA: QuizData;
     quizB: QuizData;
 }
-export const DOMAIN_1_QUIZZES: Record<string, Qbjectiv>  = {
+export const DOMAIN_1_QUIZZES: Record<string, ObjectiveQuizzes>  = {
     "1.1": {
         quizA: {
             title: "OSI Model Fundamentals - Quiz A",
