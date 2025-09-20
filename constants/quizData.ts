@@ -223,7 +223,7 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                         { id: "layer4", text: "Layer 4", correct: "tcp" },
                         { id: "layer7", text: "Layer 7", correct: "http" }
                     ],
-                    explanation: "Ethernet (L2), IP (L3), TCP (L4), HTTP (L7)"
+                    explanation: "Ethernet operates at Layer 2, IP at Layer 3, TCP at Layer 4, and HTTP at Layer 7."
                 },
                 {
                     id: 4,
