@@ -1691,7 +1691,7 @@ export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
             ]
         }
     },
-    "1.4": {
+    "2.4": {
         quizA: {
             title: "Ports, Protocols & Traffic Types - Quiz A",
             questions: [
