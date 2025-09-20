@@ -26,7 +26,7 @@ export default function QuizRoute() {
                 </Text>
 
                 {/* Uncomment this when the basic route works */}
-                {/* <QuizScreen /> */}
+                <QuizScreen /> 
             </View>
         </SafeAreaView>
     );
