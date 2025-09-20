@@ -1901,7 +1901,7 @@ export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
         }
     },
 
-    "1.5": {
+    "2.5": {
         quizA: {
             title: "Transmission Media & Transceivers - Quiz A",
             questions: [
