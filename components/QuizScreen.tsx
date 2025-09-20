@@ -74,7 +74,7 @@ export default function QuizScreen() {
                             textAlign: 'center',
                             marginBottom: theme.spacing.xl
                         }}>
-                            {score >= 70 ?
+                            {score >= 90 ?
                                 "Great job! You've mastered this topic." :
                                 "Keep studying! Review the material and try again."
                             }
