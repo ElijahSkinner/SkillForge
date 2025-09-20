@@ -124,7 +124,7 @@ export default function RoadmapScreen() {
                         style={[styles.button, { backgroundColor: theme.colors.primary }]}
                         onPress={() => router.push('/(tabs)/course')}
                     >
-                        <ThemedText variant="button" color="textOnPrimary">
+                        <ThemedText variant="button" style={{ color: theme.colors.textOnPrimary }}>
                             Select a Cert
                         </ThemedText>
                     </Pressable>
@@ -241,7 +241,9 @@ export default function RoadmapScreen() {
                                             >
                                                 <ThemedText
                                                     variant="h4"
-                                                    color={isLessonComplete ? "success" : "text"}
+                                                    style={{
+                                                        color: isLessonComplete ? theme.colors.success : theme.colors.text
+                                                    }}
                                                 >
                                                     {lessonNumber}
                                                 </ThemedText>
@@ -373,4 +375,4 @@ const styles = {
         paddingVertical: 12,
         borderRadius: 8,
     },
-};
+} as const;
