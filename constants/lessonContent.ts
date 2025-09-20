@@ -1,4 +1,4 @@
-export const LESSON_CONTENT = {
+export const LESSON_CONTENT: Record<string, any> = {
     "1.1": {
         title: "OSI Reference Model",
         objective: "Explain concepts related to the Open Systems Interconnection (OSI) reference model",
