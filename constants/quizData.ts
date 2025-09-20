@@ -2031,7 +2031,7 @@ export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
         }
     },
 
-    "1.7": {
+    "2.7": {
         quizA: {
             title: "IPv4 Network Addressing - Quiz A",
             questions: [
