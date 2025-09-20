@@ -93,7 +93,8 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                         { id: "function2", text: "Ensures reliable data delivery", correct: "layer4" },
                         { id: "function3", text: "Handles routing and logical addressing", correct: "layer3" },
                         { id: "function4", text: "Manages electrical signals and physical medium", correct: "layer1" }
-                    ]
+                    ],
+                    explanation: "Each OSI layer has specific responsibilities: Application (L7) provides services, Transport (L4) ensures reliability, Network (L3) handles routing, Physical (L1) manages the physical medium."
                 },
                 {
                     id: 4,
