@@ -223,7 +223,7 @@ export default function RoadmapScreen() {
                                         })}
                                         backgroundColor={theme.colors.secondary}
                                         progressColor={theme.colors.success}
-                                        style={[styles.tile, { marginBottom: TILE_SPACING }]}
+                                        style={{ ...styles.tile, marginBottom: TILE_SPACING }}
                                     >
                                         <ThemedText variant="h4" color="text">Q</ThemedText>
                                     </AnimatedProgressTile>
