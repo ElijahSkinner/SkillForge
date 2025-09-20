@@ -45,9 +45,8 @@ export default function LessonSelectionModal({
         switch (lesson.modId) {
             case 1:
                 return DOMAIN_1_QUIZZES;
-            // Add other domains when you create them
-            // case 2:
-            //     return DOMAIN_2_QUIZZES;
+             case 2:
+                 return DOMAIN_2_QUIZZES;
             default:
                 return {};
         }
