@@ -14,7 +14,7 @@ export default function QuizScreen() {
     const router = useRouter();
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [answers, setAnswers] = useState<{ isCorrect: boolean; userAnswer: any }[]>([]);
+    const [answers, setAnswers] = useState<Array<{ isCorrect: boolean; userAnswer: any }>>([]);
     const [showResult, setShowResult] = useState(false);
     const [quizCompleted, setQuizCompleted] = useState(false);
 
