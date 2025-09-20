@@ -41,7 +41,7 @@ export default function LessonSelectionModal({
         : Math.round(lesson.moduleWeight / lesson.totalLessons);
 
     // check if quizzes exist for this lesson
-    const hasQuiz = QUIZ_DATA[`1.${lesson.lessonIndex}`];
+    const hasQuiz = DOMAIN_1_QUIZZES[`1.${lesson.lessonIndex}`];
 
     return (
         <ThemedModal visible={visible} onClose={onClose}>
