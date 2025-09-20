@@ -52,7 +52,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                     id: 5,
                     name: '1.5 Transmission Media & Transceivers',
                     content: LESSON_CONTENT["1.5"],
-                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.5"]
+                    quizzes: DOMAIN_1_QUIZZES["1.5"]
                 },
                 {
                     id: 6,
