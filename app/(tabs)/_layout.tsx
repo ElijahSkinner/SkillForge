@@ -3,6 +3,21 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
+    const { user, loading } = useAuth();
+
+    // Show loading spinner while checking auth
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0d0e12' }}>
+                <ActivityIndicator size="large" color="#ffa500" />
+            </View>
+        );
+    }
+
+    // Redirect to auth if not logged in
+    if (!user) {
+        return <Redirect href="/(auth)/home" />;
+    }
 
 
 
