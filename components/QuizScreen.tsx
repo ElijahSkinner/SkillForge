@@ -12,7 +12,9 @@ export default function QuizScreen() {
     const { objective, quizType } = useLocalSearchParams<{ objective: string; quizType: 'quizA' | 'quizB' }>();
     const { theme } = useTheme();
     const router = useRouter();
-
+    console.log('QuizScreen params:', { objective, quizType });
+    console.log('Available quizzes:', Object.keys(DOMAIN_1_QUIZZES));
+    console.log('Quiz data:', DOMAIN_1_QUIZZES[objective!]?.[quizType!]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState<{ isCorrect: boolean; userAnswer: any }[]>([]);
     const [showResult, setShowResult] = useState(false);
