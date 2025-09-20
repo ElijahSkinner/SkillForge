@@ -50,7 +50,6 @@ export default function TabLayout() {
                     tabBarIcon: ({ color, size }) => <Ionicons name="book" size={size} color={color} />,
                 }}
             />
-
             <Tabs.Screen
                 name="profile/index"
                 options={{
