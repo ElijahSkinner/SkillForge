@@ -2080,7 +2080,7 @@ export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
         }
     },
 
-    "1.8": {
+    "2.8": {
         quizA: {
             title: "Modern Network Environments - Quiz A",
             questions: [
