@@ -18,7 +18,7 @@ export default function QuizScreen() {
     const [showResult, setShowResult] = useState(false);
     const [quizCompleted, setQuizCompleted] = useState(false);
 
-    const quiz = QUIZ_DATA[objective!]?.[quizType!];
+    const quiz = DOMAIN_1_QUIZZES[objective!]?.[quizType!];
 
     if (!quiz) {
         return (
