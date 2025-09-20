@@ -42,30 +42,13 @@ export default function LessonSelectionModal({
 
     const hasQuiz = DOMAIN_1_QUIZZES[`${lesson.modId}.${lesson.lessonIndex}`] !== undefined;
 
-    // Debug and navigation handler
     const handleLessonStart = async () => {
-        console.log('🔥 BUTTON PRESSED!');
-        console.log('📝 Lesson data:', lesson);
-        console.log('❓ Has quiz:', hasQuiz);
-
         if (hasQuiz) {
             const objective = `${lesson.modId}.${lesson.lessonIndex}`;
             const route = `/quiz/${objective}/quizA`;
-
-            console.log('🎯 Objective:', objective);
-            console.log('🛣️ Full route:', route);
-            console.log('🧭 Router object:', router);
-
-            try {
-                console.log('🚀 Attempting navigation...');
-                router.push(route as any);
-                console.log('✅ Navigation call completed');
-                onClose();
-            } catch (error) {
-                console.error('❌ Navigation failed:', error);
-            }
+            router.push(route as any);
+            onClose();
         } else {
-            console.log('📚 No quiz, calling onStart');
             onStart();
         }
     };
@@ -73,16 +56,8 @@ export default function LessonSelectionModal({
     const handleQuizNavigation = (quizType: 'quizA' | 'quizB') => {
         const objective = `${lesson.modId}.${lesson.lessonIndex}`;
         const route = `/quiz/${objective}/${quizType}`;
-
-        console.log('🎯 Quiz navigation - Objective:', objective);
-        console.log('🛣️ Quiz route:', route);
-
-        try {
-            router.push(route as any);
-            onClose();
-        } catch (error) {
-            console.error('❌ Quiz navigation failed:', error);
-        }
+        router.push(route as any);
+        onClose();
     };
 
     return (
@@ -116,13 +91,6 @@ export default function LessonSelectionModal({
                         ? 'Review all concepts from this module and test your knowledge'
                         : 'Complete this lesson to earn XP and unlock the next challenge'}
                 </ThemedText>
-
-                {/* Debug Info (Remove this after testing) */}
-                <View style={{ marginBottom: theme.spacing.md, padding: theme.spacing.sm, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: theme.borderRadius.sm }}>
-                    <ThemedText variant="caption" style={{ textAlign: 'center' }}>
-                        Debug: {lesson.modId}.{lesson.lessonIndex} | Has Quiz: {hasQuiz ? 'Yes' : 'No'}
-                    </ThemedText>
-                </View>
 
                 {/* Action Buttons */}
                 <View style={{ width: '100%', gap: theme.spacing.md }}>
