@@ -22,8 +22,6 @@ export default function TabLayout() {
         return <Redirect href="/(auth)/home" />;
     }
 
-
-
     return (
         <Tabs
             screenOptions={{
