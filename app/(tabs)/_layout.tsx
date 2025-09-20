@@ -66,12 +66,6 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="quiz/[cert]/[id]"
-                options={{
-                    href: null,
-                }}
-            />
-            <Tabs.Screen
                 name="glossary/Flashcards"
                 options={{
                     href: null,
