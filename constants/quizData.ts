@@ -1985,7 +1985,7 @@ export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
         }
     },
 
-    "1.6": {
+    "2.6": {
         quizA: {
             title: "Network Topologies & Architectures - Quiz A",
             questions: [
