@@ -64,7 +64,7 @@ export const CERTS_ROADMAP: Record<string, ModuleType[]> = {
                     id: 7,
                     name: '1.7 IPv4 Network Addressing',
                     content: LESSON_CONTENT["1.7"],
-                    quizzes: COMPLETE_DOMAIN_1_QUIZZES["1.7"]
+                    quizzes: DOMAIN_1_QUIZZES["1.7"]
                 },
                 {
                     id: 8,
