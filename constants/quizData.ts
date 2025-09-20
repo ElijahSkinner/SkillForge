@@ -1086,7 +1086,7 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
 };
 
 export const DOMAIN_2_QUIZZES: Record<string, QuizType>  = {
-    "1.1": {
+    "2.1": {
         quizA: {
             title: "OSI Model Fundamentals - Quiz A",
             questions: [
