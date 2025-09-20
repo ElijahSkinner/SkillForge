@@ -217,7 +217,6 @@ export const DOMAIN_1_QUIZZES: Record<string, QuizType>  = {
                         { id: "ip", text: "IP" },
                         { id: "ethernet", text: "Ethernet" }
                     ],
-                    correctOrder: ["ethernet", "ip", "tcp", "http"],
                     explanation: "Ethernet (L2), IP (L3), TCP (L4), HTTP (L7)"
                 },
                 {
