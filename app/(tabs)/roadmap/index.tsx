@@ -6,7 +6,6 @@ import {
     Dimensions,
     Animated,
     ScrollView,
-    ViewStyle,
 } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -208,10 +207,7 @@ export default function RoadmapScreen() {
                                         })}
                                         backgroundColor={theme.colors.secondary}
                                         progressColor={theme.colors.success}
-                                        style={{
-                                            ...styles.tile,
-                                            marginBottom: TILE_SPACING
-                                        }}
+                                        style={[styles.tile, { marginBottom: TILE_SPACING }]}
                                     >
                                         <ThemedText variant="h4" color="text">Q</ThemedText>
                                     </AnimatedProgressTile>
@@ -240,10 +236,7 @@ export default function RoadmapScreen() {
                                                     : theme.colors.surface
                                                 }
                                                 progressColor={theme.colors.primary}
-                                                style={{
-                                                    ...styles.tile,
-                                                    marginBottom: TILE_SPACING
-                                                }}
+                                                style={[styles.tile, { marginBottom: TILE_SPACING }]}
                                                 disabled={updatingProgress === `${module.id}_${lessonNumber}`}
                                             >
                                                 <ThemedText
@@ -315,58 +308,58 @@ export default function RoadmapScreen() {
     );
 }
 
-const styles: { [key: string]: ViewStyle } = {
+const styles = {
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
         padding: 16,
     },
     backgroundImage: {
         flex: 1,
-        width: '100%',
+        width: '100%' as const,
     },
     backgroundImageStyle: {
-        resizeMode: 'cover',
-        alignSelf: 'center',
+        resizeMode: 'cover' as const,
+        alignSelf: 'center' as const,
     },
     overlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.3)', // Semi-transparent overlay
     },
     safeArea: {
         flex: 1,
     },
     scrollContent: {
-        flexDirection: 'column-reverse',
-        alignItems: 'center',
+        flexDirection: 'column-reverse' as const,
+        alignItems: 'center' as const,
         paddingHorizontal: 16,
     },
     moduleContainer: {
-        alignItems: 'center',
-        width: '100%',
+        alignItems: 'center' as const,
+        width: '100%' as const,
     },
     tile: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
         borderRadius: 16,
     },
     sectionTitle: {
-        fontWeight: 'bold',
-        textAlign: 'center',
+        fontWeight: 'bold' as const,
+        textAlign: 'center' as const,
     },
     progressContainer: {
-        width: '80%',
-        alignItems: 'center',
+        width: '80%' as const,
+        alignItems: 'center' as const,
     },
     progressBar: {
-        width: '100%',
+        width: '100%' as const,
         height: 4,
         borderRadius: 2,
-        overflow: 'hidden',
+        overflow: 'hidden' as const,                    A
     },
     progressFill: {
-        height: '100%',
+        height: '100%' as const,
         borderRadius: 2,
     },
     progressText: {
@@ -374,7 +367,7 @@ const styles: { [key: string]: ViewStyle } = {
         fontSize: 12,
     },
     message: {
-        textAlign: 'center',
+        textAlign: 'center' as const,
         marginBottom: 20,
     },
     button: {
@@ -382,4 +375,4 @@ const styles: { [key: string]: ViewStyle } = {
         paddingVertical: 12,
         borderRadius: 8,
     },
-};
+} as const;
