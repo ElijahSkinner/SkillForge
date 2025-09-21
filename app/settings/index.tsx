@@ -5,21 +5,21 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
-import { notificationService } from '@/services/NotificationService';
+import { useTheme } from '../../context/ThemeContext';
+import { notificationService } from '../../services/NotificationService';
 import {
     ThemedView,
     ThemedText,
     ThemedSwitch,
-} from '@/components/themed';
+} from '../../components/themed';
 import {
     ThemeSelectionModal,
     AccountInfoModal,
     ChangeEmailModal,
     ChangePasswordModal,
     LogoutConfirmModal,
-} from '@/components/modals';
-import { XPGoalModal, ReminderTimeModal } from '@/components/modals/StudyPreferences';
+} from '../../components/modals';
+import { XPGoalModal, ReminderTimeModal } from '../../components/modals/StudyPreferences';
 
 export default function SettingsScreen() {
     const router = useRouter();
