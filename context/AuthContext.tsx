@@ -2,8 +2,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
 import { streakService } from "../services/StreakService";
-import { backgroundStreakService } from "@/services/BackgroundStreakService";
-import appConfig from "@/config/AppConfig";
+import { backgroundStreakService } from "../services/BackgroundStreakService";
+import appConfig from "../config/AppConfig";
 
 // Initialize Appwrite client with secure configuration
 const client = new Client()
