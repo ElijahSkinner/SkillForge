@@ -1,9 +1,9 @@
 // components/modals/LogoutConfirmModal.tsx
 import React from 'react';
 import { View } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
-import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemedModal, ThemedText, ThemedButton } from '../../components/themed';
 
 interface LogoutConfirmModalProps {
     visible: boolean;
