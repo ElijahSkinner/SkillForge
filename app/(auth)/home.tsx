@@ -16,7 +16,16 @@ import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import { Stack } from 'expo-router';
 
+export default function YourScreen() {
+    return (
+        <>
+            <Stack.Screen options={{ headerShown: false }} />
+            {/* Your screen content */}
+        </>
+    );
+}
 const { width } = Dimensions.get('window');
 
 type AuthMode = 'splash' | 'login' | 'register' | 'forgot';
