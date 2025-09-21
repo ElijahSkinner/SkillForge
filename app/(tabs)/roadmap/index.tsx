@@ -7,7 +7,7 @@ import {
     Animated,
     ScrollView,
 } from 'react-native';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '../../..context/ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/AuthContext';
 import { useCert } from '@/context/CertContext';
