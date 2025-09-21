@@ -174,7 +174,7 @@ export const forgeTheme = {
         modules: { locked: '#444444', available: '#708090', inProgress: '#ffa500', completed: '#27b0b9' }
     },
     assets: {
-        logo: require('@/assets/images/new-logo.png'),
-        roadmapBackground: require('@/assets/forge/path.png'),
+        logo: require('../assets/images/new-logo.png'),
+        roadmapBackground: require('../assets/forge/path.png'),
     }
 };

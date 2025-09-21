@@ -122,7 +122,7 @@ export const spaceTheme = {
         modules: {locked: '#2d3748', available: '#4a5568', inProgress: '#4a90e2', completed: '#48bb78'}
     },
     assets: {
-        logo: require('@/assets/images/new-logo.png'),
-        roadmapBackground: require('@/assets/space/spacebg.png'),
+        logo: require('../assets/images/new-logo.png'),
+        roadmapBackground: require('../assets/space/spacebg.png'),
     }
 };
