@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '../context/ThemeContext';
 import CoursesDropdown from './CoursesDropdown';
 import StreakDisplay from './StreakDisplay';
 
