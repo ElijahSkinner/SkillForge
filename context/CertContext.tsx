@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Pressable } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 type Course = {
     id: number;
