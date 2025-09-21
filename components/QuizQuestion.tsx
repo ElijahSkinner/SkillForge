@@ -1,9 +1,9 @@
 // components/quiz/QuizQuestion.tsx
 import React, { useState } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
-import { ThemedText, ThemedButton } from '@/components/themed';
-import { useTheme } from '@/context/ThemeContext';
-import { QuizQuestion } from '@/constants/quizData';
+import { ThemedText, ThemedButton } from '../components/themed';
+import { useTheme } from '../context/ThemeContext';
+import { QuizQuestion } from '../constants/quizData';
 
 interface QuizQuestionComponentProps {
     question: QuizQuestion;

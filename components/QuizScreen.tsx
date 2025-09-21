@@ -4,15 +4,15 @@ import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
-import { useTheme } from '@/context/ThemeContext';
+import { ThemedView, ThemedText, ThemedButton } from '../components/themed';
+import { useTheme } from '../context/ThemeContext';
 import {
     DOMAIN_1_QUIZZES,
     DOMAIN_2_QUIZZES,
     // DOMAIN_3_QUIZZES,
     // DOMAIN_4_QUIZZES,
     // DOMAIN_5_QUIZZES,
-} from '@/constants/quizData';
+} from '../constants/quizData';
 import QuizQuestionComponent from './QuizQuestion';
 
 console.log('QuizScreen.tsx file is being loaded');
