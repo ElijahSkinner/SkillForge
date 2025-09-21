@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { forgeTheme } from "@/themes/forge";
-import { spaceTheme } from "@/themes/space";
-import { oceanTheme } from "@/themes/ocean";
-import { useAuth } from "@/context/AuthContext";
+import { forgeTheme } from "../themes/forge";
+import { spaceTheme } from "../themes/space";
+import { oceanTheme } from "../themes/ocean";
+import { useAuth } from "../context/AuthContext";
 
 const themes = {
     forge: forgeTheme,
