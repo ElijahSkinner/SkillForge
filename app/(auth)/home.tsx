@@ -47,7 +47,12 @@ export default function RootHomeScreen() {
         };
         checkFirstLaunch();
     }, []);
-
+    return (
+        <>
+            <Stack.Screen options={{ headerShown: false }} />
+            {/* Your screen content */}
+        </>
+    );
     const clearMessages = () => {
         setError("");
         setSuccessMessage("");
