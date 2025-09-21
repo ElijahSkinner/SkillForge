@@ -1,7 +1,7 @@
 // context/AuthContext.tsx - UPDATE
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
-import { streakService } from "@/services/StreakService";
+import { streakService } from "../../services/StreakService";
 import { backgroundStreakService } from "@/services/BackgroundStreakService";
 import appConfig from "@/config/AppConfig";
 
