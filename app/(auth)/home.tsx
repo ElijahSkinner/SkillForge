@@ -445,7 +445,7 @@ export default function RootHomeScreen() {
                     {authMode === 'forgot' && renderForgotPasswordForm()}
                 </ScrollView>
             </KeyboardAvoidingView>
-        </LinearGradient> 
+        </LinearGradient>
 </>
     );
 }
