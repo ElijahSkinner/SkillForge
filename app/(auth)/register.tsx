@@ -4,7 +4,7 @@ import { View, TextInput, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '@../../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
 
 export default function RegisterScreen() {
