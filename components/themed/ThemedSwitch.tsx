@@ -1,7 +1,7 @@
 // components/themed/ThemedSwitch.tsx
 import React from 'react';
 import { Switch, SwitchProps } from 'react-native';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ThemedSwitchProps extends SwitchProps {}
 

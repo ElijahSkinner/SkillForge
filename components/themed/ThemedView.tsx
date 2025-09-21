@@ -1,7 +1,7 @@
 // components/themed/ThemedView.tsx
 import React from 'react';
 import { View, ViewProps } from 'react-native';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ThemedViewProps extends ViewProps {
     variant?: 'background' | 'surface' | 'card';

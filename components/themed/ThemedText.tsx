@@ -1,7 +1,7 @@
 // components/themed/ThemedText.tsx
 import React from 'react';
 import { Text, TextProps } from 'react-native';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ThemedTextProps extends TextProps {
     variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'body1' | 'body2' | 'caption' | 'button';

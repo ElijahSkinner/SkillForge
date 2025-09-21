@@ -1,7 +1,7 @@
 // components/themed/ThemedButton.tsx
 import React from 'react';
 import { Pressable, PressableProps, Text } from 'react-native';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ThemedButtonProps extends PressableProps {
     title: string;

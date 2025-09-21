@@ -1,7 +1,7 @@
 // components/themed/ThemedModal.tsx
 import React from 'react';
 import { Modal, ModalProps, View, Pressable } from 'react-native';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ThemedModalProps extends ModalProps {
     onClose?: () => void;
