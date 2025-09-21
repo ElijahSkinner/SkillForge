@@ -9,7 +9,7 @@ import {
     GLOSSARY_TERMS,
     GLOSSARY_ACRONYMS_BY_OBJECTIVE,
     GLOSSARY_PORTS,
-} from '@/constants/glossary';
+} from '../../../constants/glossary';
 import CourseRedirect from '../../../components/CourseRedirect';
 const OBJECTIVES = [
     '1.0 Networking Concepts',
