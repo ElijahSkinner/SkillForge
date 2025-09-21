@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '@/context/AuthContext';
-import { ThemedText, ThemedView } from '@/components/themed';
-import { backgroundStreakService } from '@/services/BackgroundStreakService';
+import { useAuth } from '../context/AuthContext';
+import { ThemedText, ThemedView } from '../components/themed';
+import { backgroundStreakService } from '../services/BackgroundStreakService';
 
 interface StreakDisplayProps {
     size?: 'small' | 'medium' | 'large';
