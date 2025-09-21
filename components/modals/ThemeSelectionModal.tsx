@@ -2,8 +2,8 @@
 import React from 'react';
 import { View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '@/context/ThemeContext';
-import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemedModal, ThemedText, ThemedButton } from '../../components/themed';
 
 interface ThemeSelectionModalProps {
     visible: boolean;

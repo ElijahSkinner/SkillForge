@@ -1,10 +1,10 @@
 // components/modals/ReminderTimeModal.tsx
 import React, { useState } from 'react';
 import { View, Alert, ScrollView, Pressable } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
-import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
-import { notificationService } from '@/services/NotificationService';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemedModal, ThemedText, ThemedButton } from '../../components/themed';
+import { notificationService } from '../../services/NotificationService';
 
 interface ReminderTimeModalProps {
     visible: boolean;
