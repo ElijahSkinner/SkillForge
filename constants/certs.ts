@@ -1,5 +1,5 @@
 //constant/certs/ts
-import { ModuleType } from '../../types/certs';
+import { ModuleType } from '../types/certs';
 import {LESSON_CONTENT} from "@/constants/lessonContent";
 import {DOMAIN_1_QUIZZES} from "@/constants/quizData";
 // types/certs.ts
