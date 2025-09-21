@@ -10,15 +10,15 @@ import {
 import { useTheme } from '../../../context/ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../../context/AuthContext';
-import { useCert } from '@/context/CertContext';
+import { useCert } from '../../../context/CertContext';
 import { useRouter } from 'expo-router';
-import { CERTS_ROADMAP } from '@/constants/certs';
-import { ModuleType } from "@/types/certs";
-import { ThemedView, ThemedText } from '@/components/themed';
-import TopBar from '@/components/TopBar';
-import LessonSelectionModal from '@/components/modals/LessonSelectionModal';
-import AnimatedProgressTile from '@/components/modals/AnimatedProgressTile';
-import {DOMAIN_1_QUIZZES} from "@/constants/quizData";
+import { CERTS_ROADMAP } from '../../../constants/certs';
+import { ModuleType } from "../../../types/certs";
+import { ThemedView, ThemedText } from '../../../components/themed';
+import TopBar from '../../../components/TopBar';
+import LessonSelectionModal from '../../../components/modals/LessonSelectionModal';
+import AnimatedProgressTile from '../../../components/modals/AnimatedProgressTile';
+import {DOMAIN_1_QUIZZES} from "../../../constants/quizData";
 
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 70, TILE_SPACING: 12 };
 
