@@ -5,7 +5,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
+import { ThemedView, ThemedText, ThemedButton } from '../../components/themed';
 
 export default function VerifyEmailScreen() {
     const router = useRouter();
