@@ -1,9 +1,9 @@
 // components/modals/ChangeEmailModal.tsx
 import React, { useState } from 'react';
 import { View, TextInput, Alert } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
-import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemedModal, ThemedText, ThemedButton } from '../../components/themed';
 
 interface ChangeEmailModalProps {
     visible: boolean;
