@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { View, Alert } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
-import { ThemedModal, ThemedText, ThemedButton } from '@/components/themed';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemedModal, ThemedText, ThemedButton } from '../../components/themed';
 
 interface AccountInfoModalProps {
     visible: boolean;
