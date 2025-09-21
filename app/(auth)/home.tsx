@@ -410,6 +410,9 @@ export default function RootHomeScreen() {
     );
 
     return (
+        <>
+            <Stack.Screen options={{ headerShown: false }} />
+
         <LinearGradient
             colors={[theme.colors.background, theme.colors.primary, theme.colors.accent]}
             style={styles.container}
@@ -442,7 +445,8 @@ export default function RootHomeScreen() {
                     {authMode === 'forgot' && renderForgotPasswordForm()}
                 </ScrollView>
             </KeyboardAvoidingView>
-        </LinearGradient>
+        </LinearGradient> {/* Your screen content */}
+</>
     );
 }
 
