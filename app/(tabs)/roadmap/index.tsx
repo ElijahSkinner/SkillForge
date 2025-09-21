@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../context/ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '../../..context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { useCert } from '@/context/CertContext';
 import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '@/constants/certs';
