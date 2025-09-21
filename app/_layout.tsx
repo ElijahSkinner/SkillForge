@@ -6,10 +6,10 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '../hooks/use-color-scheme';
-import { CertProvider } from '@/context/CertContext';
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { ThemeProvider as AppThemeProvider } from "@/context/ThemeContext";
-import { backgroundStreakService } from '@/services/BackgroundStreakService';
+import { CertProvider } from '../context/CertContext';
+import { AuthProvider, useAuth } from "../context/AuthContext";
+import { ThemeProvider as AppThemeProvider } from "../context/ThemeContext";
+import { backgroundStreakService } from '../services/BackgroundStreakService';
 import { Redirect } from 'expo-router';
 import { View, ActivityIndicator } from 'react-native';
 
