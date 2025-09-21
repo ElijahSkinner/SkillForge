@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { ThemedView, ThemedText, ThemedButton } from '@/components/themed';
 
