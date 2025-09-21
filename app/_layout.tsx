@@ -5,7 +5,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { useColorScheme } from '../../hooks/use-color-scheme';
+import { useColorScheme } from '../hooks/use-color-scheme';
 import { CertProvider } from '@/context/CertContext';
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { ThemeProvider as AppThemeProvider } from "@/context/ThemeContext";
