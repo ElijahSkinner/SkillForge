@@ -170,7 +170,7 @@ export default function RoadmapScreen() {
     });
 
     // Get background image safely
-    const backgroundImage = theme.assets?.roadmapBackground || require('@/assets/forge/path.png');
+    const backgroundImage = theme.assets?.roadmapBackground || require('../../../assets/forge/path.png');
 
     return (
         <ImageBackground
