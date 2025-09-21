@@ -1,8 +1,8 @@
 // app/(tabs)/glossary/index.tsx
-import { useTheme} from '../../context/ThemeContext';
+import { useTheme} from '../../../context/ThemeContext';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useCert } from '../../..context/CertContext';
+import { useCert } from '../../../context/CertContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Flashcards from './Flashcards';
 import {
@@ -10,7 +10,7 @@ import {
     GLOSSARY_ACRONYMS_BY_OBJECTIVE,
     GLOSSARY_PORTS,
 } from '@/constants/glossary';
-import CourseRedirect from '../../..components/CourseRedirect';
+import CourseRedirect from '../../../components/CourseRedirect';
 const OBJECTIVES = [
     '1.0 Networking Concepts',
     '2.0 Network Implementation',
