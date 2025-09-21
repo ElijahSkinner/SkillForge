@@ -4,7 +4,7 @@ import { View, ScrollView, Pressable, Alert, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { notificationService } from '@/services/NotificationService';
 import {
