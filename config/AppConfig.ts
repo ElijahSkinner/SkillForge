@@ -20,7 +20,7 @@ interface AppConfig {
 
 // Fallback values for development (never use in production)
 const DEV_CONFIG = {
-    endpoint: "http://192.168.40.8/v1",
+    endpoint: "http://elijahskinner.com/v1",
     projectId: "68c99e72002c3fb21bdf",
     databaseId: "68c9a6a6000cf7733309",
     collectionId: "68c9a6b7002dfd514488"
