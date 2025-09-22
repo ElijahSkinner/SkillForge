@@ -2,7 +2,7 @@
 import { Pressable, Text, View, StyleSheet } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
-import { useCert } from "../../context/CertContext";
+import { useCert } from "../context/CertContext";
 
 export default function CourseRedirect() {
     const router = useRouter();
