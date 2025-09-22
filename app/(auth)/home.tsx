@@ -496,7 +496,7 @@ const styles = {
         marginBottom: 24,
     },
     buttonContainer: {
-        width: '100%',
+        width: '100',
         gap: 15,
     },
     button: {
