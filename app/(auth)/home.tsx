@@ -1,3 +1,4 @@
+// app/(auth)/home.tsx - FIXED VERSION
 import {
     Image,
     View,
@@ -8,7 +9,9 @@ import {
     ActivityIndicator,
     ScrollView,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    ViewStyle,
+    TextStyle
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,7 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { Stack } from 'expo-router';
-
 
 const { width } = Dimensions.get('window');
 
@@ -47,6 +49,7 @@ export default function RootHomeScreen() {
         };
         checkFirstLaunch();
     }, []);
+
     const clearMessages = () => {
         setError("");
         setSuccessMessage("");
@@ -91,7 +94,6 @@ export default function RootHomeScreen() {
         try {
             await register(email, password, name);
             setSuccessMessage("Account created! Please check your email to verify your account.");
-            // Optionally redirect to roadmap or keep them on verification screen
             setTimeout(() => {
                 router.replace('/(tabs)/roadmap');
             }, 2000);
@@ -136,6 +138,115 @@ export default function RootHomeScreen() {
         resetForm();
     };
 
+    // Themed styles
+    const styles = {
+        container: {
+            flex: 1,
+        } as ViewStyle,
+        scrollContainer: {
+            flexGrow: 1,
+            justifyContent: 'center' as const,
+            padding: theme.spacing.lg,
+        } as ViewStyle,
+        contentContainer: {
+            alignItems: 'center' as const,
+            justifyContent: 'center' as const,
+        } as ViewStyle,
+        formContainer: {
+            width: '100%',
+            maxWidth: 400,
+            alignSelf: 'center' as const,
+        } as ViewStyle,
+        logo: {
+            width: width * 0.6,
+            height: width * 0.6,
+            marginBottom: theme.spacing.xl,
+        } as ViewStyle,
+        title: {
+            ...theme.typography.h1,
+            textAlign: 'center' as const,
+            marginBottom: theme.spacing.sm,
+        } as TextStyle,
+        subtitle: {
+            ...theme.typography.body1,
+            color: theme.colors.textSecondary,
+            textAlign: 'center' as const,
+            marginBottom: theme.spacing.xl,
+        } as TextStyle,
+        formTitle: {
+            ...theme.typography.h2,
+            textAlign: 'center' as const,
+            marginBottom: theme.spacing.sm,
+        } as TextStyle,
+        formSubtitle: {
+            ...theme.typography.body2,
+            color: theme.colors.textSecondary,
+            textAlign: 'center' as const,
+            marginBottom: theme.spacing.lg,
+        } as TextStyle,
+        buttonContainer: {
+            width: "100%",
+            gap: theme.spacing.md,
+        } as ViewStyle,
+        button: {
+            paddingVertical: theme.spacing.md,
+            borderRadius: theme.borderRadius.md,
+            alignItems: 'center' as const,
+        } as ViewStyle,
+        submitButton: {
+            paddingVertical: theme.spacing.md,
+            borderRadius: theme.borderRadius.md,
+            alignItems: 'center' as const,
+            marginTop: theme.spacing.sm,
+            marginBottom: theme.spacing.md,
+        } as ViewStyle,
+        buttonText: {
+            ...theme.typography.button,
+        } as TextStyle,
+        input: {
+            width: "100%",
+            padding: theme.spacing.md,
+            borderWidth: 1,
+            borderColor: theme.colors.borderColor,
+            backgroundColor: theme.colors.surface,
+            color: theme.colors.text,
+            borderRadius: theme.borderRadius.md,
+            marginBottom: theme.spacing.md,
+            fontSize: 16,
+        } as ViewStyle,
+        link: {
+            ...theme.typography.body1,
+            color: theme.colors.primary,
+            textAlign: "center" as const,
+            marginVertical: theme.spacing.xs,
+        } as TextStyle,
+        forgotButton: {
+            alignSelf: 'flex-end' as const,
+            marginBottom: theme.spacing.sm,
+        } as ViewStyle,
+        switchModeContainer: {
+            flexDirection: 'row' as const,
+            justifyContent: 'center' as const,
+            alignItems: 'center' as const,
+            marginTop: theme.spacing.md,
+        } as ViewStyle,
+        switchModeText: {
+            ...theme.typography.body1,
+            color: theme.colors.textSecondary,
+        } as TextStyle,
+        messageContainer: {
+            padding: theme.spacing.md,
+            borderRadius: theme.borderRadius.md,
+            marginBottom: theme.spacing.md,
+        } as ViewStyle,
+        messageText: {
+            color: '#fff',
+            textAlign: 'center' as const,
+            fontSize: 14,
+            fontWeight: '500' as const,
+        } as TextStyle,
+    };
+
     const renderSplashScreen = () => (
         <View style={styles.contentContainer}>
             <Image
@@ -144,10 +255,10 @@ export default function RootHomeScreen() {
                 resizeMode="contain"
             />
 
-            <Text style={[styles.title, { color: theme.colors.text }]}>
+            <Text style={styles.title}>
                 Welcome to SkillForge!
             </Text>
-            <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+            <Text style={styles.subtitle}>
                 Learn, practice, and master your tech certifications
             </Text>
 
@@ -193,19 +304,15 @@ export default function RootHomeScreen() {
 
     const renderLoginForm = () => (
         <View style={styles.formContainer}>
-            <Text style={[styles.formTitle, { color: theme.colors.text }]}>
+            <Text style={styles.formTitle}>
                 Welcome Back
             </Text>
-            <Text style={[styles.formSubtitle, { color: theme.colors.textSecondary }]}>
+            <Text style={styles.formSubtitle}>
                 Sign in to continue your learning journey
             </Text>
 
             <TextInput
-                style={[styles.input, {
-                    borderColor: theme.colors.borderColor,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text
-                }]}
+                style={styles.input}
                 placeholder="Email"
                 placeholderTextColor={theme.colors.textMuted}
                 autoCapitalize="none"
@@ -215,11 +322,7 @@ export default function RootHomeScreen() {
             />
 
             <TextInput
-                style={[styles.input, {
-                    borderColor: theme.colors.borderColor,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text
-                }]}
+                style={styles.input}
                 placeholder="Password"
                 placeholderTextColor={theme.colors.textMuted}
                 secureTextEntry
@@ -231,7 +334,7 @@ export default function RootHomeScreen() {
                 onPress={() => switchMode('forgot')}
                 style={styles.forgotButton}
             >
-                <Text style={[styles.link, { color: theme.colors.primary }]}>
+                <Text style={styles.link}>
                     Forgot Password?
                 </Text>
             </TouchableOpacity>
@@ -251,17 +354,17 @@ export default function RootHomeScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => switchMode('splash')}>
-                <Text style={[styles.link, { color: theme.colors.primary }]}>
+                <Text style={styles.link}>
                     ← Back to login options
                 </Text>
             </TouchableOpacity>
 
             <View style={styles.switchModeContainer}>
-                <Text style={[styles.switchModeText, { color: theme.colors.textSecondary }]}>
+                <Text style={styles.switchModeText}>
                     Don't have an account?{' '}
                 </Text>
                 <TouchableOpacity onPress={() => switchMode('register')}>
-                    <Text style={[styles.link, { color: theme.colors.primary }]}>
+                    <Text style={styles.link}>
                         Sign Up
                     </Text>
                 </TouchableOpacity>
@@ -271,19 +374,15 @@ export default function RootHomeScreen() {
 
     const renderRegisterForm = () => (
         <View style={styles.formContainer}>
-            <Text style={[styles.formTitle, { color: theme.colors.text }]}>
+            <Text style={styles.formTitle}>
                 Create Account
             </Text>
-            <Text style={[styles.formSubtitle, { color: theme.colors.textSecondary }]}>
+            <Text style={styles.formSubtitle}>
                 Join SkillForge and start your certification journey
             </Text>
 
             <TextInput
-                style={[styles.input, {
-                    borderColor: theme.colors.borderColor,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text
-                }]}
+                style={styles.input}
                 placeholder="Full Name"
                 placeholderTextColor={theme.colors.textMuted}
                 autoCapitalize="words"
@@ -292,11 +391,7 @@ export default function RootHomeScreen() {
             />
 
             <TextInput
-                style={[styles.input, {
-                    borderColor: theme.colors.borderColor,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text
-                }]}
+                style={styles.input}
                 placeholder="Email"
                 placeholderTextColor={theme.colors.textMuted}
                 autoCapitalize="none"
@@ -306,11 +401,7 @@ export default function RootHomeScreen() {
             />
 
             <TextInput
-                style={[styles.input, {
-                    borderColor: theme.colors.borderColor,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text
-                }]}
+                style={styles.input}
                 placeholder="Password"
                 placeholderTextColor={theme.colors.textMuted}
                 secureTextEntry
@@ -319,11 +410,7 @@ export default function RootHomeScreen() {
             />
 
             <TextInput
-                style={[styles.input, {
-                    borderColor: theme.colors.borderColor,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text
-                }]}
+                style={styles.input}
                 placeholder="Confirm Password"
                 placeholderTextColor={theme.colors.textMuted}
                 secureTextEntry
@@ -346,17 +433,17 @@ export default function RootHomeScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => switchMode('splash')}>
-                <Text style={[styles.link, { color: theme.colors.primary }]}>
+                <Text style={styles.link}>
                     ← Back to login options
                 </Text>
             </TouchableOpacity>
 
             <View style={styles.switchModeContainer}>
-                <Text style={[styles.switchModeText, { color: theme.colors.textSecondary }]}>
+                <Text style={styles.switchModeText}>
                     Already have an account?{' '}
                 </Text>
                 <TouchableOpacity onPress={() => switchMode('login')}>
-                    <Text style={[styles.link, { color: theme.colors.primary }]}>
+                    <Text style={styles.link}>
                         Sign In
                     </Text>
                 </TouchableOpacity>
@@ -366,19 +453,15 @@ export default function RootHomeScreen() {
 
     const renderForgotPasswordForm = () => (
         <View style={styles.formContainer}>
-            <Text style={[styles.formTitle, { color: theme.colors.text }]}>
+            <Text style={styles.formTitle}>
                 Reset Password
             </Text>
-            <Text style={[styles.formSubtitle, { color: theme.colors.textSecondary }]}>
+            <Text style={styles.formSubtitle}>
                 Enter your email to receive a password reset link
             </Text>
 
             <TextInput
-                style={[styles.input, {
-                    borderColor: theme.colors.borderColor,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text
-                }]}
+                style={styles.input}
                 placeholder="Email"
                 placeholderTextColor={theme.colors.textMuted}
                 autoCapitalize="none"
@@ -402,7 +485,7 @@ export default function RootHomeScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => switchMode('login')}>
-                <Text style={[styles.link, { color: theme.colors.primary }]}>
+                <Text style={styles.link}>
                     ← Back to Sign In
                 </Text>
             </TouchableOpacity>
@@ -413,143 +496,39 @@ export default function RootHomeScreen() {
         <>
             <Stack.Screen options={{ headerShown: false }} />
 
-        <LinearGradient
-            colors={[theme.colors.background, theme.colors.primary, theme.colors.accent]}
-            style={styles.container}
-        >
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            <LinearGradient
+                colors={[theme.colors.background, theme.colors.primary, theme.colors.accent]}
                 style={styles.container}
             >
-                <ScrollView
-                    contentContainerStyle={styles.scrollContainer}
-                    keyboardShouldPersistTaps="handled"
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={styles.container}
                 >
-                    {/* Messages */}
-                    {error ? (
-                        <View style={[styles.messageContainer, { backgroundColor: theme.colors.error }]}>
-                            <Text style={styles.messageText}>{error}</Text>
-                        </View>
-                    ) : null}
+                    <ScrollView
+                        contentContainerStyle={styles.scrollContainer}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        {/* Messages */}
+                        {error ? (
+                            <View style={[styles.messageContainer, { backgroundColor: theme.colors.error }]}>
+                                <Text style={styles.messageText}>{error}</Text>
+                            </View>
+                        ) : null}
 
-                    {successMessage ? (
-                        <View style={[styles.messageContainer, { backgroundColor: theme.colors.success }]}>
-                            <Text style={styles.messageText}>{successMessage}</Text>
-                        </View>
-                    ) : null}
+                        {successMessage ? (
+                            <View style={[styles.messageContainer, { backgroundColor: theme.colors.success }]}>
+                                <Text style={styles.messageText}>{successMessage}</Text>
+                            </View>
+                        ) : null}
 
-                    {/* Render appropriate form based on authMode */}
-                    {authMode === 'splash' && renderSplashScreen()}
-                    {authMode === 'login' && renderLoginForm()}
-                    {authMode === 'register' && renderRegisterForm()}
-                    {authMode === 'forgot' && renderForgotPasswordForm()}
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </LinearGradient>
-</>
+                        {/* Render appropriate form based on authMode */}
+                        {authMode === 'splash' && renderSplashScreen()}
+                        {authMode === 'login' && renderLoginForm()}
+                        {authMode === 'register' && renderRegisterForm()}
+                        {authMode === 'forgot' && renderForgotPasswordForm()}
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </LinearGradient>
+        </>
     );
 }
-
-const styles = {
-    container: {
-        flex: 1,
-    },
-    scrollContainer: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        padding: 20,
-    },
-    contentContainer: {
-        alignItems: 'center' as const,
-        justifyContent: 'center' as const,
-    },
-    formContainer: {
-        width: '100%',
-        maxWidth: 400,
-        alignSelf: 'center' as const,
-    },
-    logo: {
-        width: width * 0.6,
-        height: width * 0.6,
-        marginBottom: 30,
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold' as const,
-        textAlign: 'center' as const,
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: 16,
-        textAlign: 'center' as const,
-        marginBottom: 40,
-    },
-    formTitle: {
-        fontSize: 24,
-        fontWeight: 'bold' as const,
-        textAlign: 'center' as const,
-        marginBottom: 8,
-    },
-    formSubtitle: {
-        fontSize: 14,
-        textAlign: 'center' as const,
-        marginBottom: 24,
-    },
-    buttonContainer: {
-        width: "100%",
-        gap: 15,
-    },
-    button: {
-        paddingVertical: 16,
-        borderRadius: 12,
-        alignItems: 'center' as const,
-    },
-    submitButton: {
-        paddingVertical: 16,
-        borderRadius: 12,
-        alignItems: 'center' as const,
-        marginTop: 8,
-        marginBottom: 16,
-    },
-    buttonText: {
-        fontSize: 18,
-        fontWeight: 'bold' as const,
-    },
-    input: {
-        width: "100%",
-        padding: 12,
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 15,
-        fontSize: 16,
-    },
-    link: {
-        fontSize: 16,
-        textAlign: "center" as const,
-        marginVertical: 4,
-    },
-    forgotButton: {
-        alignSelf: 'flex-end' as const,
-        marginBottom: 8,
-    },
-    switchModeContainer: {
-        flexDirection: 'row' as const,
-        justifyContent: 'center' as const,
-        alignItems: 'center' as const,
-        marginTop: 16,
-    },
-    switchModeText: {
-        fontSize: 16,
-    },
-    messageContainer: {
-        padding: 12,
-        borderRadius: 8,
-        marginBottom: 16,
-    },
-    messageText: {
-        color: '#fff',
-        textAlign: 'center' as const,
-        fontSize: 14,
-        fontWeight: '500' as const,
-    },
-};
