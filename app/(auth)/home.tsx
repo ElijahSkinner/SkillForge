@@ -204,7 +204,7 @@ export default function RootHomeScreen() {
             ...theme.typography.button,
         } as TextStyle,
         input: {
-            width: "100%",
+            flex: 1,
             padding: theme.spacing.md,
             borderWidth: 1,
             borderColor: theme.colors.borderColor,
@@ -213,7 +213,7 @@ export default function RootHomeScreen() {
             borderRadius: theme.borderRadius.md,
             marginBottom: theme.spacing.md,
             fontSize: 16,
-        } as ViewStyle,
+        } as TextStyle,
         link: {
             ...theme.typography.body1,
             color: theme.colors.primary,
