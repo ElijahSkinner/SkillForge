@@ -485,12 +485,12 @@ git commit -m "fix: Correct streak calculation for different timezones"
 - **Improved:** Performance optimizations for large datasets
 - **Fixed:** Theme persistence across app restarts
 - **Fixed:** Streak calculation edge cases
+- **Added:** Profile management and settings
 
 ### **v1.1.0 (August 2025)**
 - **Added:** User authentication with Appwrite
 - **Added:** Progress tracking and XP system
 - **Added:** Basic roadmap interface
-- **Added:** Profile management and settings
 - **Added:** League system with tier rankings (Static)
 
 ### **v1.0.0 (July 2025)**
