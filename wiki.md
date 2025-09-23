@@ -494,7 +494,7 @@ git commit -m "fix: Correct streak calculation for different timezones"
 - **Added:** League system with tier rankings
 
 ### **v1.0.0 (July 2025)**
-- **Initial plannine** with core functionality
+- **Initial planninh** with core functionality
 - Basic navigation and UI framework
 - User registration and login
 - Simple progress tracking
