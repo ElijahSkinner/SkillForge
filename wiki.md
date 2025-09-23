@@ -497,7 +497,6 @@ git commit -m "fix: Correct streak calculation for different timezones"
 - **Initial planning** with core functionality
 - Basic navigation and UI framework
 - Firebase and GitHub configuration
-- Simple progress tracking
 
 ---
 
