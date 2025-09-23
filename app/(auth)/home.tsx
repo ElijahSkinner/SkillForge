@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
-import { } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
