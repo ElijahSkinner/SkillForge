@@ -1,167 +1,114 @@
-
 # **SkillForge Wiki (Internal)**
+
+*Last Updated: September 2025*
 
 ---
 
 ## **1. Setup & Installation**
 
-**Steps:**
+### **Development Environment Setup**
 
-1. **Clone the repository**
+1. **Prerequisites**
+   ```bash
+   # Required tools
+   node --version  # v18+ required
+   npm --version   # Latest stable
+   expo --version  # Expo CLI
+   ```
 
+2. **Clone & Install**
    ```bash
    git clone git@github.com:ElijahSkinner/SkillForge.git
-   cd skillforge
-   ```
-2. **Install dependencies**
-
-   ```bash
+   cd SkillForge
    npm install
    ```
-3. **Configure environment**
 
-    * Copy `.env.example` → `.env`
-    * Set Appwrite endpoint, project ID, database ID, collection ID, etc.
-4. **Start Expo**
+3. **Environment Configuration**
+    - Copy `.env.example` → `.env`
+    - Configure Appwrite settings:
+      ```env
+      EXPO_PUBLIC_APPWRITE_ENDPOINT=http://your-ip:80/v1
+      EXPO_PUBLIC_APPWRITE_PROJECT_ID=your_project_id
+      EXPO_PUBLIC_DATABASE_ID=your_database_id  
+      EXPO_PUBLIC_COLLECTION_ID=your_collection_id
+      ```
 
+4. **Appwrite Database Setup**
+    - Create `user_progress` collection
+    - Configure attributes (see Database Schema section)
+    - Set up authentication (email/password)
+    - Enable real-time subscriptions
+
+5. **Development Server**
    ```bash
-   npm run start
+   npm start           # Start Expo dev server
+   npm run android     # Android emulator
+   npm run ios         # iOS simulator  
+   npm run web         # Web browser
    ```
 
-    * For Android: `npm run android`
-    * For iOS: `npm run ios`
-    * For Web: `npm run web`
-5. **Testing**
-
-    * Test login/signup flows using test accounts.
-    * Ensure database reads/writes work.
+### **Common Setup Issues**
+- **Network connectivity:** Use `--tunnel` flag for remote device testing
+- **Appwrite CORS:** Add your development domains to Appwrite console
+- **iOS Simulator:** Requires Xcode on macOS
+- **Android Emulator:** Requires Android Studio setup
 
 ---
 
-## **2. Architecture**
+## **2. Architecture Overview**
 
-**Overview:** Shows the high-level structure of the app.
-
-**Components:**
-
-* **Frontend:** React Native + Expo, uses Expo Router for navigation.
-* **Backend:** Appwrite (Auth, Database, Storage if needed).
-* **Context Providers:** `AuthProvider`, `CertProvider`, `ThemeProvider`.
-* **Tabs:** `(tabs)` folder contains main navigation (`course`, `glossary`, `quiz`, `profile`, `roadmap`, `today`, `league`).
-
-**Diagrams (Placeholder):**
-
+### **High-Level Architecture**
 ```
-[Mobile App] -- API --> [Appwrite Server]
-       |                        |
-   Auth / Progress             Database
+┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
+│   Mobile App    │ ←→ │   Appwrite   │ ←→ │    Database     │
+│  (React Native)│    │   Backend    │    │ (user_progress) │
+└─────────────────┘    └──────────────┘    └─────────────────┘
+         ↓
+┌─────────────────────────────────────────────────────────────┐
+│                Context Providers                            │
+│  • AuthContext (Authentication & Progress)                 │
+│  • ThemeContext (UI Themes & Persistence)                  │  
+│  • CertContext (Course Management)                         │
+└─────────────────────────────────────────────────────────────┘
 ```
+
+### **App Structure**
+```
+app/
+├── (auth)/                 # Authentication flow
+│   ├── home.tsx           # Login/signup interface
+│   ├── verify-email.tsx   # Email verification
+│   └── forgot-password.tsx # Password reset
+├── (tabs)/                # Main app navigation
+│   ├── roadmap/          # Learning roadmap
+│   ├── glossary/         # Study tools
+│   ├── today/            # Daily review
+│   ├── league/           # Leaderboards
+│   └── profile/          # User profile
+├── quiz/                 # Quiz system
+│   └── [objective]/      # Dynamic quiz routes
+└── settings/             # App configuration
+```
+
+### **Navigation Flow**
+1. **Unauthenticated:** `/(auth)/home` → Login/Signup
+2. **Authenticated:** `/(tabs)/roadmap` → Main app
+3. **Course Selection:** `/(tabs)/course` → Pick certification
+4. **Learning:** `/(tabs)/roadmap` → Module progression
+5. **Study Tools:** `/(tabs)/glossary` → Flashcards & terms
 
 ---
 
 ## **3. Database Schema**
 
-**Collection:** `user_progress`
-**Attributes:**
+### **Primary Collection: `user_progress`**
 
-* `userID` (string, required)
-* `currentCert` (string)
-* `xp` (integer, default 0)
-* `completedLessons` (array of strings)
-* `completedModules` (array of strings)
-* `maxStreakAllTime` (integer, default 0)
-* `currentStreak` (integer, default 0)
-
----
-
-## **4. Features / Functionality**
-
-**Tabs & Pages Overview:**
-
-| Tab      | Description                                       |
-| -------- | ------------------------------------------------- |
-| Roadmap  | Displays the user’s learning roadmap and modules  |
-| Course   | Select which course/cert to work on               |
-| Glossary | Interactive flashcards and term lookup            |
-| Quiz     | Questions for selected certifications             |
-| Profile  | Shows streak, XP, achievements, and settings link |
-| Today    | Recent progress and mistakes                      |
-| League   | Leaderboard by XP / score                         |
-
-**Additional Features:**
-
-* Streak tracking and updates.
-* User progress saved per account.
-* Achievements and badges.
-
----
-
-## **5. Testing**
-
-**Local Testing:**
-
-* Run app via Expo (web, iOS, Android).
-* Test login/signup, progress creation, and updates.
-
-**Automated Tests:**
-
-* TBD / future integration with Jest or Detox.
-
-**Test Accounts:**
-
-* Placeholder account details for dev testing (internal use only).
-
----
-
-## **6. Troubleshooting / Common Issues**
-
-* **Appwrite 401 Unauthorized:**
-
-    * Ensure correct API endpoint & project ID in `.env`.
-    * Verify active session or login.
-    * Check if expo is running with or w/o `--tunnel`
-* **Expo Tunnel Issues:**
-
-    * Use LAN or localhost mode to test connectivity.
-* **GitHub Auto-Push Failures:**
-
-    * SSH key must be added to GitHub account.
-    * Ensure WebStorm SSH settings are configured.
-    * Set auth to https instead of ssh then login to GitHub in Webstorm
-* **Dependencies / NPM Warnings:**
-
-    * Resolve conflicting versions for AsyncStorage, Firebase.
-
----
-
-## **7. Contribution Guidelines**
-
-* Follow branching strategy: `main` for production, `dev` for development.
-* Commit messages:
-
-  ```
-  feat: Add login page
-  fix: Correct streak update bug
-  docs: Update README
-  ```
-* Pull Request workflow:
-
-    * PRs must pass local build/test.
-    * Review and approve before merge.
-
----
-
-## **8. Roadmap**
-
-* **Short-term:** Decide basic theme, create Network+ content, create xp tracking.
-* **Medium-term:** Add friends system, share progress, begin second course.
-* **Long-term:** Analytics dashboard, additional certifications, push notifications.
-
----
-
-## **9. Changelog**
-
-* **v1.0.0** - Initial working version with Auth, Roadmap, Profile, Tabs.
-* **v1.1.0** - Added Streak tracking, XP updates, Quiz page scaffold.
-* **v1.2.0** - UI improvements, Settings and Logout modal.
-
+| Attribute | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userID` | string | ✓ | Appwrite user account ID |
+| `currentCert` | string | | Selected certification name |
+| `xp` | integer | | Total experience points |
+| `completedLessons` | array | | Array of lesson IDs: `[cert_moduleId_lessonIndex]` |
+| `completedModules` | array | | Array of module IDs: `[cert_moduleId]` |
+| `currentStreak` | integer | | Current daily study streak |
+| `maxStreakAllTime` | integer | |
