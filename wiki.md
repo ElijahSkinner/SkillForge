@@ -491,7 +491,7 @@ git commit -m "fix: Correct streak calculation for different timezones"
 - **Added:** Progress tracking and XP system
 - **Added:** Basic roadmap interface
 - **Added:** Profile management and settings
-- **Added:** League system with tier rankings
+- **Added:** League system with tier rankings (Static)
 
 ### **v1.0.0 (July 2025)**
 - **Initial planning** with core functionality
