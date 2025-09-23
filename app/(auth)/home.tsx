@@ -138,7 +138,7 @@ export default function RootHomeScreen() {
         resetForm();
     };
 
-    // Themed styles
+    // Create styles using the current theme
     const styles = {
         container: {
             flex: 1,
@@ -240,9 +240,9 @@ export default function RootHomeScreen() {
             marginBottom: theme.spacing.md,
         } as ViewStyle,
         messageText: {
+            ...theme.typography.body2,
             color: '#fff',
             textAlign: 'center' as const,
-            fontSize: 14,
             fontWeight: '500' as const,
         } as TextStyle,
     };
