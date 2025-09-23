@@ -362,7 +362,7 @@ export default function RootHomeScreen() {
 
             <View style={styles.switchModeContainer}>
                 <Text style={styles.switchModeText}>
-                    Don't have an account?{' '}
+                    Dont have an account?{' '}
                 </Text>
                 <TouchableOpacity onPress={() => switchMode('register')}>
                     <Text style={styles.link}>
