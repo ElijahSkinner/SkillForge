@@ -11,7 +11,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     ViewStyle,
-    TextStyle
+    TextStyle,
+    ImageStyle
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -161,7 +162,7 @@ export default function RootHomeScreen() {
             width: width * 0.6,
             height: width * 0.6,
             marginBottom: theme.spacing.xl,
-        } as ViewStyle,
+        } as ImageStyle,
         title: {
             ...theme.typography.h1,
             textAlign: 'center' as const,
@@ -361,7 +362,7 @@ export default function RootHomeScreen() {
 
             <View style={styles.switchModeContainer}>
                 <Text style={styles.switchModeText}>
-                    Dont have an account?{' '}
+                    Don't have an account?{' '}
                 </Text>
                 <TouchableOpacity onPress={() => switchMode('register')}>
                     <Text style={styles.link}>
