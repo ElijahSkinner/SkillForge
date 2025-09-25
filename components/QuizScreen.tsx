@@ -169,7 +169,6 @@ export default function QuizScreen() {
                         disabled={!showResult}
                     />
                 </View>
-            />
             </SafeAreaView>
         </ThemedView>
     );
