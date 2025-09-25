@@ -106,9 +106,9 @@ export default function Flashcards({ data, onClose }: Props) {
         },
         onPanResponderRelease: (_, gestureState) => {
             if (gestureState.dx > 50) {
-                prevCard();
-            } else if (gestureState.dx < -50) {
                 nextCard();
+            } else if (gestureState.dx < -50) {
+                prevCard();
             }
         },
     });
@@ -362,6 +362,7 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
+        paddingBottom: 80, // Add space to prevent overlap with navigation
     },
     cardAnimationContainer: {
         width: '100%',
