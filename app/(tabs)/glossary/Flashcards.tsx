@@ -1,6 +1,6 @@
-// components/(tabs)/glossary/Flashcards.tsx - Enhanced version
+// components/(tabs)/glossary/Flashcards.tsx - Professional version
 import React, { useState, useRef } from 'react';
-import { View, Text, Pressable, Animated, Dimensions } from 'react-native';
+import { View, Text, Pressable, Animated, Dimensions, PanResponder } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../../context/ThemeContext';
@@ -17,13 +17,14 @@ type Props = {
     onClose?: () => void;
 };
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 
 export default function Flashcards({ data, onClose }: Props) {
     const { theme } = useTheme();
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [showDefinition, setShowDefinition] = useState(false);
+    const [isFlipped, setIsFlipped] = useState(false);
     const flipAnimation = useRef(new Animated.Value(0)).current;
+    const slideAnimation = useRef(new Animated.Value(0)).current;
 
     if (!data || data.length === 0) {
         return (
@@ -35,10 +36,10 @@ export default function Flashcards({ data, onClose }: Props) {
                     </Text>
                     {onClose && (
                         <Pressable
-                            style={[styles.closeButton, { backgroundColor: theme.colors.primary }]}
+                            style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
                             onPress={onClose}
                         >
-                            <Text style={[styles.closeButtonText, { color: theme.colors.textOnPrimary }]}>
+                            <Text style={[styles.actionButtonText, { color: theme.colors.textOnPrimary }]}>
                                 Go Back
                             </Text>
                         </Pressable>
@@ -50,91 +51,118 @@ export default function Flashcards({ data, onClose }: Props) {
 
     const currentCard = data[currentIndex];
 
+    // Smooth flip animation
     const flipCard = () => {
-        const toValue = showDefinition ? 0 : 1;
-
-        Animated.spring(flipAnimation, {
-            toValue,
-            tension: 150,
-            friction: 8,
+        Animated.timing(flipAnimation, {
+            toValue: isFlipped ? 0 : 1,
+            duration: 600,
             useNativeDriver: true,
-        }).start(() => {
-            setShowDefinition(!showDefinition);
-        });
+        }).start();
+        setIsFlipped(!isFlipped);
     };
 
+    // Navigate to next card
     const nextCard = () => {
         if (currentIndex < data.length - 1) {
-            setShowDefinition(false);
+            // Reset flip state and animation
+            setIsFlipped(false);
             flipAnimation.setValue(0);
-            setCurrentIndex(prev => prev + 1);
+
+            // Slide animation
+            Animated.timing(slideAnimation, {
+                toValue: 1,
+                duration: 200,
+                useNativeDriver: true,
+            }).start(() => {
+                setCurrentIndex(prev => prev + 1);
+                slideAnimation.setValue(0);
+            });
         }
     };
 
+    // Navigate to previous card
     const prevCard = () => {
         if (currentIndex > 0) {
-            setShowDefinition(false);
+            // Reset flip state and animation
+            setIsFlipped(false);
             flipAnimation.setValue(0);
-            setCurrentIndex(prev => prev - 1);
+
+            // Slide animation
+            Animated.timing(slideAnimation, {
+                toValue: -1,
+                duration: 200,
+                useNativeDriver: true,
+            }).start(() => {
+                setCurrentIndex(prev => prev - 1);
+                slideAnimation.setValue(0);
+            });
         }
     };
 
-    // Calculate card colors based on current theme
-    const getCardColors = () => {
-        const colorSets = [
-            { front: theme.colors.primary, back: theme.colors.accent },
-            { front: theme.colors.success, back: theme.colors.warning },
-            { front: theme.colors.secondary, back: theme.colors.info },
-        ];
-        return colorSets[currentIndex % colorSets.length];
-    };
-
-    const cardColors = getCardColors();
-
-    // Flip animation interpolations
-    const frontAnimatedStyle = {
-        transform: [
-            {
-                rotateY: flipAnimation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ['0deg', '180deg'],
-                })
+    // Swipe gesture handler
+    const panResponder = PanResponder.create({
+        onMoveShouldSetPanResponder: (_, gestureState) => {
+            return Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dy) < 50;
+        },
+        onPanResponderRelease: (_, gestureState) => {
+            if (gestureState.dx > 50) {
+                prevCard();
+            } else if (gestureState.dx < -50) {
+                nextCard();
             }
-        ]
-    };
+        },
+    });
 
-    const backAnimatedStyle = {
-        transform: [
-            {
-                rotateY: flipAnimation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ['180deg', '360deg'],
-                })
-            }
-        ]
-    };
+    // Animation styles for card rotation
+    const frontInterpolate = flipAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '180deg'],
+    });
+
+    const backInterpolate = flipAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['180deg', '360deg'],
+    });
+
+    const frontOpacity = flipAnimation.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [1, 0, 0],
+    });
+
+    const backOpacity = flipAnimation.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [0, 0, 1],
+    });
+
+    const slideTransform = slideAnimation.interpolate({
+        inputRange: [-1, 0, 1],
+        outputRange: [-screenWidth, 0, screenWidth],
+    });
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             {/* Header */}
-            <View style={styles.header}>
+            <View style={[styles.header, { borderBottomColor: theme.colors.borderColor }]}>
                 <Pressable
-                    style={[styles.headerButton, { backgroundColor: theme.colors.surface }]}
+                    style={styles.closeButton}
                     onPress={onClose}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                     <Ionicons name="close" size={24} color={theme.colors.text} />
                 </Pressable>
 
-                <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-                    Flashcards
-                </Text>
+                <View style={styles.progressInfo}>
+                    <Text style={[styles.progressText, { color: theme.colors.textSecondary }]}>
+                        {currentIndex + 1} of {data.length}
+                    </Text>
+                </View>
 
                 <View style={styles.headerSpacer} />
             </View>
 
             {/* Progress bar */}
-            <View style={[styles.progressContainer, { backgroundColor: theme.colors.surface }]}>
-                <View
+            <View style={[styles.progressBarContainer, { backgroundColor: theme.colors.borderColor }]}>
+                <Animated.View
                     style={[
                         styles.progressBar,
                         {
@@ -145,131 +173,137 @@ export default function Flashcards({ data, onClose }: Props) {
                 />
             </View>
 
-            <Text style={[styles.progressText, { color: theme.colors.textSecondary }]}>
-                {currentIndex + 1} of {data.length}
-            </Text>
+            {/* Card container */}
+            <View style={styles.cardContainer} {...panResponder.panHandlers}>
+                <Animated.View
+                    style={[
+                        styles.cardAnimationContainer,
+                        {
+                            transform: [{ translateX: slideTransform }]
+                        }
+                    ]}
+                >
+                    <Pressable onPress={flipCard} style={styles.cardPressable}>
+                        {/* Front of card */}
+                        <Animated.View
+                            style={[
+                                styles.card,
+                                { backgroundColor: theme.colors.surface, borderColor: theme.colors.borderColor },
+                                {
+                                    transform: [{ rotateY: frontInterpolate }],
+                                    opacity: frontOpacity,
+                                }
+                            ]}
+                        >
+                            <View style={styles.cardHeader}>
+                                <View style={[styles.cardTypeBadge, { backgroundColor: theme.colors.primary }]}>
+                                    <Text style={[styles.cardTypeBadgeText, { color: theme.colors.textOnPrimary }]}>
+                                        TERM
+                                    </Text>
+                                </View>
+                            </View>
 
-            {/* Flashcard container */}
-            <View style={styles.flashcardContainer}>
-                <Pressable onPress={flipCard} style={styles.cardPressable}>
-                    {/* Front of card */}
-                    <Animated.View
-                        style={[
-                            styles.flashcard,
-                            { backgroundColor: cardColors.front },
-                            frontAnimatedStyle,
-                            showDefinition && styles.cardHidden
-                        ]}
-                    >
-                        <View style={styles.cardContent}>
-                            <Ionicons
-                                name="help-circle-outline"
-                                size={32}
-                                color={theme.colors.textOnPrimary}
-                                style={styles.cardIcon}
-                            />
-                            <Text style={[styles.cardText, { color: theme.colors.textOnPrimary }]}>
-                                {currentCard.term || currentCard.acronym || currentCard.port}
-                            </Text>
-                            <Text style={[styles.tapHint, { color: theme.colors.textOnPrimary }]}>
-                                Tap to reveal
-                            </Text>
-                        </View>
-                    </Animated.View>
+                            <View style={styles.cardContent}>
+                                <Text style={[styles.cardTerm, { color: theme.colors.text }]}>
+                                    {currentCard.term || currentCard.acronym || currentCard.port}
+                                </Text>
+                            </View>
 
-                    {/* Back of card */}
-                    <Animated.View
-                        style={[
-                            styles.flashcard,
-                            styles.flashcardBack,
-                            { backgroundColor: cardColors.back },
-                            backAnimatedStyle,
-                            !showDefinition && styles.cardHidden
-                        ]}
-                    >
-                        <View style={styles.cardContent}>
-                            <Ionicons
-                                name="checkmark-circle-outline"
-                                size={32}
-                                color={theme.colors.textOnPrimary}
-                                style={styles.cardIcon}
-                            />
-                            <Text style={[styles.cardText, { color: theme.colors.textOnPrimary }]}>
-                                {currentCard.definition}
-                            </Text>
-                            <Text style={[styles.tapHint, { color: theme.colors.textOnPrimary }]}>
-                                Tap to flip back
-                            </Text>
-                        </View>
-                    </Animated.View>
-                </Pressable>
+                            <View style={styles.cardFooter}>
+                                <Text style={[styles.flipHint, { color: theme.colors.textMuted }]}>
+                                    Tap to reveal definition
+                                </Text>
+                            </View>
+                        </Animated.View>
+
+                        {/* Back of card */}
+                        <Animated.View
+                            style={[
+                                styles.card,
+                                styles.cardBack,
+                                { backgroundColor: theme.colors.primary, borderColor: theme.colors.primaryDark },
+                                {
+                                    transform: [{ rotateY: backInterpolate }],
+                                    opacity: backOpacity,
+                                }
+                            ]}
+                        >
+                            <View style={styles.cardHeader}>
+                                <View style={[styles.cardTypeBadge, { backgroundColor: theme.colors.textOnPrimary }]}>
+                                    <Text style={[styles.cardTypeBadgeText, { color: theme.colors.primary }]}>
+                                        DEFINITION
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View style={styles.cardContent}>
+                                <Text style={[styles.cardDefinition, { color: theme.colors.textOnPrimary }]}>
+                                    {currentCard.definition}
+                                </Text>
+                            </View>
+
+                            <View style={styles.cardFooter}>
+                                <Text style={[styles.flipHint, { color: theme.colors.textOnPrimary, opacity: 0.8 }]}>
+                                    Tap to flip back
+                                </Text>
+                            </View>
+                        </Animated.View>
+                    </Pressable>
+                </Animated.View>
             </View>
 
-            {/* Navigation buttons */}
-            <View style={styles.navContainer}>
-                <Pressable
-                    style={[
-                        styles.navButton,
-                        { backgroundColor: theme.colors.secondary },
-                        currentIndex === 0 && [styles.disabledButton, { backgroundColor: theme.colors.surface }]
-                    ]}
-                    onPress={prevCard}
-                    disabled={currentIndex === 0}
-                >
-                    <Ionicons
-                        name="chevron-back"
-                        size={24}
-                        color={currentIndex === 0 ? theme.colors.textMuted : theme.colors.textOnPrimary}
-                    />
-                    <Text style={[
-                        styles.navText,
-                        { color: currentIndex === 0 ? theme.colors.textMuted : theme.colors.textOnPrimary }
-                    ]}>
-                        Previous
-                    </Text>
-                </Pressable>
-
-                <Pressable
-                    style={[
-                        styles.navButton,
-                        { backgroundColor: theme.colors.secondary },
-                        currentIndex === data.length - 1 && [styles.disabledButton, { backgroundColor: theme.colors.surface }]
-                    ]}
-                    onPress={nextCard}
-                    disabled={currentIndex === data.length - 1}
-                >
-                    <Text style={[
-                        styles.navText,
-                        { color: currentIndex === data.length - 1 ? theme.colors.textMuted : theme.colors.textOnPrimary }
-                    ]}>
-                        Next
-                    </Text>
-                    <Ionicons
-                        name="chevron-forward"
-                        size={24}
-                        color={currentIndex === data.length - 1 ? theme.colors.textMuted : theme.colors.textOnPrimary}
-                    />
-                </Pressable>
-            </View>
-
-            {/* Study stats */}
-            <View style={[styles.statsContainer, { backgroundColor: theme.colors.surface }]}>
-                <View style={styles.statItem}>
-                    <Text style={[styles.statNumber, { color: theme.colors.primary }]}>
-                        {Math.round(((currentIndex + 1) / data.length) * 100)}%
-                    </Text>
-                    <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
-                        Progress
+            {/* Navigation */}
+            <View style={styles.navigationContainer}>
+                <View style={styles.swipeHint}>
+                    <Text style={[styles.swipeHintText, { color: theme.colors.textMuted }]}>
+                        Swipe or tap buttons to navigate
                     </Text>
                 </View>
-                <View style={[styles.statDivider, { backgroundColor: theme.colors.borderColor }]} />
-                <View style={styles.statItem}>
-                    <Text style={[styles.statNumber, { color: theme.colors.success }]}>
-                        {data.length}
-                    </Text>
-                    <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
-                        Total Cards
-                    </Text>
+
+                <View style={styles.navButtons}>
+                    <Pressable
+                        style={[
+                            styles.navButton,
+                            { backgroundColor: theme.colors.surface, borderColor: theme.colors.borderColor },
+                            currentIndex === 0 && styles.navButtonDisabled
+                        ]}
+                        onPress={prevCard}
+                        disabled={currentIndex === 0}
+                    >
+                        <Ionicons
+                            name="chevron-back"
+                            size={20}
+                            color={currentIndex === 0 ? theme.colors.textMuted : theme.colors.text}
+                        />
+                        <Text style={[
+                            styles.navButtonText,
+                            { color: currentIndex === 0 ? theme.colors.textMuted : theme.colors.text }
+                        ]}>
+                            Previous
+                        </Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={[
+                            styles.navButton,
+                            { backgroundColor: theme.colors.surface, borderColor: theme.colors.borderColor },
+                            currentIndex === data.length - 1 && styles.navButtonDisabled
+                        ]}
+                        onPress={nextCard}
+                        disabled={currentIndex === data.length - 1}
+                    >
+                        <Text style={[
+                            styles.navButtonText,
+                            { color: currentIndex === data.length - 1 ? theme.colors.textMuted : theme.colors.text }
+                        ]}>
+                            Next
+                        </Text>
+                        <Ionicons
+                            name="chevron-forward"
+                            size={20}
+                            color={currentIndex === data.length - 1 ? theme.colors.textMuted : theme.colors.text}
+                        />
+                    </Pressable>
                 </View>
             </View>
         </SafeAreaView>
@@ -287,7 +321,7 @@ const styles = {
         padding: 32,
     },
     emptyText: {
-        fontSize: 18,
+        fontSize: 16,
         marginTop: 16,
         marginBottom: 24,
         textAlign: 'center',
@@ -295,152 +329,145 @@ const styles = {
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        paddingBottom: 8,
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+        borderBottomWidth: 1,
     },
-    headerButton: {
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-        alignItems: 'center',
-        justifyContent: 'center',
+    closeButton: {
+        padding: 4,
     },
-    headerTitle: {
+    progressInfo: {
         flex: 1,
-        fontSize: 20,
-        fontWeight: '700',
-        textAlign: 'center',
+        alignItems: 'center',
+    },
+    progressText: {
+        fontSize: 14,
+        fontWeight: '500',
     },
     headerSpacer: {
-        width: 44,
+        width: 32,
     },
-    progressContainer: {
-        height: 4,
-        marginHorizontal: 16,
-        borderRadius: 2,
-        overflow: 'hidden',
+    progressBarContainer: {
+        height: 3,
+        marginHorizontal: 20,
+        borderRadius: 1.5,
+        marginBottom: 20,
     },
     progressBar: {
         height: '100%',
-        borderRadius: 2,
+        borderRadius: 1.5,
     },
-    progressText: {
-        textAlign: 'center',
-        fontSize: 14,
-        marginTop: 8,
-        marginBottom: 16,
-        fontWeight: '600',
-    },
-    flashcardContainer: {
+    cardContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
+    },
+    cardAnimationContainer: {
+        width: '100%',
+        height: 350,
     },
     cardPressable: {
-        width: screenWidth - 48,
-        height: Math.min(screenHeight * 0.5, 400),
+        width: '100%',
+        height: '100%',
     },
-    flashcard: {
+    card: {
         position: 'absolute',
         width: '100%',
         height: '100%',
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
+        borderRadius: 16,
+        borderWidth: 1,
         backfaceVisibility: 'hidden',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
     },
-    flashcardBack: {
+    cardBack: {
         // Additional styles for back of card if needed
+    },
+    cardHeader: {
+        padding: 20,
+        paddingBottom: 0,
+    },
+    cardTypeBadge: {
+        alignSelf: 'flex-start',
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        borderRadius: 12,
+    },
+    cardTypeBadgeText: {
+        fontSize: 10,
+        fontWeight: '700',
+        letterSpacing: 0.5,
     },
     cardContent: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 24,
+        paddingHorizontal: 20,
     },
-    cardIcon: {
-        marginBottom: 16,
-        opacity: 0.8,
-    },
-    cardText: {
-        fontSize: 22,
-        fontWeight: '600',
+    cardTerm: {
+        fontSize: 28,
+        fontWeight: '700',
         textAlign: 'center',
-        lineHeight: 32,
-        flex: 1,
-        justifyContent: 'center',
+        letterSpacing: -0.5,
+    },
+    cardDefinition: {
+        fontSize: 18,
+        fontWeight: '400',
+        textAlign: 'center',
+        lineHeight: 26,
+    },
+    cardFooter: {
+        padding: 20,
         alignItems: 'center',
     },
-    tapHint: {
-        fontSize: 14,
-        opacity: 0.8,
-        marginTop: 16,
+    flipHint: {
+        fontSize: 12,
         fontStyle: 'italic',
     },
-    cardHidden: {
-        opacity: 0,
+    navigationContainer: {
+        paddingHorizontal: 20,
+        paddingBottom: 20,
     },
-    navContainer: {
+    swipeHint: {
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    swipeHintText: {
+        fontSize: 12,
+    },
+    navButtons: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingVertical: 20,
-        gap: 16,
+        gap: 12,
     },
     navButton: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 16,
-        borderRadius: 12,
-        gap: 8,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        borderWidth: 1,
+        gap: 6,
     },
-    disabledButton: {
-        opacity: 0.5,
+    navButtonDisabled: {
+        opacity: 0.4,
     },
-    navText: {
-        fontSize: 16,
-        fontWeight: '600',
+    navButtonText: {
+        fontSize: 14,
+        fontWeight: '500',
     },
-    statsContainer: {
-        flexDirection: 'row',
-        marginHorizontal: 16,
-        marginBottom: 16,
-        borderRadius: 12,
-        padding: 16,
-    },
-    statItem: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    statNumber: {
-        fontSize: 24,
-        fontWeight: '700',
-    },
-    statLabel: {
-        fontSize: 12,
-        marginTop: 4,
-        textTransform: 'uppercase',
-        fontWeight: '600',
-    },
-    statDivider: {
-        width: 1,
-        marginHorizontal: 16,
-    },
-    closeButton: {
+    actionButton: {
         paddingHorizontal: 24,
         paddingVertical: 12,
         borderRadius: 8,
     },
-    closeButtonText: {
-        fontSize: 16,
+    actionButtonText: {
+        fontSize: 14,
         fontWeight: '600',
     },
 } as const;
