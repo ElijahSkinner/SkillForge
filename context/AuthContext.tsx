@@ -1,4 +1,4 @@
-// context/AuthContext.tsx - UPDATE
+// context/AuthContext.tsx - UPDATED FOR FUNCTION INTEGRATION
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
 import { streakService } from "../services/StreakService";
@@ -84,10 +84,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setLoading(false);
             }
         };
+
         checkSession();
     }, []);
 
-    // Helper function to create initial progress document
+    // Helper function to wait for function to create progress document
+    const waitForProgressDocument = async (userId: string, maxRetries = 5, delay = 1000) => {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const result = await databases.listDocuments(
+                    DATABASE_ID,
+                    COLLECTION_ID,
+                    [Query.equal("userID", userId)]
+                );
+
+                if (result.total > 0) {
+                    return result.documents[0];
+                }
+
+                // Wait before trying again
+                await new Promise(resolve => setTimeout(resolve, delay));
+            } catch (error) {
+                console.error(`Attempt ${i + 1} to fetch progress document failed:`, error);
+                if (i === maxRetries - 1) {
+                    throw error;
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+
+        // If we get here, the function might not have created the document
+        // Fall back to creating it manually
+        console.warn('Function did not create progress document, creating manually...');
+        return await createInitialProgress(userId);
+    };
+
+    // Fallback helper function to create initial progress document manually
     const createInitialProgress = async (userId: string) => {
         const initialProgress = {
             userID: userId,
@@ -193,9 +225,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 }
             );
             setProgress(updatedDoc);
-
             await backgroundStreakService.onUserActivity();
-
         } catch (error) {
             console.error('Failed to add completed lesson:', error);
             throw error;
@@ -270,23 +300,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (result.total > 0) {
             setProgress(result.documents[0]);
         } else {
+            // If no progress document exists, create one manually (shouldn't happen with function)
             const newDoc = await createInitialProgress(user.$id);
             setProgress(newDoc);
         }
     };
 
     const register = async (email: string, password: string, name: string) => {
+        // Create user account
         const user = await account.create(ID.unique(), email, password, name);
 
-        // Use your domain for verification emails
-        await account.createVerification(`${appConfig.app.deepLinkUrl}/verify-email`);
+        // SMTP DISABLED - Comment out email verification for now
+        // await account.createVerification(`${appConfig.app.deepLinkUrl}/verify-email`);
 
+        // Create session
         await account.createEmailPasswordSession(email, password);
         const loggedInUser = await account.get();
         setUser(loggedInUser);
 
-        const newDoc = await createInitialProgress(user.$id);
-        setProgress(newDoc);
+        // Wait for the Appwrite function to create the progress document
+        try {
+            const progressDoc = await waitForProgressDocument(loggedInUser.$id);
+            setProgress(progressDoc);
+        } catch (error) {
+            console.error('Failed to get progress document:', error);
+            // Handle the error appropriately for your app
+            throw new Error('Failed to initialize user progress. Please try again.');
+        }
     };
 
     const logout = async () => {
