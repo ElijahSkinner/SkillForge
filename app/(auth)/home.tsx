@@ -91,14 +91,30 @@ export default function RootHomeScreen() {
 
         clearMessages();
         setLoading(true);
+
         try {
-            await register(email, password, name);
-            setSuccessMessage("Account created! Please check your email to verify your account.");
+            // Only create the account, don't log them in
+            await account.create(ID.unique(), email, password, name);
+
+            // Show success message and switch to login
+            setSuccessMessage("Account created successfully! Please sign in with your new credentials.");
+
+            // Clear form and switch to login after a brief delay
             setTimeout(() => {
-                router.replace('/(tabs)/roadmap');
+                switchMode('login');
+                // Pre-fill the email for convenience
+                setEmail(email);
+                setPassword('');
+                setSuccessMessage(""); // Clear success message
             }, 2000);
+
         } catch (err: any) {
-            setError(err.message || "Registration failed. Please try again.");
+            // Only show error if account creation actually failed
+            if (err.message.includes("already exists") || err.message.includes("email")) {
+                setError("An account with this email already exists. Please try signing in instead.");
+            } else {
+                setError(err.message || "Registration failed. Please try again.");
+            }
         } finally {
             setLoading(false);
         }
