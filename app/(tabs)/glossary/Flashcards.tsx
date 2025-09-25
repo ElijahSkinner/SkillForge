@@ -26,6 +26,12 @@ export default function Flashcards({ data, onClose }: Props) {
     const flipAnimation = useRef(new Animated.Value(0)).current;
     const slideAnimation = useRef(new Animated.Value(0)).current;
 
+    // Reset flip state whenever card index changes
+    React.useEffect(() => {
+        setIsFlipped(false);
+        flipAnimation.setValue(0);
+    }, [currentIndex]);
+
     if (!data || data.length === 0) {
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -71,9 +77,6 @@ export default function Flashcards({ data, onClose }: Props) {
                 useNativeDriver: true,
             }).start(() => {
                 setCurrentIndex(prev => prev + 1);
-                // Reset flip state and animation AFTER changing card
-                setIsFlipped(false);
-                flipAnimation.setValue(0);
                 slideAnimation.setValue(0);
             });
         }
@@ -89,9 +92,6 @@ export default function Flashcards({ data, onClose }: Props) {
                 useNativeDriver: true,
             }).start(() => {
                 setCurrentIndex(prev => prev - 1);
-                // Reset flip state and animation AFTER changing card
-                setIsFlipped(false);
-                flipAnimation.setValue(0);
                 slideAnimation.setValue(0);
             });
         }
