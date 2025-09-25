@@ -114,7 +114,7 @@ export default function QuizScreen() {
     return (
         <ThemedView style={{ flex: 1 }}>
             <SafeAreaView style={{ flex: 1 }}>
-                {/* Header */}
+                <Stack.Screen options={{ headerShown: false }} />
                 <View
                     style={{
                         padding: theme.spacing.md,
