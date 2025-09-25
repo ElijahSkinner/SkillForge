@@ -1,4 +1,4 @@
-// app/(tabs)/glossary/index.tsx - Enhanced version
+// app/(tabs)/glossary/index.tsx - Professional version
 import { useTheme } from '../../../context/ThemeContext';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
@@ -31,7 +31,6 @@ export default function GlossaryScreen() {
         { term?: string; acronym?: string; port?: string; definition: string }[]
     >([]);
 
-    // Update flashcards whenever selectedObjective or tab changes
     useEffect(() => {
         if (!selectedCert) return;
 
@@ -49,23 +48,18 @@ export default function GlossaryScreen() {
         return <CourseRedirect />;
     }
 
-    // Tab buttons with enhanced styling
     const renderTabButtons = () => (
         <View style={styles.tabContainer}>
-            {['terms', 'acronyms', 'ports'].map((t, index) => {
+            {['terms', 'acronyms', 'ports'].map((t) => {
                 const isActive = tab === t;
-                const colors = [theme.colors.primary, theme.colors.accent, theme.colors.success];
-                const tabColor = colors[index];
-
                 return (
                     <Pressable
                         key={t}
                         style={[
                             styles.tabButton,
                             {
-                                backgroundColor: isActive ? tabColor : theme.colors.surface,
-                                borderColor: tabColor,
-                                borderWidth: 2,
+                                backgroundColor: isActive ? theme.colors.primary : theme.colors.surface,
+                                borderColor: theme.colors.borderColor,
                             }
                         ]}
                         onPress={() => {
@@ -74,19 +68,11 @@ export default function GlossaryScreen() {
                             setViewMode('list');
                         }}
                     >
-                        <Ionicons
-                            name={
-                                t === 'terms' ? 'library' :
-                                    t === 'acronyms' ? 'text' : 'server'
-                            }
-                            size={20}
-                            color={isActive ? theme.colors.textOnPrimary : tabColor}
-                        />
                         <Text style={[
                             styles.tabText,
                             {
-                                color: isActive ? theme.colors.textOnPrimary : tabColor,
-                                fontWeight: isActive ? '700' : '600'
+                                color: isActive ? theme.colors.textOnPrimary : theme.colors.text,
+                                fontWeight: isActive ? '600' : '500'
                             }
                         ]}>
                             {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -97,21 +83,15 @@ export default function GlossaryScreen() {
         </View>
     );
 
-    // Enhanced objective cards
     const renderObjectiveCards = () => {
         if (tab === 'ports' || selectedObjective) return null;
 
         return (
             <ScrollView style={styles.objectivesContainer} showsVerticalScrollIndicator={false}>
-                {OBJECTIVES.map((obj, index) => {
-                    const gradientColors = [
-                        [theme.colors.primary, theme.colors.primaryLight],
-                        [theme.colors.accent, theme.colors.accentLight],
-                        [theme.colors.secondary, theme.colors.secondaryLight],
-                        [theme.colors.success, '#4ade80'],
-                        [theme.colors.warning, '#fbbf24']
-                    ];
-                    const [startColor, endColor] = gradientColors[index % gradientColors.length];
+                {OBJECTIVES.map((obj) => {
+                    const itemCount = tab === 'terms' ?
+                        GLOSSARY_TERMS[selectedCert]?.[obj]?.length || 0 :
+                        GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[obj]?.length || 0;
 
                     return (
                         <Pressable
@@ -119,30 +99,25 @@ export default function GlossaryScreen() {
                             style={[
                                 styles.objectiveCard,
                                 {
-                                    backgroundColor: startColor,
-                                    borderColor: endColor,
-                                    borderWidth: 2,
+                                    backgroundColor: theme.colors.surface,
+                                    borderColor: theme.colors.borderColor,
                                 }
                             ]}
                             onPress={() => setSelectedObjective(obj)}
                         >
-                            <View style={styles.objectiveCardContent}>
-                                <Ionicons
-                                    name="school"
-                                    size={24}
-                                    color={theme.colors.textOnPrimary}
-                                    style={styles.objectiveIcon}
-                                />
-                                <Text style={[styles.objectiveTitle, { color: theme.colors.textOnPrimary }]}>
+                            <View style={styles.objectiveContent}>
+                                <Text style={[styles.objectiveTitle, { color: theme.colors.text }]}>
                                     {obj}
                                 </Text>
-                                <View style={[styles.objectiveBadge, { backgroundColor: endColor }]}>
-                                    <Text style={[styles.objectiveBadgeText, { color: theme.colors.textOnPrimary }]}>
-                                        {tab === 'terms' ?
-                                            `${GLOSSARY_TERMS[selectedCert]?.[obj]?.length || 0} terms` :
-                                            `${GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[obj]?.length || 0} acronyms`
-                                        }
+                                <View style={styles.objectiveFooter}>
+                                    <Text style={[styles.itemCount, { color: theme.colors.textSecondary }]}>
+                                        {itemCount} {tab === 'terms' ? 'terms' : 'acronyms'}
                                     </Text>
+                                    <Ionicons
+                                        name="chevron-forward"
+                                        size={20}
+                                        color={theme.colors.textMuted}
+                                    />
                                 </View>
                             </View>
                         </Pressable>
@@ -152,60 +127,52 @@ export default function GlossaryScreen() {
         );
     };
 
-    // View mode selector
     const renderViewModeSelector = () => {
         if (!selectedObjective) return null;
 
         return (
             <View style={styles.viewModeContainer}>
-                <Text style={[styles.selectedObjectiveTitle, { color: theme.colors.text }]}>
-                    {selectedObjective}
-                </Text>
-                <View style={styles.viewModeButtons}>
+                <View style={styles.viewModeHeader}>
+                    <Pressable
+                        style={[styles.backButton, { backgroundColor: theme.colors.surface }]}
+                        onPress={() => {
+                            setSelectedObjective(null);
+                            setViewMode('list');
+                        }}
+                    >
+                        <Ionicons name="arrow-back" size={20} color={theme.colors.text} />
+                    </Pressable>
+
+                    <Text style={[styles.selectedObjectiveTitle, { color: theme.colors.text }]}>
+                        {selectedObjective === 'all_ports' ? 'Common Ports' : selectedObjective}
+                    </Text>
+                </View>
+
+                <View style={styles.viewModeToggle}>
                     {['list', 'flashcards'].map((mode) => (
                         <Pressable
                             key={mode}
                             style={[
-                                styles.viewModeButton,
+                                styles.toggleButton,
                                 {
-                                    backgroundColor: viewMode === mode ? theme.colors.primary : theme.colors.surface,
-                                    borderColor: theme.colors.primary,
+                                    backgroundColor: viewMode === mode ? theme.colors.primary : 'transparent',
                                 }
                             ]}
                             onPress={() => setViewMode(mode as 'list' | 'flashcards')}
                         >
-                            <Ionicons
-                                name={mode === 'list' ? 'list' : 'card'}
-                                size={18}
-                                color={viewMode === mode ? theme.colors.textOnPrimary : theme.colors.primary}
-                            />
                             <Text style={[
-                                styles.viewModeText,
-                                { color: viewMode === mode ? theme.colors.textOnPrimary : theme.colors.primary }
+                                styles.toggleText,
+                                { color: viewMode === mode ? theme.colors.textOnPrimary : theme.colors.text }
                             ]}>
-                                {mode === 'list' ? 'List View' : 'Flashcards'}
+                                {mode === 'list' ? 'List' : 'Cards'}
                             </Text>
                         </Pressable>
                     ))}
                 </View>
-
-                <Pressable
-                    style={[styles.backButton, { backgroundColor: theme.colors.secondary }]}
-                    onPress={() => {
-                        setSelectedObjective(null);
-                        setViewMode('list');
-                    }}
-                >
-                    <Ionicons name="arrow-back" size={18} color={theme.colors.textOnPrimary} />
-                    <Text style={[styles.backButtonText, { color: theme.colors.textOnPrimary }]}>
-                        Back to Topics
-                    </Text>
-                </Pressable>
             </View>
         );
     };
 
-    // Enhanced list view
     const renderListView = () => {
         if (viewMode !== 'list' || !selectedObjective) return null;
 
@@ -218,20 +185,13 @@ export default function GlossaryScreen() {
                             styles.listItem,
                             {
                                 backgroundColor: theme.colors.surface,
-                                borderLeftColor: theme.colors.primary,
+                                borderColor: theme.colors.borderColor,
                             }
                         ]}
                     >
-                        <View style={styles.listItemHeader}>
-                            <Text style={[styles.listItemTerm, { color: theme.colors.primary }]}>
-                                {item.term || item.acronym || item.port}
-                            </Text>
-                            <View style={[styles.listItemBadge, { backgroundColor: theme.colors.accent }]}>
-                                <Text style={[styles.listItemBadgeText, { color: theme.colors.textOnPrimary }]}>
-                                    {tab.slice(0, -1).toUpperCase()}
-                                </Text>
-                            </View>
-                        </View>
+                        <Text style={[styles.listItemTerm, { color: theme.colors.primary }]}>
+                            {item.term || item.acronym || item.port}
+                        </Text>
                         <Text style={[styles.listItemDefinition, { color: theme.colors.textSecondary }]}>
                             {item.definition}
                         </Text>
@@ -266,128 +226,95 @@ const styles = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
         marginBottom: 20,
-        gap: 8,
+        borderRadius: 8,
+        padding: 4,
     },
     tabButton: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
         padding: 12,
-        borderRadius: 12,
-        gap: 8,
+        borderRadius: 6,
+        alignItems: 'center',
+        marginHorizontal: 2,
+        borderWidth: 1,
     },
     tabText: {
-        fontSize: 14,
-        fontWeight: '600',
+        fontSize: 15,
     },
     objectivesContainer: {
         flex: 1,
     },
     objectiveCard: {
-        marginBottom: 16,
-        borderRadius: 16,
-        padding: 20,
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        marginBottom: 12,
+        borderRadius: 8,
+        borderWidth: 1,
+        padding: 16,
     },
-    objectiveCardContent: {
-        alignItems: 'center',
-    },
-    objectiveIcon: {
-        marginBottom: 8,
+    objectiveContent: {
+        flex: 1,
     },
     objectiveTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 12,
-    },
-    objectiveBadge: {
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 20,
-    },
-    objectiveBadgeText: {
-        fontSize: 12,
+        fontSize: 16,
         fontWeight: '600',
+        marginBottom: 8,
+    },
+    objectiveFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    itemCount: {
+        fontSize: 14,
     },
     viewModeContainer: {
         marginBottom: 16,
     },
+    viewModeHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+        gap: 12,
+    },
+    backButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     selectedObjectiveTitle: {
         fontSize: 18,
         fontWeight: '600',
-        marginBottom: 12,
-        textAlign: 'center',
-    },
-    viewModeButtons: {
-        flexDirection: 'row',
-        gap: 8,
-        marginBottom: 12,
-    },
-    viewModeButton: {
         flex: 1,
+    },
+    viewModeToggle: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 12,
+        backgroundColor: '#f0f0f0',
         borderRadius: 8,
-        borderWidth: 2,
-        gap: 6,
+        padding: 4,
     },
-    viewModeText: {
-        fontSize: 14,
-        fontWeight: '600',
-    },
-    backButton: {
-        flexDirection: 'row',
+    toggleButton: {
+        flex: 1,
+        paddingVertical: 8,
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: 10,
-        borderRadius: 8,
-        gap: 6,
+        borderRadius: 6,
     },
-    backButtonText: {
+    toggleText: {
         fontSize: 14,
-        fontWeight: '600',
+        fontWeight: '500',
     },
     listContainer: {
         flex: 1,
     },
     listItem: {
         padding: 16,
-        marginBottom: 12,
-        borderRadius: 12,
-        borderLeftWidth: 4,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-    },
-    listItemHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
         marginBottom: 8,
+        borderRadius: 8,
+        borderWidth: 1,
     },
     listItemTerm: {
         fontSize: 16,
-        fontWeight: '700',
-        flex: 1,
-    },
-    listItemBadge: {
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 12,
-    },
-    listItemBadgeText: {
-        fontSize: 10,
-        fontWeight: '700',
+        fontWeight: '600',
+        marginBottom: 4,
     },
     listItemDefinition: {
         fontSize: 14,
