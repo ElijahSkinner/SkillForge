@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import {Stack, useLocalSearchParams, useRouter} from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedView, ThemedText, ThemedButton } from '../components/themed';
 import { useTheme } from '../context/ThemeContext';
@@ -107,6 +107,7 @@ export default function QuizScreen() {
                     </View>
                 </SafeAreaView>
             </ThemedView>
+
         );
     }
 
