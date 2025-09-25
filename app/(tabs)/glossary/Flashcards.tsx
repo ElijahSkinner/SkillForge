@@ -64,10 +64,6 @@ export default function Flashcards({ data, onClose }: Props) {
     // Navigate to next card
     const nextCard = () => {
         if (currentIndex < data.length - 1) {
-            // Reset flip state and animation
-            setIsFlipped(false);
-            flipAnimation.setValue(0);
-
             // Slide animation
             Animated.timing(slideAnimation, {
                 toValue: 1,
@@ -75,6 +71,9 @@ export default function Flashcards({ data, onClose }: Props) {
                 useNativeDriver: true,
             }).start(() => {
                 setCurrentIndex(prev => prev + 1);
+                // Reset flip state and animation AFTER changing card
+                setIsFlipped(false);
+                flipAnimation.setValue(0);
                 slideAnimation.setValue(0);
             });
         }
@@ -83,10 +82,6 @@ export default function Flashcards({ data, onClose }: Props) {
     // Navigate to previous card
     const prevCard = () => {
         if (currentIndex > 0) {
-            // Reset flip state and animation
-            setIsFlipped(false);
-            flipAnimation.setValue(0);
-
             // Slide animation
             Animated.timing(slideAnimation, {
                 toValue: -1,
@@ -94,6 +89,9 @@ export default function Flashcards({ data, onClose }: Props) {
                 useNativeDriver: true,
             }).start(() => {
                 setCurrentIndex(prev => prev - 1);
+                // Reset flip state and animation AFTER changing card
+                setIsFlipped(false);
+                flipAnimation.setValue(0);
                 slideAnimation.setValue(0);
             });
         }
