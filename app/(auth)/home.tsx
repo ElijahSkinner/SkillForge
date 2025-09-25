@@ -28,7 +28,7 @@ type AuthMode = 'splash' | 'login' | 'register' | 'forgot';
 
 export default function RootHomeScreen() {
     const router = useRouter();
-    const { login, register, forgotPassword } = useAuth();
+    const { login, register, forgotPassword, account } = useAuth();
     const { theme } = useTheme();
 
     const [authMode, setAuthMode] = useState<AuthMode>('splash');
