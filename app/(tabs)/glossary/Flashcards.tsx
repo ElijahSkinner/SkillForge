@@ -1,10 +1,17 @@
-// app/(tabs)/glossary/Flashcards.tsx - Simplified with theme integration (Under 100 lines)
+// app/(tabs)/glossary/Flashcards.tsx - Ultra-smooth, Duolingo-beating UI
 import React, { useState } from 'react';
-import { View, Pressable } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../../context/ThemeContext';
-import { ThemedView, ThemedText } from '../../../components/themed';
+import {
+    ThemedView,
+    ThemedText,
+    ThemedButton
+} from '../../../components/themed';
+import { ThemedCard } from '../../../components/themed/ThemedCard';
+import { ThemedBadge } from '../../../components/themed/ThemedBadge';
+import { ThemedProgressBar } from '../../../components/themed/ThemedProgressBar';
+import { ThemedIconButton } from '../../../components/themed/ThemedIconButton';
 
 type FlashcardItem = {
     term?: string;
@@ -23,33 +30,46 @@ export default function Flashcards({ data, onClose }: Props) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
 
+    // Empty state with beautiful design
     if (!data || data.length === 0) {
         return (
-            <ThemedView variant="background" style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl }}>
-                <Ionicons name="library-outline" size={64} color={theme.colors.textMuted} style={{ marginBottom: theme.spacing.lg, opacity: 0.5 }} />
-                <ThemedText color="textSecondary" style={{ textAlign: 'center', lineHeight: 24 }}>
-                    No flashcards available for this topic.{'\n\n'}Try selecting a different objective or tab.
-                </ThemedText>
+            <ThemedView variant="background" style={{ flex: 1 }}>
+                <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl }}>
+                    <View style={{
+                        width: 120, height: 120, borderRadius: 60,
+                        backgroundColor: theme.colors.primary + '20',
+                        justifyContent: 'center', alignItems: 'center',
+                        marginBottom: theme.spacing.xl
+                    }}>
+                        <ThemedText variant="h1" style={{ color: theme.colors.primary, opacity: 0.6 }}>
+                            📚
+                        </ThemedText>
+                    </View>
+                    <ThemedText variant="h3" style={{ marginBottom: theme.spacing.sm, textAlign: 'center' }}>
+                        No Flashcards Available
+                    </ThemedText>
+                    <ThemedText color="textSecondary" style={{ textAlign: 'center', lineHeight: 24 }}>
+                        Try selecting a different objective or tab to start studying.
+                    </ThemedText>
+                </SafeAreaView>
             </ThemedView>
         );
     }
 
     const currentCard = data[currentIndex];
     const progress = ((currentIndex + 1) / data.length) * 100;
-    const canGoPrevious = currentIndex > 0;
-    const canGoNext = currentIndex < data.length - 1;
 
     const flipCard = () => setShowDefinition(!showDefinition);
 
     const nextCard = () => {
-        if (canGoNext) {
+        if (currentIndex < data.length - 1) {
             setCurrentIndex(currentIndex + 1);
             setShowDefinition(false);
         }
     };
 
     const prevCard = () => {
-        if (canGoPrevious) {
+        if (currentIndex > 0) {
             setCurrentIndex(currentIndex - 1);
             setShowDefinition(false);
         }
@@ -57,129 +77,115 @@ export default function Flashcards({ data, onClose }: Props) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-            {/* Header */}
+            {/* Elegant Header */}
             <ThemedView variant="surface" style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: theme.spacing.md,
                 borderBottomWidth: 1,
-                borderBottomColor: theme.colors.borderColor,
+                borderBottomColor: theme.colors.borderColor + '40',
                 ...theme.shadows.small
             }}>
-                <Pressable
+                <ThemedIconButton
+                    icon="close"
+                    variant="ghost"
                     onPress={onClose}
-                    style={{
-                        width: 40, height: 40, borderRadius: 20,
-                        justifyContent: 'center', alignItems: 'center',
-                        backgroundColor: theme.colors.surfaceVariant
-                    }}
-                >
-                    <Ionicons name="close" size={24} color={theme.colors.text} />
-                </Pressable>
-                <ThemedText variant="body1" style={{ fontWeight: '600' }}>
+                />
+                <ThemedText variant="body1" style={{ fontWeight: '700', letterSpacing: 0.5 }}>
                     {currentIndex + 1} of {data.length}
                 </ThemedText>
                 <View style={{ width: 40 }} />
             </ThemedView>
 
-            {/* Progress Bar */}
-            <View style={{
-                height: 4, marginHorizontal: theme.spacing.lg, marginVertical: theme.spacing.md,
-                backgroundColor: theme.colors.surfaceVariant, borderRadius: theme.borderRadius.sm
-            }}>
-                <View style={{
-                    height: '100%', width: `${progress}%`,
-                    backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.sm
-                }} />
+            {/* Beautiful Progress Bar with Glow */}
+            <View style={{ paddingHorizontal: theme.spacing.lg, paddingTop: theme.spacing.lg }}>
+                <ThemedProgressBar
+                    progress={progress}
+                    variant="default"
+                    showGlow={true}
+                    color="primary"
+                />
             </View>
 
-            {/* Card */}
-            <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: theme.spacing.lg, paddingBottom: theme.spacing.xxl }}>
-                <Pressable
+            {/* Stunning Flashcard */}
+            <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                paddingHorizontal: theme.spacing.lg,
+                paddingVertical: theme.spacing.xl
+            }}>
+                <ThemedCard
+                    variant={showDefinition ? 'flashcard-flipped' : 'flashcard'}
                     onPress={flipCard}
                     style={{
-                        height: 350, borderRadius: theme.borderRadius.xl, borderWidth: 2,
-                        padding: theme.spacing.xl, justifyContent: 'space-between', alignItems: 'center',
-                        backgroundColor: showDefinition ? theme.colors.primary : theme.colors.surface,
-                        borderColor: showDefinition ? theme.colors.primary : theme.colors.borderColor,
-                        ...theme.shadows.large
+                        // Add subtle bounce animation feel
+                        transform: [{ scale: 1 }],
                     }}
                 >
                     {/* Badge */}
-                    <View style={{
-                        paddingHorizontal: theme.spacing.sm, paddingVertical: theme.spacing.xs,
-                        borderRadius: theme.borderRadius.round,
-                        backgroundColor: showDefinition ? theme.colors.textOnPrimary : theme.colors.primary
-                    }}>
-                        <ThemedText
-                            style={{
-                                ...theme.typography.overline,
-                                fontWeight: '800', letterSpacing: 1,
-                                color: showDefinition ? theme.colors.primary : theme.colors.textOnPrimary
-                            }}
-                        >
-                            {showDefinition ? 'DEFINITION' : 'TERM'}
-                        </ThemedText>
-                    </View>
+                    <ThemedBadge
+                        text={showDefinition ? 'DEFINITION' : 'TERM'}
+                        variant={showDefinition ? 'inverted' : 'primary'}
+                        size="medium"
+                    />
 
                     {/* Content */}
-                    <ThemedText style={{
-                        ...theme.typography.h2, textAlign: 'center', letterSpacing: -0.5,
-                        color: showDefinition ? theme.colors.textOnPrimary : theme.colors.text
-                    }}>
-                        {showDefinition ? currentCard.definition : (currentCard.term || currentCard.acronym || currentCard.port)}
+                    <ThemedText
+                        variant="h2"
+                        style={{
+                            textAlign: 'center',
+                            letterSpacing: -0.5,
+                            lineHeight: 36,
+                            color: showDefinition ? theme.colors.textOnPrimary : theme.colors.text,
+                            paddingHorizontal: theme.spacing.sm,
+                        }}
+                    >
+                        {showDefinition
+                            ? currentCard.definition
+                            : (currentCard.term || currentCard.acronym || currentCard.port)
+                        }
                     </ThemedText>
 
                     {/* Hint */}
-                    <ThemedText style={{
-                        ...theme.typography.caption, fontStyle: 'italic', textAlign: 'center', opacity: 0.8,
-                        color: showDefinition ? theme.colors.textOnPrimary : theme.colors.textMuted
-                    }}>
-                        {showDefinition ? 'Tap to flip back' : 'Tap to reveal definition'}
+                    <ThemedText
+                        variant="caption"
+                        style={{
+                            fontStyle: 'italic',
+                            textAlign: 'center',
+                            opacity: 0.8,
+                            color: showDefinition ? theme.colors.textOnPrimary : theme.colors.textMuted
+                        }}
+                    >
+                        {showDefinition ? '👆 Tap to flip back' : '👆 Tap to reveal definition'}
                     </ThemedText>
-                </Pressable>
+                </ThemedCard>
             </View>
 
-            {/* Navigation */}
-            <View style={{ flexDirection: 'row', paddingHorizontal: theme.spacing.lg, paddingBottom: theme.spacing.lg, gap: theme.spacing.sm }}>
-                <Pressable
+            {/* Premium Navigation */}
+            <View style={{
+                flexDirection: 'row',
+                paddingHorizontal: theme.spacing.lg,
+                paddingBottom: theme.spacing.lg,
+                gap: theme.spacing.md
+            }}>
+                <ThemedButton
+                    title="← Previous"
+                    variant="outline"
+                    size="medium"
                     onPress={prevCard}
-                    disabled={!canGoPrevious}
-                    style={{
-                        flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                        paddingVertical: theme.spacing.sm, borderRadius: theme.borderRadius.md, borderWidth: 1,
-                        backgroundColor: canGoPrevious ? theme.colors.surface : theme.colors.surfaceVariant,
-                        borderColor: theme.colors.borderColor,
-                        opacity: canGoPrevious ? 1 : 0.5,
-                        gap: theme.spacing.xs,
-                        ...theme.shadows.small
-                    }}
-                >
-                    <Ionicons name="chevron-back" size={20} color={canGoPrevious ? theme.colors.text : theme.colors.textMuted} />
-                    <ThemedText style={{ fontWeight: '600', color: canGoPrevious ? theme.colors.text : theme.colors.textMuted }}>
-                        Previous
-                    </ThemedText>
-                </Pressable>
+                    disabled={currentIndex === 0}
+                    style={{ flex: 1 }}
+                />
 
-                <Pressable
+                <ThemedButton
+                    title="Next →"
+                    variant="primary"
+                    size="medium"
                     onPress={nextCard}
-                    disabled={!canGoNext}
-                    style={{
-                        flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                        paddingVertical: theme.spacing.sm, borderRadius: theme.borderRadius.md, borderWidth: 1,
-                        backgroundColor: canGoNext ? theme.colors.surface : theme.colors.surfaceVariant,
-                        borderColor: theme.colors.borderColor,
-                        opacity: canGoNext ? 1 : 0.5,
-                        gap: theme.spacing.xs,
-                        ...theme.shadows.small
-                    }}
-                >
-                    <ThemedText style={{ fontWeight: '600', color: canGoNext ? theme.colors.text : theme.colors.textMuted }}>
-                        Next
-                    </ThemedText>
-                    <Ionicons name="chevron-forward" size={20} color={canGoNext ? theme.colors.text : theme.colors.textMuted} />
-                </Pressable>
+                    disabled={currentIndex === data.length - 1}
+                    style={{ flex: 1 }}
+                />
             </View>
         </SafeAreaView>
     );
