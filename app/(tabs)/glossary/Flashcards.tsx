@@ -1,6 +1,6 @@
-// app/(tabs)/glossary/Flashcards.tsx - Ultra-smooth, Duolingo-beating UI
+// app/(tabs)/glossary/Flashcards.tsx - Ultra-smooth, Duolingo-beating UI with Swipe
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, PanResponder } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../context/ThemeContext';
 import {
@@ -29,6 +29,24 @@ export default function Flashcards({ data, onClose }: Props) {
     const { theme } = useTheme();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
+
+    // Swipe gesture handler
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: (_, gestureState) => {
+            return Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dy) < 100;
+        },
+        onPanResponderRelease: (_, gestureState) => {
+            const swipeThreshold = 50;
+            if (gestureState.dx > swipeThreshold) {
+                // Swipe right - previous card
+                prevCard();
+            } else if (gestureState.dx < -swipeThreshold) {
+                // Swipe left - next card
+                nextCard();
+            }
+        },
+    });
 
     // Empty state with beautiful design
     if (!data || data.length === 0) {
@@ -108,13 +126,16 @@ export default function Flashcards({ data, onClose }: Props) {
                 />
             </View>
 
-            {/* Stunning Flashcard */}
-            <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                paddingHorizontal: theme.spacing.lg,
-                paddingVertical: theme.spacing.xl
-            }}>
+            {/* Stunning Flashcard with Swipe */}
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    paddingHorizontal: theme.spacing.lg,
+                    paddingVertical: theme.spacing.xl
+                }}
+                {...panResponder.panHandlers}
+            >
                 <ThemedCard
                     variant={showDefinition ? 'flashcard-flipped' : 'flashcard'}
                     onPress={flipCard}
@@ -157,7 +178,7 @@ export default function Flashcards({ data, onClose }: Props) {
                             color: showDefinition ? theme.colors.textOnPrimary : theme.colors.textMuted
                         }}
                     >
-                        {showDefinition ? '👆 Tap to flip back' : '👆 Tap to reveal definition'}
+                        {showDefinition ? '👆 Tap to flip • 👈👉 Swipe to navigate' : '👆 Tap to reveal • 👈👉 Swipe to navigate'}
                     </ThemedText>
                 </ThemedCard>
             </View>
