@@ -162,7 +162,11 @@ export default function Flashcards({ data, onClose }: Props) {
             changeCard('prev');
         }
     };
-
+    const nextCardPosition = cardPosition.interpolate({
+        inputRange: [-400, 0, 400],
+        outputRange: [50, 0, -50], // slight parallax effect
+        extrapolate: 'clamp',
+    });
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
             {/* Elegant Header */}
