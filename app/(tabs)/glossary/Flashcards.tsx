@@ -1,9 +1,10 @@
-// components/(tabs)/glossary/Flashcards.tsx - Clean, working version
+// app/(tabs)/glossary/Flashcards.tsx - Enhanced with theme integration
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../../context/ThemeContext';
+import { ThemedView, ThemedText } from '../../../components/themed';
 
 type FlashcardItem = {
     term?: string;
@@ -17,24 +18,254 @@ type Props = {
     onClose?: () => void;
 };
 
+// Create themed styles
+const createStyles = (theme: any) => ({
+    container: {
+        flex: 1,
+        backgroundColor: theme.colors.background,
+    },
+
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
+        padding: theme.spacing.xxl,
+    },
+
+    emptyIcon: {
+        marginBottom: theme.spacing.lg,
+        opacity: 0.5,
+    },
+
+    emptyText: {
+        ...theme.typography.body1,
+        color: theme.colors.textMuted,
+        textAlign: 'center' as const,
+        lineHeight: 24,
+    },
+
+    // Header Styles
+    header: {
+        flexDirection: 'row' as const,
+        alignItems: 'center' as const,
+        justifyContent: 'space-between' as const,
+        paddingHorizontal: theme.spacing.lg,
+        paddingVertical: theme.spacing.md,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.colors.borderColor,
+        backgroundColor: theme.colors.surface,
+        ...theme.shadows.small,
+    },
+
+    closeButton: {
+        width: 40,
+        height: 40,
+        borderRadius: theme.borderRadius.round,
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
+        backgroundColor: theme.colors.surfaceVariant,
+    },
+
+    progressText: {
+        ...theme.typography.body1,
+        fontWeight: '600',
+        color: theme.colors.text,
+    },
+
+    // Progress Bar
+    progressContainer: {
+        height: 4,
+        marginHorizontal: theme.spacing.lg,
+        borderRadius: theme.borderRadius.sm,
+        marginVertical: theme.spacing.md,
+        backgroundColor: theme.colors.surfaceVariant,
+        overflow: 'hidden' as const,
+    },
+
+    progressBar: {
+        height: '100%',
+        backgroundColor: theme.colors.primary,
+        borderRadius: theme.borderRadius.sm,
+        minWidth: 4, // Ensure it's visible even at 0%
+        ...theme.shadows.small,
+    },
+
+    // Card Container
+    cardContainer: {
+        flex: 1,
+        justifyContent: 'center' as const,
+        paddingHorizontal: theme.spacing.lg,
+        paddingBottom: theme.spacing.xxl,
+    },
+
+    // Flashcard Styles
+    card: {
+        height: 350,
+        borderRadius: theme.borderRadius.xl,
+        borderWidth: 2,
+        padding: theme.spacing.xl,
+        justifyContent: 'space-between' as const,
+        alignItems: 'center' as const,
+        ...theme.shadows.large,
+        // Add subtle animation feel
+        transform: [{ scale: 1 }],
+    },
+
+    cardFront: {
+        backgroundColor: theme.colors.surface,
+        borderColor: theme.colors.borderColor,
+    },
+
+    cardBack: {
+        backgroundColor: theme.colors.primary,
+        borderColor: theme.colors.primary,
+    },
+
+    // Badge Styles
+    badge: {
+        paddingHorizontal: theme.spacing.sm,
+        paddingVertical: theme.spacing.xs,
+        borderRadius: theme.borderRadius.round,
+    },
+
+    badgeFront: {
+        backgroundColor: theme.colors.primary,
+    },
+
+    badgeBack: {
+        backgroundColor: theme.colors.textOnPrimary,
+    },
+
+    badgeText: {
+        ...theme.typography.overline,
+        fontWeight: '800',
+        letterSpacing: 1,
+    },
+
+    badgeTextFront: {
+        color: theme.colors.textOnPrimary,
+    },
+
+    badgeTextBack: {
+        color: theme.colors.primary,
+    },
+
+    // Card Content
+    cardTerm: {
+        ...theme.typography.h2,
+        textAlign: 'center' as const,
+        letterSpacing: -0.5,
+        lineHeight: 36,
+    },
+
+    cardTermFront: {
+        color: theme.colors.text,
+    },
+
+    cardTermBack: {
+        color: theme.colors.textOnPrimary,
+    },
+
+    cardDefinition: {
+        ...theme.typography.body1,
+        textAlign: 'center' as const,
+        lineHeight: 24,
+        paddingHorizontal: theme.spacing.sm,
+    },
+
+    cardDefinitionText: {
+        color: theme.colors.textOnPrimary,
+    },
+
+    hint: {
+        ...theme.typography.caption,
+        fontStyle: 'italic',
+        textAlign: 'center' as const,
+        opacity: 0.8,
+    },
+
+    hintFront: {
+        color: theme.colors.textMuted,
+    },
+
+    hintBack: {
+        color: theme.colors.textOnPrimary,
+    },
+
+    // Navigation Styles
+    navContainer: {
+        flexDirection: 'row' as const,
+        paddingHorizontal: theme.spacing.lg,
+        paddingBottom: theme.spacing.lg,
+        gap: theme.spacing.sm,
+        backgroundColor: theme.colors.background,
+    },
+
+    navButton: {
+        flex: 1,
+        flexDirection: 'row' as const,
+        alignItems: 'center' as const,
+        justifyContent: 'center' as const,
+        paddingVertical: theme.spacing.sm,
+        borderRadius: theme.borderRadius.md,
+        borderWidth: 1,
+        gap: theme.spacing.xs,
+        ...theme.shadows.small,
+    },
+
+    navButtonEnabled: {
+        backgroundColor: theme.colors.surface,
+        borderColor: theme.colors.borderColor,
+    },
+
+    navButtonDisabled: {
+        backgroundColor: theme.colors.surfaceVariant,
+        borderColor: theme.colors.borderColor,
+        opacity: 0.5,
+    },
+
+    navButtonText: {
+        ...theme.typography.body2,
+        fontWeight: '600',
+    },
+
+    navButtonTextEnabled: {
+        color: theme.colors.text,
+    },
+
+    navButtonTextDisabled: {
+        color: theme.colors.textMuted,
+    },
+});
+
 export default function Flashcards({ data, onClose }: Props) {
     const { theme } = useTheme();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
 
+    const styles = createStyles(theme);
+
     if (!data || data.length === 0) {
         return (
-            <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <SafeAreaView style={styles.container}>
                 <View style={styles.emptyContainer}>
-                    <Text style={[styles.emptyText, { color: theme.colors.textMuted }]}>
-                        No flashcards available.
-                    </Text>
+                    <Ionicons
+                        name="library-outline"
+                        size={64}
+                        color={theme.colors.textMuted}
+                        style={styles.emptyIcon}
+                    />
+                    <ThemedText style={styles.emptyText}>
+                        No flashcards available for this topic.
+                        {'\n\n'}Try selecting a different objective or tab.
+                    </ThemedText>
                 </View>
             </SafeAreaView>
         );
     }
 
     const currentCard = data[currentIndex];
+    const progress = ((currentIndex + 1) / data.length) * 100;
 
     const flipCard = () => {
         setShowDefinition(!showDefinition);
@@ -43,222 +274,159 @@ export default function Flashcards({ data, onClose }: Props) {
     const nextCard = () => {
         if (currentIndex < data.length - 1) {
             setCurrentIndex(currentIndex + 1);
-            setShowDefinition(false); // Reset to front side
+            setShowDefinition(false);
         }
     };
 
     const prevCard = () => {
         if (currentIndex > 0) {
             setCurrentIndex(currentIndex - 1);
-            setShowDefinition(false); // Reset to front side
+            setShowDefinition(false);
         }
     };
 
+    const canGoPrevious = currentIndex > 0;
+    const canGoNext = currentIndex < data.length - 1;
+
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            {/* Header */}
-            <View style={[styles.header, { borderBottomColor: theme.colors.borderColor }]}>
+        <SafeAreaView style={styles.container}>
+            {/* Header with enhanced styling */}
+            <View style={styles.header}>
                 <Pressable style={styles.closeButton} onPress={onClose}>
                     <Ionicons name="close" size={24} color={theme.colors.text} />
                 </Pressable>
 
-                <Text style={[styles.progressText, { color: theme.colors.textSecondary }]}>
+                <ThemedText style={styles.progressText}>
                     {currentIndex + 1} of {data.length}
-                </Text>
+                </ThemedText>
 
-                <View style={{ width: 32 }} />
+                <View style={{ width: 40 }} />
             </View>
 
-            {/* Progress bar */}
-            <View style={[styles.progressContainer, { backgroundColor: theme.colors.borderColor }]}>
+            {/* Enhanced Progress bar */}
+            <View style={styles.progressContainer}>
                 <View
                     style={[
                         styles.progressBar,
-                        {
-                            backgroundColor: theme.colors.primary,
-                            width: `${((currentIndex + 1) / data.length) * 100}%`
-                        }
+                        { width: `${progress}%` }
                     ]}
                 />
             </View>
 
-            {/* Card */}
+            {/* Card with improved styling */}
             <View style={styles.cardContainer}>
-                <Pressable onPress={flipCard} style={[
-                    styles.card,
-                    {
-                        backgroundColor: showDefinition ? theme.colors.primary : theme.colors.surface,
-                        borderColor: theme.colors.borderColor
-                    }
-                ]}>
+                <Pressable
+                    onPress={flipCard}
+                    style={[
+                        styles.card,
+                        showDefinition ? styles.cardBack : styles.cardFront,
+                    ]}
+                >
                     {!showDefinition ? (
                         // Front side - Term
                         <>
-                            <View style={[styles.badge, { backgroundColor: theme.colors.primary }]}>
-                                <Text style={[styles.badgeText, { color: theme.colors.textOnPrimary }]}>
+                            <View style={[
+                                styles.badge,
+                                styles.badgeFront,
+                            ]}>
+                                <ThemedText style={[
+                                    styles.badgeText,
+                                    styles.badgeTextFront,
+                                ]}>
                                     TERM
-                                </Text>
+                                </ThemedText>
                             </View>
-                            <Text style={[styles.cardTerm, { color: theme.colors.text }]}>
+
+                            <ThemedText style={[
+                                styles.cardTerm,
+                                styles.cardTermFront,
+                            ]}>
                                 {currentCard.term || currentCard.acronym || currentCard.port}
-                            </Text>
-                            <Text style={[styles.hint, { color: theme.colors.textMuted }]}>
+                            </ThemedText>
+
+                            <ThemedText style={[
+                                styles.hint,
+                                styles.hintFront,
+                            ]}>
                                 Tap to reveal definition
-                            </Text>
+                            </ThemedText>
                         </>
                     ) : (
                         // Back side - Definition
                         <>
-                            <View style={[styles.badge, { backgroundColor: theme.colors.textOnPrimary }]}>
-                                <Text style={[styles.badgeText, { color: theme.colors.primary }]}>
+                            <View style={[
+                                styles.badge,
+                                styles.badgeBack,
+                            ]}>
+                                <ThemedText style={[
+                                    styles.badgeText,
+                                    styles.badgeTextBack,
+                                ]}>
                                     DEFINITION
-                                </Text>
+                                </ThemedText>
                             </View>
-                            <Text style={[styles.cardDefinition, { color: theme.colors.textOnPrimary }]}>
-                                {currentCard.definition}
-                            </Text>
-                            <Text style={[styles.hint, { color: theme.colors.textOnPrimary, opacity: 0.8 }]}>
+
+                            <View style={styles.cardDefinition}>
+                                <ThemedText style={styles.cardDefinitionText}>
+                                    {currentCard.definition}
+                                </ThemedText>
+                            </View>
+
+                            <ThemedText style={[
+                                styles.hint,
+                                styles.hintBack,
+                            ]}>
                                 Tap to flip back
-                            </Text>
+                            </ThemedText>
                         </>
                     )}
                 </Pressable>
             </View>
 
-            {/* Navigation */}
+            {/* Enhanced Navigation */}
             <View style={styles.navContainer}>
                 <Pressable
                     style={[
                         styles.navButton,
-                        { backgroundColor: theme.colors.surface, borderColor: theme.colors.borderColor },
-                        currentIndex === 0 && { opacity: 0.5 }
+                        canGoPrevious ? styles.navButtonEnabled : styles.navButtonDisabled,
                     ]}
                     onPress={prevCard}
-                    disabled={currentIndex === 0}
+                    disabled={!canGoPrevious}
                 >
-                    <Ionicons name="chevron-back" size={20} color={theme.colors.text} />
-                    <Text style={[styles.navButtonText, { color: theme.colors.text }]}>Previous</Text>
+                    <Ionicons
+                        name="chevron-back"
+                        size={20}
+                        color={canGoPrevious ? theme.colors.text : theme.colors.textMuted}
+                    />
+                    <ThemedText style={[
+                        styles.navButtonText,
+                        canGoPrevious ? styles.navButtonTextEnabled : styles.navButtonTextDisabled,
+                    ]}>
+                        Previous
+                    </ThemedText>
                 </Pressable>
 
                 <Pressable
                     style={[
                         styles.navButton,
-                        { backgroundColor: theme.colors.surface, borderColor: theme.colors.borderColor },
-                        currentIndex === data.length - 1 && { opacity: 0.5 }
+                        canGoNext ? styles.navButtonEnabled : styles.navButtonDisabled,
                     ]}
                     onPress={nextCard}
-                    disabled={currentIndex === data.length - 1}
+                    disabled={!canGoNext}
                 >
-                    <Text style={[styles.navButtonText, { color: theme.colors.text }]}>Next</Text>
-                    <Ionicons name="chevron-forward" size={20} color={theme.colors.text} />
+                    <ThemedText style={[
+                        styles.navButtonText,
+                        canGoNext ? styles.navButtonTextEnabled : styles.navButtonTextDisabled,
+                    ]}>
+                        Next
+                    </ThemedText>
+                    <Ionicons
+                        name="chevron-forward"
+                        size={20}
+                        color={canGoNext ? theme.colors.text : theme.colors.textMuted}
+                    />
                 </Pressable>
             </View>
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    emptyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 32,
-    },
-    emptyText: {
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 16,
-        borderBottomWidth: 1,
-    },
-    closeButton: {
-        padding: 4,
-    },
-    progressText: {
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    progressContainer: {
-        height: 3,
-        marginHorizontal: 20,
-        borderRadius: 1.5,
-        marginVertical: 20,
-    },
-    progressBar: {
-        height: '100%',
-        borderRadius: 1.5,
-    },
-    cardContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        paddingHorizontal: 20,
-        paddingBottom: 100,
-    },
-    card: {
-        height: 350,
-        borderRadius: 16,
-        borderWidth: 1,
-        padding: 20,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-    },
-    badge: {
-        paddingHorizontal: 12,
-        paddingVertical: 4,
-        borderRadius: 12,
-    },
-    badgeText: {
-        fontSize: 10,
-        fontWeight: '700',
-        letterSpacing: 0.5,
-    },
-    cardTerm: {
-        fontSize: 28,
-        fontWeight: '700',
-        textAlign: 'center',
-        letterSpacing: -0.5,
-    },
-    cardDefinition: {
-        fontSize: 18,
-        fontWeight: '400',
-        textAlign: 'center',
-        lineHeight: 26,
-    },
-    hint: {
-        fontSize: 12,
-        fontStyle: 'italic',
-    },
-    navContainer: {
-        flexDirection: 'row',
-        paddingHorizontal: 20,
-        paddingBottom: 20,
-        gap: 12,
-    },
-    navButton: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        borderRadius: 8,
-        borderWidth: 1,
-        gap: 6,
-    },
-    navButtonText: {
-        fontSize: 14,
-        fontWeight: '500',
-    },
-});
