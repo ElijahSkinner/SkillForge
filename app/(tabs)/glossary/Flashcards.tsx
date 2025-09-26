@@ -158,7 +158,7 @@ export default function Flashcards({ data, onClose }: Props) {
 
     const prevCard = () => {
         if (!isTransitioning) {
-            slideToCard('prev');
+            changeCard('prev');
         }
     };
 
