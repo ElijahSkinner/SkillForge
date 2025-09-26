@@ -34,67 +34,69 @@ export default function Flashcards({ data, onClose }: Props) {
     const cardPosition = useRef(new Animated.Value(0)).current;
     const cardOpacity = useRef(new Animated.Value(1)).current;
 
+    // Reset animations when card changes
+    const resetCardPosition = () => {
+        cardPosition.setValue(0);
+        cardOpacity.setValue(1);
+        setShowDefinition(false);
+    };
+
     // Swipe gesture handler with smooth dragging
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: (_, gestureState) => {
-            return Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dy) < 100;
+            return Math.abs(gestureState.dx) > 15 && Math.abs(gestureState.dy) < 80;
         },
         onPanResponderMove: (_, gestureState) => {
-            // Card follows finger with resistance
-            const resistance = 0.7;
-            cardPosition.setValue(gestureState.dx * resistance);
+            // Card follows finger smoothly
+            cardPosition.setValue(gestureState.dx * 0.8);
 
-            // Fade out as card moves away
-            const fadeThreshold = 100;
-            const opacity = Math.max(0.3, 1 - Math.abs(gestureState.dx) / fadeThreshold);
-            cardOpacity.setValue(opacity);
+            // Subtle fade as card moves
+            const fadeAmount = Math.abs(gestureState.dx) / 150;
+            cardOpacity.setValue(Math.max(0.6, 1 - fadeAmount));
         },
         onPanResponderRelease: (_, gestureState) => {
-            const swipeThreshold = 80;
+            const swipeThreshold = 60;
 
             if (Math.abs(gestureState.dx) > swipeThreshold) {
-                // Animate card flying off screen
-                const direction = gestureState.dx > 0 ? 1 : -1;
-                Animated.parallel([
-                    Animated.timing(cardPosition, {
-                        toValue: direction * 400,
-                        duration: 200,
-                        useNativeDriver: true,
-                    }),
-                    Animated.timing(cardOpacity, {
-                        toValue: 0,
-                        duration: 200,
-                        useNativeDriver: true,
-                    })
-                ]).start(() => {
-                    // Change card and reset position
-                    if (direction > 0) {
-                        prevCard();
-                    } else {
-                        nextCard();
-                    }
+                // Determine direction and change card immediately
+                const goingNext = gestureState.dx < 0;
 
-                    // Reset card position and opacity
-                    cardPosition.setValue(0);
-                    cardOpacity.setValue(1);
-                });
-            } else {
-                // Snap back to center
-                Animated.parallel([
+                if (goingNext && currentIndex < data.length - 1) {
+                    setCurrentIndex(currentIndex + 1);
+                    resetCardPosition();
+                } else if (!goingNext && currentIndex > 0) {
+                    setCurrentIndex(currentIndex - 1);
+                    resetCardPosition();
+                } else {
+                    // Can't go further, snap back
                     Animated.spring(cardPosition, {
                         toValue: 0,
-                        tension: 100,
+                        tension: 150,
                         friction: 8,
                         useNativeDriver: true,
-                    }),
+                    }).start();
                     Animated.spring(cardOpacity, {
                         toValue: 1,
-                        tension: 100,
+                        tension: 150,
                         friction: 8,
                         useNativeDriver: true,
-                    })
-                ]).start();
+                    }).start();
+                }
+            } else {
+                // Snap back to center
+                Animated.spring(cardPosition, {
+                    toValue: 0,
+                    tension: 150,
+                    friction: 8,
+                    useNativeDriver: true,
+                }).start();
+                Animated.spring(cardOpacity, {
+                    toValue: 1,
+                    tension: 150,
+                    friction: 8,
+                    useNativeDriver: true,
+                }).start();
             }
         },
     });
@@ -133,14 +135,14 @@ export default function Flashcards({ data, onClose }: Props) {
     const nextCard = () => {
         if (currentIndex < data.length - 1) {
             setCurrentIndex(currentIndex + 1);
-            setShowDefinition(false);
+            resetCardPosition();
         }
     };
 
     const prevCard = () => {
         if (currentIndex > 0) {
             setCurrentIndex(currentIndex - 1);
-            setShowDefinition(false);
+            resetCardPosition();
         }
     };
 
