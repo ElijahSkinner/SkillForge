@@ -151,7 +151,7 @@ export default function Flashcards({ data, onClose }: Props) {
     const flipCard = () => setShowDefinition(!showDefinition);
 
     const nextCard = () => {
-        if (!isTransitioning) {
+        if (!isAnimating) {
             changeCard('next');
         }
     };
