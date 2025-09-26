@@ -146,6 +146,7 @@ export default function Flashcards({ data, onClose }: Props) {
     }
 
     const currentCard = data[currentIndex];
+    const nextCardData = currentIndex < data.length - 1 ? data[currentIndex + 1] : null;
     const progress = ((currentIndex + 1) / data.length) * 100;
 
     const flipCard = () => setShowDefinition(!showDefinition);
