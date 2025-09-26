@@ -399,19 +399,22 @@ export default function GlossaryScreen() {
         );
     };
 
+    // Full-screen flashcard mode - hide everything else
+    if (selectedObjective && viewMode === 'flashcards') {
+        return (
+            <Flashcards
+                data={flashcards}
+                onClose={() => setViewMode('list')}
+            />
+        );
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             {renderTabButtons()}
             {renderObjectiveCards()}
             {renderViewModeSelector()}
             {renderListView()}
-
-            {selectedObjective && viewMode === 'flashcards' && (
-                <Flashcards
-                    data={flashcards}
-                    onClose={() => setViewMode('list')}
-                />
-            )}
         </SafeAreaView>
     );
 }
