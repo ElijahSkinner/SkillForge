@@ -192,54 +192,56 @@ export default function Flashcards({ data, onClose }: Props) {
                     }}
                     {...panResponder.panHandlers}
                 >
-                    <ThemedCard
-                        variant={showDefinition ? 'flashcard-flipped' : 'flashcard'}
-                        onPress={flipCard}
-                        style={{
-                            transform: [
-                                { translateX: cardPosition },
-                                { scale: 1 }
-                            ],
-                            opacity: cardOpacity,
-                        }}
-                    >
-                        {/* Badge */}
-                        <ThemedBadge
-                            text={showDefinition ? 'DEFINITION' : 'TERM'}
-                            variant={showDefinition ? 'inverted' : 'primary'}
-                            size="medium"
-                        />
-
-                        {/* Content */}
-                        <ThemedText
-                            variant="h2"
+                    <Animated.View>
+                        <ThemedCard
+                            variant={showDefinition ? 'flashcard-flipped' : 'flashcard'}
+                            onPress={flipCard}
                             style={{
-                                textAlign: 'center',
-                                letterSpacing: -0.5,
-                                lineHeight: 36,
-                                color: showDefinition ? theme.colors.textOnPrimary : theme.colors.text,
-                                paddingHorizontal: theme.spacing.sm,
+                                transform: [
+                                    { translateX: cardPosition },
+                                    { scale: 1 }
+                                ],
+                                opacity: cardOpacity,
                             }}
                         >
-                            {showDefinition
-                                ? currentCard.definition
-                                : (currentCard.term || currentCard.acronym || currentCard.port)
-                            }
-                        </ThemedText>
+                            {/* Badge */}
+                            <ThemedBadge
+                                text={showDefinition ? 'DEFINITION' : 'TERM'}
+                                variant={showDefinition ? 'inverted' : 'primary'}
+                                size="medium"
+                            />
 
-                        {/* Hint */}
-                        <ThemedText
-                            variant="caption"
-                            style={{
-                                fontStyle: 'italic',
-                                textAlign: 'center',
-                                opacity: 0.8,
-                                color: showDefinition ? theme.colors.textOnPrimary : theme.colors.textMuted
-                            }}
-                        >
-                            {showDefinition ? '👆 Tap to flip • 🤏 Drag to navigate' : '👆 Tap to reveal • 🤏 Drag to navigate'}
-                        </ThemedText>
-                    </ThemedCard>
+                            {/* Content */}
+                            <ThemedText
+                                variant="h2"
+                                style={{
+                                    textAlign: 'center',
+                                    letterSpacing: -0.5,
+                                    lineHeight: 36,
+                                    color: showDefinition ? theme.colors.textOnPrimary : theme.colors.text,
+                                    paddingHorizontal: theme.spacing.sm,
+                                }}
+                            >
+                                {showDefinition
+                                    ? currentCard.definition
+                                    : (currentCard.term || currentCard.acronym || currentCard.port)
+                                }
+                            </ThemedText>
+
+                            {/* Hint */}
+                            <ThemedText
+                                variant="caption"
+                                style={{
+                                    fontStyle: 'italic',
+                                    textAlign: 'center',
+                                    opacity: 0.8,
+                                    color: showDefinition ? theme.colors.textOnPrimary : theme.colors.textMuted
+                                }}
+                            >
+                                {showDefinition ? '👆 Tap to flip • 🤏 Drag to navigate' : '👆 Tap to reveal • 🤏 Drag to navigate'}
+                            </ThemedText>
+                        </ThemedCard>
+                    </Animated.View>
                 </View>
 
                 {/* Premium Navigation */}
@@ -269,4 +271,4 @@ export default function Flashcards({ data, onClose }: Props) {
                 </View>
             </SafeAreaView>
         );
-    }}
+    }
