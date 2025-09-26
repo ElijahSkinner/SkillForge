@@ -30,130 +30,92 @@ export default function Flashcards({ data, onClose }: Props) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
 
-    // Animation for card sliding transitions
+    // Simple, reliable card sliding animation
     const cardPosition = useRef(new Animated.Value(0)).current;
-    const nextCardPosition = useRef(new Animated.Value(0)).current;
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    const [nextCardData, setNextCardData] = useState<FlashcardItem | null>(null);
+    const [isAnimating, setIsAnimating] = useState(false);
 
-    // Smooth card transition function
-    const slideToCard = (direction: 'next' | 'prev') => {
-        if (isTransitioning) return;
+    // Clean card transition
+    const changeCard = (direction: 'next' | 'prev') => {
+        if (isAnimating) return;
 
-        const canGoNext = currentIndex < data.length - 1;
-        const canGoPrev = currentIndex > 0;
+        const canGoNext = direction === 'next' && currentIndex < data.length - 1;
+        const canGoPrev = direction === 'prev' && currentIndex > 0;
 
-        if (direction === 'next' && !canGoNext) return;
-        if (direction === 'prev' && !canGoPrev) return;
+        if (!canGoNext && !canGoPrev) return;
 
-        setIsTransitioning(true);
+        setIsAnimating(true);
 
-        // Set up next card data
-        const nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
-        setNextCardData(data[nextIndex]);
+        // Animate card sliding out
+        const slideOut = direction === 'next' ? -400 : 400;
 
-        // Slide direction
-        const slideDistance = direction === 'next' ? -400 : 400;
-        const nextCardStart = direction === 'next' ? 400 : -400;
+        Animated.timing(cardPosition, {
+            toValue: slideOut,
+            duration: 200,
+            useNativeDriver: true,
+        }).start(() => {
+            // Update card index
+            if (direction === 'next') {
+                setCurrentIndex(currentIndex + 1);
+            } else {
+                setCurrentIndex(currentIndex - 1);
+            }
 
-        // Position next card off-screen
-        nextCardPosition.setValue(nextCardStart);
-
-        // Animate both cards
-        Animated.parallel([
-            Animated.timing(cardPosition, {
-                toValue: slideDistance,
-                duration: 250,
-                useNativeDriver: true,
-            }),
-            Animated.timing(nextCardPosition, {
-                toValue: 0,
-                duration: 250,
-                useNativeDriver: true,
-            })
-        ]).start(() => {
-            // Update state
-            setCurrentIndex(nextIndex);
+            // Reset flip state
             setShowDefinition(false);
-            setNextCardData(null);
-            setIsTransitioning(false);
 
-            // Reset positions
-            cardPosition.setValue(0);
-            nextCardPosition.setValue(0);
+            // Position new card off-screen on opposite side
+            const slideIn = direction === 'next' ? 400 : -400;
+            cardPosition.setValue(slideIn);
+
+            // Animate new card sliding in
+            Animated.timing(cardPosition, {
+                toValue: 0,
+                duration: 200,
+                useNativeDriver: true,
+            }).start(() => {
+                setIsAnimating(false);
+            });
         });
     };
 
-    // Swipe gesture handler
+    // Simple swipe gesture
     const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: () => !isTransitioning,
+        onStartShouldSetPanResponder: () => !isAnimating,
         onMoveShouldSetPanResponder: (_, gestureState) => {
-            return !isTransitioning && Math.abs(gestureState.dx) > 15 && Math.abs(gestureState.dy) < 80;
+            return !isAnimating && Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dy) < 100;
         },
         onPanResponderMove: (_, gestureState) => {
-            if (isTransitioning) return;
-
-            // Only allow dragging in valid directions
-            const canGoNext = currentIndex < data.length - 1;
-            const canGoPrev = currentIndex > 0;
-
-            let adjustedDx = gestureState.dx;
+            if (isAnimating) return;
 
             // Add resistance at boundaries
-            if (gestureState.dx < 0 && !canGoNext) {
-                adjustedDx = gestureState.dx * 0.3; // Heavy resistance
-            } else if (gestureState.dx > 0 && !canGoPrev) {
-                adjustedDx = gestureState.dx * 0.3; // Heavy resistance
-            }
-
-            cardPosition.setValue(adjustedDx * 0.8);
-
-            // Show preview of next card
-            if (Math.abs(gestureState.dx) > 30) {
-                const nextIndex = gestureState.dx < 0 ? currentIndex + 1 : currentIndex - 1;
-                if (nextIndex >= 0 && nextIndex < data.length) {
-                    setNextCardData(data[nextIndex]);
-                    const nextStart = gestureState.dx < 0 ? 400 : -400;
-                    nextCardPosition.setValue(nextStart + (adjustedDx * 0.8));
-                }
-            } else {
-                setNextCardData(null);
-                nextCardPosition.setValue(0);
-            }
-        },
-        onPanResponderRelease: (_, gestureState) => {
-            if (isTransitioning) return;
-
-            const swipeThreshold = 80;
             const canGoNext = currentIndex < data.length - 1;
             const canGoPrev = currentIndex > 0;
 
-            if (Math.abs(gestureState.dx) > swipeThreshold) {
-                if (gestureState.dx < 0 && canGoNext) {
-                    slideToCard('next');
-                    return;
-                } else if (gestureState.dx > 0 && canGoPrev) {
-                    slideToCard('prev');
-                    return;
-                }
+            let resistance = 1;
+            if ((gestureState.dx < 0 && !canGoNext) || (gestureState.dx > 0 && !canGoPrev)) {
+                resistance = 0.3;
             }
 
-            // Snap back to center
-            setNextCardData(null);
-            Animated.parallel([
+            cardPosition.setValue(gestureState.dx * resistance);
+        },
+        onPanResponderRelease: (_, gestureState) => {
+            if (isAnimating) return;
+
+            const swipeThreshold = 100;
+
+            if (gestureState.dx < -swipeThreshold && currentIndex < data.length - 1) {
+                changeCard('next');
+            } else if (gestureState.dx > swipeThreshold && currentIndex > 0) {
+                changeCard('prev');
+            } else {
+                // Snap back
                 Animated.spring(cardPosition, {
                     toValue: 0,
-                    tension: 150,
-                    friction: 8,
+                    tension: 300,
+                    friction: 30,
                     useNativeDriver: true,
-                }),
-                Animated.spring(nextCardPosition, {
-                    toValue: 0,
-                    tension: 150,
-                    friction: 8,
-                    useNativeDriver: true,
-                })
-            ]).start();
+                }).start();
+            }
         },
     });
 
