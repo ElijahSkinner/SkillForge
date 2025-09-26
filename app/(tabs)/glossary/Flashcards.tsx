@@ -30,130 +30,74 @@ export default function Flashcards({ data, onClose }: Props) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
 
-    // Animation for card sliding transitions
+    // Animation for card dragging
     const cardPosition = useRef(new Animated.Value(0)).current;
-    const nextCardPosition = useRef(new Animated.Value(0)).current;
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    const [nextCardData, setNextCardData] = useState<FlashcardItem | null>(null);
+    const cardOpacity = useRef(new Animated.Value(1)).current;
 
-    // Smooth card transition function
-    const slideToCard = (direction: 'next' | 'prev') => {
-        if (isTransitioning) return;
-
-        const canGoNext = currentIndex < data.length - 1;
-        const canGoPrev = currentIndex > 0;
-
-        if (direction === 'next' && !canGoNext) return;
-        if (direction === 'prev' && !canGoPrev) return;
-
-        setIsTransitioning(true);
-
-        // Set up next card data
-        const nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
-        setNextCardData(data[nextIndex]);
-
-        // Slide direction
-        const slideDistance = direction === 'next' ? -400 : 400;
-        const nextCardStart = direction === 'next' ? 400 : -400;
-
-        // Position next card off-screen
-        nextCardPosition.setValue(nextCardStart);
-
-        // Animate both cards
-        Animated.parallel([
-            Animated.timing(cardPosition, {
-                toValue: slideDistance,
-                duration: 250,
-                useNativeDriver: true,
-            }),
-            Animated.timing(nextCardPosition, {
-                toValue: 0,
-                duration: 250,
-                useNativeDriver: true,
-            })
-        ]).start(() => {
-            // Update state
-            setCurrentIndex(nextIndex);
-            setShowDefinition(false);
-            setNextCardData(null);
-            setIsTransitioning(false);
-
-            // Reset positions
-            cardPosition.setValue(0);
-            nextCardPosition.setValue(0);
-        });
+    // Reset animations when card changes
+    const resetCardPosition = () => {
+        cardPosition.setValue(0);
+        cardOpacity.setValue(1);
+        setShowDefinition(false);
     };
 
-    // Swipe gesture handler
+    // Swipe gesture handler with smooth dragging
     const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: () => !isTransitioning,
+        onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: (_, gestureState) => {
-            return !isTransitioning && Math.abs(gestureState.dx) > 15 && Math.abs(gestureState.dy) < 80;
+            return Math.abs(gestureState.dx) > 15 && Math.abs(gestureState.dy) < 80;
         },
         onPanResponderMove: (_, gestureState) => {
-            if (isTransitioning) return;
+            // Card follows finger smoothly
+            cardPosition.setValue(gestureState.dx * 0.8);
 
-            // Only allow dragging in valid directions
-            const canGoNext = currentIndex < data.length - 1;
-            const canGoPrev = currentIndex > 0;
-
-            let adjustedDx = gestureState.dx;
-
-            // Add resistance at boundaries
-            if (gestureState.dx < 0 && !canGoNext) {
-                adjustedDx = gestureState.dx * 0.3; // Heavy resistance
-            } else if (gestureState.dx > 0 && !canGoPrev) {
-                adjustedDx = gestureState.dx * 0.3; // Heavy resistance
-            }
-
-            cardPosition.setValue(adjustedDx * 0.8);
-
-            // Show preview of next card
-            if (Math.abs(gestureState.dx) > 30) {
-                const nextIndex = gestureState.dx < 0 ? currentIndex + 1 : currentIndex - 1;
-                if (nextIndex >= 0 && nextIndex < data.length) {
-                    setNextCardData(data[nextIndex]);
-                    const nextStart = gestureState.dx < 0 ? 400 : -400;
-                    nextCardPosition.setValue(nextStart + (adjustedDx * 0.8));
-                }
-            } else {
-                setNextCardData(null);
-                nextCardPosition.setValue(0);
-            }
+            // Subtle fade as card moves
+            const fadeAmount = Math.abs(gestureState.dx) / 150;
+            cardOpacity.setValue(Math.max(0.6, 1 - fadeAmount));
         },
         onPanResponderRelease: (_, gestureState) => {
-            if (isTransitioning) return;
-
-            const swipeThreshold = 80;
-            const canGoNext = currentIndex < data.length - 1;
-            const canGoPrev = currentIndex > 0;
+            const swipeThreshold = 60;
 
             if (Math.abs(gestureState.dx) > swipeThreshold) {
-                if (gestureState.dx < 0 && canGoNext) {
-                    slideToCard('next');
-                    return;
-                } else if (gestureState.dx > 0 && canGoPrev) {
-                    slideToCard('prev');
-                    return;
-                }
-            }
+                // Determine direction and change card immediately
+                const goingNext = gestureState.dx < 0;
 
-            // Snap back to center
-            setNextCardData(null);
-            Animated.parallel([
+                if (goingNext && currentIndex < data.length - 1) {
+                    setCurrentIndex(currentIndex + 1);
+                    resetCardPosition();
+                } else if (!goingNext && currentIndex > 0) {
+                    setCurrentIndex(currentIndex - 1);
+                    resetCardPosition();
+                } else {
+                    // Can't go further, snap back
+                    Animated.spring(cardPosition, {
+                        toValue: 0,
+                        tension: 150,
+                        friction: 8,
+                        useNativeDriver: true,
+                    }).start();
+                    Animated.spring(cardOpacity, {
+                        toValue: 1,
+                        tension: 150,
+                        friction: 8,
+                        useNativeDriver: true,
+                    }).start();
+                }
+            } else {
+                // Snap back to center
                 Animated.spring(cardPosition, {
                     toValue: 0,
                     tension: 150,
                     friction: 8,
                     useNativeDriver: true,
-                }),
-                Animated.spring(nextCardPosition, {
-                    toValue: 0,
+                }).start();
+                Animated.spring(cardOpacity, {
+                    toValue: 1,
                     tension: 150,
                     friction: 8,
                     useNativeDriver: true,
-                })
-            ]).start();
+                }).start();
+            }
         },
     });
 
@@ -189,14 +133,16 @@ export default function Flashcards({ data, onClose }: Props) {
     const flipCard = () => setShowDefinition(!showDefinition);
 
     const nextCard = () => {
-        if (!isTransitioning) {
-            slideToCard('next');
+        if (currentIndex < data.length - 1) {
+            setCurrentIndex(currentIndex + 1);
+            resetCardPosition();
         }
     };
 
     const prevCard = () => {
-        if (!isTransitioning) {
-            slideToCard('prev');
+        if (currentIndex > 0) {
+            setCurrentIndex(currentIndex - 1);
+            resetCardPosition();
         }
     };
 
@@ -243,24 +189,24 @@ export default function Flashcards({ data, onClose }: Props) {
                 }}
                 {...panResponder.panHandlers}
             >
-                {/* Current Card */}
                 <Animated.View
                     style={{
                         transform: [{ translateX: cardPosition }],
-                        position: 'absolute',
-                        width: '100%',
+                        opacity: cardOpacity,
                     }}
                 >
                     <ThemedCard
                         variant={showDefinition ? 'flashcard-flipped' : 'flashcard'}
                         onPress={flipCard}
                     >
+                        {/* Badge */}
                         <ThemedBadge
                             text={showDefinition ? 'DEFINITION' : 'TERM'}
                             variant={showDefinition ? 'inverted' : 'primary'}
                             size="medium"
                         />
 
+                        {/* Content */}
                         <ThemedText
                             variant="h2"
                             style={{
@@ -277,6 +223,7 @@ export default function Flashcards({ data, onClose }: Props) {
                             }
                         </ThemedText>
 
+                        {/* Hint */}
                         <ThemedText
                             variant="caption"
                             style={{
@@ -286,54 +233,10 @@ export default function Flashcards({ data, onClose }: Props) {
                                 color: showDefinition ? theme.colors.textOnPrimary : theme.colors.textMuted
                             }}
                         >
-                            👆 Tap to flip • 🤏 Drag to navigate
+                            {showDefinition ? '👆 Tap to flip • 🤏 Drag to navigate' : '👆 Tap to reveal • 🤏 Drag to navigate'}
                         </ThemedText>
                     </ThemedCard>
                 </Animated.View>
-
-                {/* Next Card Preview */}
-                {nextCardData && (
-                    <Animated.View
-                        style={{
-                            transform: [{ translateX: nextCardPosition }],
-                            position: 'absolute',
-                            width: '100%',
-                        }}
-                    >
-                        <ThemedCard variant="flashcard">
-                            <ThemedBadge
-                                text="TERM"
-                                variant="primary"
-                                size="medium"
-                            />
-
-                            <ThemedText
-                                variant="h2"
-                                style={{
-                                    textAlign: 'center',
-                                    letterSpacing: -0.5,
-                                    lineHeight: 36,
-                                    color: theme.colors.text,
-                                    paddingHorizontal: theme.spacing.sm,
-                                }}
-                            >
-                                {nextCardData.term || nextCardData.acronym || nextCardData.port}
-                            </ThemedText>
-
-                            <ThemedText
-                                variant="caption"
-                                style={{
-                                    fontStyle: 'italic',
-                                    textAlign: 'center',
-                                    opacity: 0.8,
-                                    color: theme.colors.textMuted
-                                }}
-                            >
-                                👆 Tap to flip • 🤏 Drag to navigate
-                            </ThemedText>
-                        </ThemedCard>
-                    </Animated.View>
-                )}
             </View>
 
             {/* Premium Navigation */}
