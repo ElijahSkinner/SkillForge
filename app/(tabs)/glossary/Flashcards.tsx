@@ -157,7 +157,7 @@ export default function Flashcards({ data, onClose }: Props) {
     };
 
     const prevCard = () => {
-        if (!CSST) {
+        if (!isAnimating) {
             changeCard('prev');
         }
     };
