@@ -1,11 +1,12 @@
-// app/(tabs)/glossary/index.tsx - Professional version
-import { useTheme } from '../../../context/ThemeContext';
+// app/(tabs)/glossary/index.tsx - Enhanced with better theme integration
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+import { View, Pressable, ScrollView } from 'react-native';
 import { useCert } from '../../../context/CertContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Flashcards from './Flashcards';
+import { useTheme } from '../../../context/ThemeContext';
+import { ThemedView, ThemedText } from '../../../components/themed';
 import {
     GLOSSARY_TERMS,
     GLOSSARY_ACRONYMS_BY_OBJECTIVE,
@@ -13,13 +14,213 @@ import {
 } from '../../../constants/glossary';
 import CourseRedirect from '../../../components/CourseRedirect';
 
-const OBJECTIVES = [
-    '1.0 Networking Concepts',
-    '2.0 Network Implementation',
-    '3.0 Network Operations',
-    '4.0 Network Security',
-    '5.0 Network Troubleshooting',
-];
+// Dynamic objectives based on selected certification
+const getObjectivesForCert = (certName: string | null, tab: 'terms' | 'acronyms' | 'ports') => {
+    if (!certName || tab === 'ports') return [];
+
+    if (tab === 'terms') {
+        return Object.keys(GLOSSARY_TERMS[certName] || {});
+    } else if (tab === 'acronyms') {
+        return Object.keys(GLOSSARY_ACRONYMS_BY_OBJECTIVE[certName] || {});
+    }
+
+    return [];
+};
+
+// Create themed styles using theme values
+const createStyles = (theme: any) => ({
+    container: {
+        flex: 1,
+        padding: theme.spacing.md,
+        backgroundColor: theme.colors.background,
+    },
+
+    // Tab Container Styles
+    tabContainer: {
+        flexDirection: 'row' as const,
+        marginBottom: theme.spacing.lg,
+        borderRadius: theme.borderRadius.md,
+        padding: theme.spacing.xs,
+        backgroundColor: theme.colors.surfaceVariant,
+        ...theme.shadows.small,
+    },
+
+    tabButton: {
+        flex: 1,
+        paddingVertical: theme.spacing.sm,
+        paddingHorizontal: theme.spacing.md,
+        borderRadius: theme.borderRadius.sm,
+        alignItems: 'center' as const,
+        marginHorizontal: theme.spacing.xs,
+        transition: 'all 0.2s ease',
+    },
+
+    tabButtonActive: {
+        backgroundColor: theme.colors.primary,
+        ...theme.shadows.medium,
+        transform: [{ scale: 1.02 }],
+    },
+
+    tabButtonInactive: {
+        backgroundColor: 'transparent',
+    },
+
+    tabText: {
+        fontSize: theme.typography.body1.fontSize,
+        fontWeight: '600' as const,
+        textAlign: 'center' as const,
+    },
+
+    tabTextActive: {
+        color: theme.colors.textOnPrimary,
+    },
+
+    tabTextInactive: {
+        color: theme.colors.text,
+    },
+
+    // Objective Cards
+    objectivesContainer: {
+        flex: 1,
+    },
+
+    objectiveCard: {
+        marginBottom: theme.spacing.sm,
+        borderRadius: theme.borderRadius.md,
+        borderWidth: 1,
+        borderColor: theme.colors.borderColor,
+        backgroundColor: theme.colors.surface,
+        padding: theme.spacing.md,
+        ...theme.shadows.small,
+        // Add hover effect simulation
+        activeOpacity: 0.8,
+    },
+
+    objectiveContent: {
+        flex: 1,
+    },
+
+    objectiveTitle: {
+        ...theme.typography.body1,
+        fontWeight: '600',
+        color: theme.colors.text,
+        marginBottom: theme.spacing.xs,
+    },
+
+    objectiveFooter: {
+        flexDirection: 'row' as const,
+        justifyContent: 'space-between' as const,
+        alignItems: 'center' as const,
+    },
+
+    itemCount: {
+        ...theme.typography.caption,
+        color: theme.colors.textSecondary,
+    },
+
+    // Empty state styles
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
+        padding: theme.spacing.xxl,
+    },
+
+    emptyText: {
+        ...theme.typography.body1,
+        color: theme.colors.textMuted,
+        textAlign: 'center' as const,
+    },
+
+    // View Mode Section
+    viewModeContainer: {
+        marginBottom: theme.spacing.md,
+    },
+
+    viewModeHeader: {
+        flexDirection: 'row' as const,
+        alignItems: 'center' as const,
+        marginBottom: theme.spacing.sm,
+        gap: theme.spacing.sm,
+    },
+
+    backButton: {
+        width: 40,
+        height: 40,
+        borderRadius: theme.borderRadius.round,
+        alignItems: 'center' as const,
+        justifyContent: 'center' as const,
+        backgroundColor: theme.colors.surface,
+        ...theme.shadows.small,
+    },
+
+    selectedObjectiveTitle: {
+        ...theme.typography.h4,
+        color: theme.colors.text,
+        flex: 1,
+    },
+
+    viewModeToggle: {
+        flexDirection: 'row' as const,
+        backgroundColor: theme.colors.surfaceVariant,
+        borderRadius: theme.borderRadius.md,
+        padding: theme.spacing.xs,
+    },
+
+    toggleButton: {
+        flex: 1,
+        paddingVertical: theme.spacing.sm,
+        alignItems: 'center' as const,
+        borderRadius: theme.borderRadius.sm,
+        marginHorizontal: theme.spacing.xs,
+    },
+
+    toggleButtonActive: {
+        backgroundColor: theme.colors.primary,
+        ...theme.shadows.small,
+    },
+
+    toggleText: {
+        ...theme.typography.body2,
+        fontWeight: '600',
+    },
+
+    toggleTextActive: {
+        color: theme.colors.textOnPrimary,
+    },
+
+    toggleTextInactive: {
+        color: theme.colors.text,
+    },
+
+    // List View Styles
+    listContainer: {
+        flex: 1,
+    },
+
+    listItem: {
+        padding: theme.spacing.md,
+        marginBottom: theme.spacing.sm,
+        borderRadius: theme.borderRadius.md,
+        borderWidth: 1,
+        borderColor: theme.colors.borderColor,
+        backgroundColor: theme.colors.surface,
+        ...theme.shadows.small,
+    },
+
+    listItemTerm: {
+        ...theme.typography.body1,
+        fontWeight: '700',
+        color: theme.colors.primary,
+        marginBottom: theme.spacing.xs,
+    },
+
+    listItemDefinition: {
+        ...theme.typography.body2,
+        color: theme.colors.textSecondary,
+        lineHeight: 20,
+    },
+});
 
 export default function GlossaryScreen() {
     const { selectedCert } = useCert();
@@ -30,6 +231,9 @@ export default function GlossaryScreen() {
     const [flashcards, setFlashcards] = useState<
         { term?: string; acronym?: string; port?: string; definition: string }[]
     >([]);
+
+    // Create styles based on current theme
+    const styles = createStyles(theme);
 
     useEffect(() => {
         if (!selectedCert) return;
@@ -57,10 +261,7 @@ export default function GlossaryScreen() {
                         key={t}
                         style={[
                             styles.tabButton,
-                            {
-                                backgroundColor: isActive ? theme.colors.primary : theme.colors.surface,
-                                borderColor: theme.colors.borderColor,
-                            }
+                            isActive ? styles.tabButtonActive : styles.tabButtonInactive,
                         ]}
                         onPress={() => {
                             setTab(t as any);
@@ -68,15 +269,14 @@ export default function GlossaryScreen() {
                             setViewMode('list');
                         }}
                     >
-                        <Text style={[
-                            styles.tabText,
-                            {
-                                color: isActive ? theme.colors.textOnPrimary : theme.colors.text,
-                                fontWeight: isActive ? '600' : '500'
-                            }
-                        ]}>
+                        <ThemedText
+                            style={[
+                                styles.tabText,
+                                isActive ? styles.tabTextActive : styles.tabTextInactive,
+                            ]}
+                        >
                             {t.charAt(0).toUpperCase() + t.slice(1)}
-                        </Text>
+                        </ThemedText>
                     </Pressable>
                 );
             })}
@@ -86,9 +286,22 @@ export default function GlossaryScreen() {
     const renderObjectiveCards = () => {
         if (tab === 'ports' || selectedObjective) return null;
 
+        // Get dynamic objectives for the current cert and tab
+        const objectives = getObjectivesForCert(selectedCert, tab);
+
+        if (objectives.length === 0) {
+            return (
+                <View style={styles.emptyContainer}>
+                    <ThemedText style={styles.emptyText}>
+                        No objectives available for {selectedCert} in {tab}.
+                    </ThemedText>
+                </View>
+            );
+        }
+
         return (
             <ScrollView style={styles.objectivesContainer} showsVerticalScrollIndicator={false}>
-                {OBJECTIVES.map((obj) => {
+                {objectives.map((obj) => {
                     const itemCount = tab === 'terms' ?
                         GLOSSARY_TERMS[selectedCert]?.[obj]?.length || 0 :
                         GLOSSARY_ACRONYMS_BY_OBJECTIVE[selectedCert]?.[obj]?.length || 0;
@@ -96,23 +309,17 @@ export default function GlossaryScreen() {
                     return (
                         <Pressable
                             key={obj}
-                            style={[
-                                styles.objectiveCard,
-                                {
-                                    backgroundColor: theme.colors.surface,
-                                    borderColor: theme.colors.borderColor,
-                                }
-                            ]}
+                            style={styles.objectiveCard}
                             onPress={() => setSelectedObjective(obj)}
                         >
                             <View style={styles.objectiveContent}>
-                                <Text style={[styles.objectiveTitle, { color: theme.colors.text }]}>
+                                <ThemedText style={styles.objectiveTitle}>
                                     {obj}
-                                </Text>
+                                </ThemedText>
                                 <View style={styles.objectiveFooter}>
-                                    <Text style={[styles.itemCount, { color: theme.colors.textSecondary }]}>
+                                    <ThemedText style={styles.itemCount}>
                                         {itemCount} {tab === 'terms' ? 'terms' : 'acronyms'}
-                                    </Text>
+                                    </ThemedText>
                                     <Ionicons
                                         name="chevron-forward"
                                         size={20}
@@ -134,7 +341,7 @@ export default function GlossaryScreen() {
             <View style={styles.viewModeContainer}>
                 <View style={styles.viewModeHeader}>
                     <Pressable
-                        style={[styles.backButton, { backgroundColor: theme.colors.surface }]}
+                        style={styles.backButton}
                         onPress={() => {
                             setSelectedObjective(null);
                             setViewMode('list');
@@ -143,9 +350,9 @@ export default function GlossaryScreen() {
                         <Ionicons name="arrow-back" size={20} color={theme.colors.text} />
                     </Pressable>
 
-                    <Text style={[styles.selectedObjectiveTitle, { color: theme.colors.text }]}>
+                    <ThemedText style={styles.selectedObjectiveTitle}>
                         {selectedObjective === 'all_ports' ? 'Common Ports' : selectedObjective}
-                    </Text>
+                    </ThemedText>
                 </View>
 
                 <View style={styles.viewModeToggle}>
@@ -154,18 +361,18 @@ export default function GlossaryScreen() {
                             key={mode}
                             style={[
                                 styles.toggleButton,
-                                {
-                                    backgroundColor: viewMode === mode ? theme.colors.primary : 'transparent',
-                                }
+                                viewMode === mode ? styles.toggleButtonActive : null,
                             ]}
                             onPress={() => setViewMode(mode as 'list' | 'flashcards')}
                         >
-                            <Text style={[
-                                styles.toggleText,
-                                { color: viewMode === mode ? theme.colors.textOnPrimary : theme.colors.text }
-                            ]}>
+                            <ThemedText
+                                style={[
+                                    styles.toggleText,
+                                    viewMode === mode ? styles.toggleTextActive : styles.toggleTextInactive,
+                                ]}
+                            >
                                 {mode === 'list' ? 'List' : 'Cards'}
-                            </Text>
+                            </ThemedText>
                         </Pressable>
                     ))}
                 </View>
@@ -179,22 +386,13 @@ export default function GlossaryScreen() {
         return (
             <ScrollView style={styles.listContainer} showsVerticalScrollIndicator={false}>
                 {flashcards.map((item, index) => (
-                    <View
-                        key={index}
-                        style={[
-                            styles.listItem,
-                            {
-                                backgroundColor: theme.colors.surface,
-                                borderColor: theme.colors.borderColor,
-                            }
-                        ]}
-                    >
-                        <Text style={[styles.listItemTerm, { color: theme.colors.primary }]}>
+                    <View key={index} style={styles.listItem}>
+                        <ThemedText style={styles.listItemTerm}>
                             {item.term || item.acronym || item.port}
-                        </Text>
-                        <Text style={[styles.listItemDefinition, { color: theme.colors.textSecondary }]}>
+                        </ThemedText>
+                        <ThemedText style={styles.listItemDefinition}>
                             {item.definition}
-                        </Text>
+                        </ThemedText>
                     </View>
                 ))}
             </ScrollView>
@@ -202,7 +400,7 @@ export default function GlossaryScreen() {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <SafeAreaView style={styles.container}>
             {renderTabButtons()}
             {renderObjectiveCards()}
             {renderViewModeSelector()}
@@ -217,107 +415,3 @@ export default function GlossaryScreen() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
-    tabContainer: {
-        flexDirection: 'row',
-        marginBottom: 20,
-        borderRadius: 8,
-        padding: 4,
-    },
-    tabButton: {
-        flex: 1,
-        padding: 12,
-        borderRadius: 6,
-        alignItems: 'center',
-        marginHorizontal: 2,
-        borderWidth: 1,
-    },
-    tabText: {
-        fontSize: 15,
-    },
-    objectivesContainer: {
-        flex: 1,
-    },
-    objectiveCard: {
-        marginBottom: 12,
-        borderRadius: 8,
-        borderWidth: 1,
-        padding: 16,
-    },
-    objectiveContent: {
-        flex: 1,
-    },
-    objectiveTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 8,
-    },
-    objectiveFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    itemCount: {
-        fontSize: 14,
-    },
-    viewModeContainer: {
-        marginBottom: 16,
-    },
-    viewModeHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12,
-        gap: 12,
-    },
-    backButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    selectedObjectiveTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        flex: 1,
-    },
-    viewModeToggle: {
-        flexDirection: 'row',
-        backgroundColor: '#f0f0f0',
-        borderRadius: 8,
-        padding: 4,
-    },
-    toggleButton: {
-        flex: 1,
-        paddingVertical: 8,
-        alignItems: 'center',
-        borderRadius: 6,
-    },
-    toggleText: {
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    listContainer: {
-        flex: 1,
-    },
-    listItem: {
-        padding: 16,
-        marginBottom: 8,
-        borderRadius: 8,
-        borderWidth: 1,
-    },
-    listItemTerm: {
-        fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 4,
-    },
-    listItemDefinition: {
-        fontSize: 14,
-        lineHeight: 20,
-    },
-});
