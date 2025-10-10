@@ -53,7 +53,6 @@ export default function RoadmapScreen() {
     };
 
     // Helper function to check if lesson is unlocked
-    // Helper function to check if lesson is unlocked
     const isLessonUnlocked = (module: ModuleType, lessonIndex: number) => {
         // First check if the entire module is unlocked
         if (!isModuleUnlocked(module.id)) return false;
