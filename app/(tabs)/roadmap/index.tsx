@@ -53,8 +53,12 @@ export default function RoadmapScreen() {
     };
 
     // Helper function to check if lesson is unlocked
+    // Helper function to check if lesson is unlocked
     const isLessonUnlocked = (module: ModuleType, lessonIndex: number) => {
-        // Q tiles (lesson 0) are always unlocked
+        // First check if the entire module is unlocked
+        if (!isModuleUnlocked(module.id)) return false;
+
+        // Q tiles (lesson 0) are always unlocked within an unlocked module
         if (lessonIndex === 0) return true;
 
         // First lesson in module is always unlocked
