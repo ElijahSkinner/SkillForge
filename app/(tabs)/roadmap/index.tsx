@@ -237,34 +237,54 @@ export default function RoadmapScreen() {
                         {modules.map((module) => {
                             const moduleProgress = getModuleProgress(module);
                             const isModuleComplete = moduleProgress === 1;
+                            const moduleUnlocked = isModuleUnlocked(module.id);
+                            const qTileComplete = getLessonProgress(module.id, 0);
 
                             return (
                                 <View
                                     key={module.id}
-                                    style={[styles.moduleContainer, { marginBottom: theme.spacing.xl }]}
+                                    style={[
+                                        styles.moduleContainer,
+                                        {
+                                            marginBottom: theme.spacing.xl,
+                                            opacity: moduleUnlocked ? 1 : 0.6  // Dim locked modules
+                                        }
+                                    ]}
                                 >
-                                    {/* Unit Review Tile (Q) - Always unlocked */}
+                                    {/* Unit Review Tile (Q) - Unlocked if module is unlocked */}
                                     <AnimatedProgressTile
                                         size={TILE_SIZE}
-                                        progress={isModuleComplete ? 1 : 0}
-                                        onPress={() => handleTilePress(module, 0, true)}
-                                        backgroundColor={isModuleComplete
-                                            ? theme.colors.primary
-                                            : theme.colors.secondary
+                                        progress={qTileComplete ? 1 : 0}
+                                        onPress={() => handleTilePress(module, 0, moduleUnlocked)}
+                                        backgroundColor={
+                                            !moduleUnlocked
+                                                ? theme.colors.borderColor
+                                                : qTileComplete
+                                                    ? theme.colors.primary
+                                                    : theme.colors.secondary
                                         }
                                         progressColor={theme.colors.primary}
                                         style={{ ...styles.tile, marginBottom: TILE_SPACING }}
+                                        disabled={!moduleUnlocked}
                                     >
-                                        <ThemedText
-                                            variant="h4"
-                                            style={{
-                                                color: isModuleComplete
-                                                    ? theme.colors.textOnPrimary
-                                                    : theme.colors.text
-                                            }}
-                                        >
-                                            Q
-                                        </ThemedText>
+                                        {!moduleUnlocked ? (
+                                            <Ionicons
+                                                name="lock-closed"
+                                                size={28}
+                                                color={theme.colors.textMuted}
+                                            />
+                                        ) : (
+                                            <ThemedText
+                                                variant="h4"
+                                                style={{
+                                                    color: qTileComplete
+                                                        ? theme.colors.textOnPrimary
+                                                        : theme.colors.text
+                                                }}
+                                            >
+                                                Q
+                                            </ThemedText>
+                                        )}
                                     </AnimatedProgressTile>
 
                                     {/* Individual Lesson Tiles */}
@@ -327,11 +347,12 @@ export default function RoadmapScreen() {
                                             {
                                                 marginTop: theme.spacing.md,
                                                 textAlign: 'center',
-                                                color: theme.colors.text
+                                                color: moduleUnlocked ? theme.colors.text : theme.colors.textMuted
                                             }
                                         ]}
                                     >
                                         {module.name}
+                                        {!moduleUnlocked && " 🔒"}
                                     </ThemedText>
 
                                     {/* Module Progress Indicator */}
@@ -353,7 +374,10 @@ export default function RoadmapScreen() {
                                             />
                                         </View>
                                         <ThemedText variant="caption" color="textSecondary" style={styles.progressText}>
-                                            {Math.round(moduleProgress * 100)}% Complete
+                                            {moduleUnlocked
+                                                ? `${Math.round(moduleProgress * 100)}% Complete`
+                                                : "Complete previous module to unlock"
+                                            }
                                         </ThemedText>
                                     </View>
                                 </View>
