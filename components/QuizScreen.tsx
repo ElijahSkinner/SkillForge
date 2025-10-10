@@ -121,14 +121,14 @@ export default function QuizScreen() {
         const passed = score >= 70;
 
         return (
-            <ThemedView style={{flex: 1}}>
+            <ThemedView style={{ flex: 1 }}>
                 <Stack.Screen
                     options={{
                         headerShown: false
                     }}
                 />
-                <SafeAreaView style={{flex: 1, padding: theme.spacing.lg}}>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <SafeAreaView style={{ flex: 1, padding: theme.spacing.lg }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         {/* Success/Failure Icon */}
                         <View style={{
                             width: 100,
@@ -146,7 +146,7 @@ export default function QuizScreen() {
                             />
                         </View>
 
-                        <ThemedText variant="h2" style={{marginBottom: theme.spacing.lg, textAlign: 'center'}}>
+                        <ThemedText variant="h2" style={{ marginBottom: theme.spacing.lg, textAlign: 'center' }}>
                             {passed ? 'Quiz Complete!' : 'Keep Studying!'}
                         </ThemedText>
 
@@ -184,8 +184,8 @@ export default function QuizScreen() {
                             width: '100%',
                             marginBottom: theme.spacing.xl
                         }}>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                                <View style={{alignItems: 'center'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                                <View style={{ alignItems: 'center' }}>
                                     <ThemedText variant="h3" color="success">
                                         {answers.filter(a => a.isCorrect).length}
                                     </ThemedText>
@@ -193,7 +193,7 @@ export default function QuizScreen() {
                                         Correct
                                     </ThemedText>
                                 </View>
-                                <View style={{alignItems: 'center'}}>
+                                <View style={{ alignItems: 'center' }}>
                                     <ThemedText variant="h3" color="error">
                                         {answers.filter(a => !a.isCorrect).length}
                                     </ThemedText>
@@ -201,7 +201,7 @@ export default function QuizScreen() {
                                         Incorrect
                                     </ThemedText>
                                 </View>
-                                <View style={{alignItems: 'center'}}>
+                                <View style={{ alignItems: 'center' }}>
                                     <ThemedText variant="h3" color="primary">
                                         {quiz.questions.length}
                                     </ThemedText>
@@ -215,10 +215,128 @@ export default function QuizScreen() {
                         <ThemedButton
                             title="Continue Learning"
                             onPress={handleQuizComplete}
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                         />
                     </View>
                 </SafeAreaView>
             </ThemedView>
         );
-    }}
+    }
+
+    return (
+        <ThemedView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
+                {/* Custom Header with Exit Button */}
+                <Stack.Screen
+                    options={{
+                        headerShown: true,
+                        headerTitle: quiz.title,
+                        headerStyle: {
+                            backgroundColor: theme.colors.surface,
+                        },
+                        headerTintColor: theme.colors.text,
+                        headerTitleStyle: {
+                            fontWeight: '600',
+                        },
+                        headerLeft: () => (
+                            <View style={{ marginLeft: theme.spacing.sm }}>
+                                <ThemedButton
+                                    title=""
+                                    variant="ghost"
+                                    onPress={handleExit}
+                                    style={{
+                                        width: 40,
+                                        height: 40,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: 'transparent'
+                                    }}
+                                >
+                                    <Ionicons
+                                        name="close"
+                                        size={28}
+                                        color={theme.colors.text}
+                                    />
+                                </ThemedButton>
+                            </View>
+                        ),
+                    }}
+                />
+
+                {/* Progress Header */}
+                <View
+                    style={{
+                        padding: theme.spacing.md,
+                        borderBottomWidth: 1,
+                        borderBottomColor: theme.colors.borderColor,
+                        backgroundColor: theme.colors.surface
+                    }}
+                >
+                    {/* Progress Bar */}
+                    <View
+                        style={{
+                            height: 8,
+                            backgroundColor: theme.colors.surfaceVariant,
+                            borderRadius: theme.borderRadius.round,
+                            marginBottom: theme.spacing.sm,
+                            overflow: 'hidden'
+                        }}
+                    >
+                        <View
+                            style={{
+                                height: '100%',
+                                width: `${progress}%`,
+                                backgroundColor: theme.colors.primary,
+                                borderRadius: theme.borderRadius.round,
+                            }}
+                        />
+                    </View>
+
+                    {/* Question Counter */}
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <ThemedText variant="body2" color="textSecondary">
+                            Question {currentQuestionIndex + 1} of {quiz.questions.length}
+                        </ThemedText>
+                        <ThemedText variant="body2" color="primary" style={{ fontWeight: '600' }}>
+                            {Math.round(progress)}%
+                        </ThemedText>
+                    </View>
+                </View>
+
+                {/* Question Content */}
+                <ScrollView
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                >
+                    <QuizQuestionComponent
+                        question={currentQuestion}
+                        onAnswer={handleAnswer}
+                        showResult={showResult}
+                        userAnswer={answers[currentQuestionIndex]?.userAnswer}
+                    />
+                </ScrollView>
+
+                {/* Navigation Footer */}
+                <View
+                    style={{
+                        padding: theme.spacing.md,
+                        borderTopWidth: 1,
+                        borderTopColor: theme.colors.borderColor,
+                        backgroundColor: theme.colors.surface
+                    }}
+                >
+                    <ThemedButton
+                        title={currentQuestionIndex === quiz.questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                        onPress={handleNext}
+                        disabled={!showResult}
+                        variant="primary"
+                    />
+                </View>
+            </SafeAreaView>
+        </ThemedView>
+    );
+}
