@@ -5,4 +5,4 @@ export { ChangeEmailModal } from './ChangeEmailModal';
 export { ChangePasswordModal } from './ChangePasswordModal';
 export { LogoutConfirmModal } from './LogoutConfirmModal';
 export { QuizExitModal } from './QuizExitModal';
-export { ResetProgressModal } from './ResetProgressModal';  // ADD THIS
+export { ResetProgressModal } from './ResetProgressModal';
