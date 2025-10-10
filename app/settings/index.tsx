@@ -162,202 +162,135 @@ export default function SettingsScreen() {
     };
 
     return (
-        <ThemedView variant="background" style={{ flex: 1 }}>
-            <SafeAreaView style={{ flex: 1 }}>
-                <ScrollView
-                    contentContainerStyle={{
-                        padding: theme.spacing.lg
-                    }}
-                >
-                    <ThemedText variant="h2" style={{ marginBottom: theme.spacing.lg }}>
-                        Settings
-                    </ThemedText>
+        <>
+            {/* Configure header */}
+            <Stack.Screen
+                options={{
+                    headerShown: true,
+                    title: 'Settings',
+                    headerBackTitle: 'Back',
+                }}
+            />
 
-                    {/* Account Section */}
-                    <SectionHeader title="Account" />
+            <ThemedView variant="background" style={{ flex: 1 }}>
+                <SafeAreaView style={{ flex: 1 }}>
+                    <ScrollView
+                        contentContainerStyle={{
+                            padding: theme.spacing.lg
+                        }}
+                    >
+                        {/* Remove the Settings title since it's in header now */}
 
-                    <SettingCard>
-                        <Pressable onPress={() => setShowAccountModal(true)}>
-                            <View style={styles.settingRow}>
-                                <View style={{ flex: 1 }}>
-                                    <ThemedText variant="body1">Account Information</ThemedText>
-                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                        {user?.email}
-                                        {!user?.emailVerification && ' (Unverified)'}
-                                    </ThemedText>
+                        {/* Account Section */}
+                        <SectionHeader title="Account" />
+
+                        <SettingCard>
+                            <Pressable onPress={() => setShowAccountModal(true)}>
+                                <View style={styles.settingRow}>
+                                    <View style={{ flex: 1 }}>
+                                        <ThemedText variant="body1">Account Information</ThemedText>
+                                        <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                            {user?.email}
+                                            {!user?.emailVerification && ' (Unverified)'}
+                                        </ThemedText>
+                                    </View>
+                                    <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
                                 </View>
-                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
-                            </View>
-                        </Pressable>
-                    </SettingCard>
+                            </Pressable>
+                        </SettingCard>
 
-                    {/* Appearance Section */}
-                    <SectionHeader title="Appearance" />
+                        {/* ... keep all your existing sections ... */}
 
-                    <SettingCard>
-                        <Pressable style={styles.settingRow} onPress={() => setShowThemeModal(true)}>
-                            <View style={{ flex: 1 }}>
-                                <ThemedText variant="body1">Theme</ThemedText>
-                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                    {getThemeDisplayName(themeName)}
+                        {/* ADD THIS NEW SECTION before Logout Button */}
+
+                        {/* Danger Zone Section */}
+                        <SectionHeader title="Danger Zone" />
+
+                        <SettingCard>
+                            <Pressable onPress={() => setShowResetModal(true)}>
+                                <View style={styles.settingRow}>
+                                    <View style={{ flex: 1 }}>
+                                        <ThemedText variant="body1" style={{ color: theme.colors.error }}>
+                                            Reset All Progress
+                                        </ThemedText>
+                                        <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
+                                            Permanently delete all learning data
+                                        </ThemedText>
+                                    </View>
+                                    <Ionicons name="trash" size={20} color={theme.colors.error} />
+                                </View>
+                            </Pressable>
+                        </SettingCard>
+
+                        {/* Logout Button */}
+                        <View style={{ marginTop: theme.spacing.xl }}>
+                            <Pressable
+                                style={{
+                                    backgroundColor: theme.colors.error,
+                                    padding: theme.spacing.md,
+                                    borderRadius: theme.borderRadius.md,
+                                    alignItems: 'center',
+                                }}
+                                onPress={() => setShowLogoutModal(true)}
+                            >
+                                <ThemedText variant="button" style={{ color: '#fff' }}>
+                                    Logout
                                 </ThemedText>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Ionicons
-                                    name={getThemeIcon(themeName)}
-                                    size={20}
-                                    color={theme.colors.primary}
-                                    style={{ marginRight: theme.spacing.sm }}
-                                />
-                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
-                            </View>
-                        </Pressable>
-                    </SettingCard>
-
-                    <SettingCard>
-                        <View style={styles.settingRow}>
-                            <View style={{ flex: 1 }}>
-                                <ThemedText variant="body1">Dark Mode</ThemedText>
-                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                    {isDarkMode ? 'Dark theme enabled' : 'Light theme enabled'}
-                                </ThemedText>
-                            </View>
-                            <ThemedSwitch value={isDarkMode} onValueChange={toggleDarkMode} />
+                            </Pressable>
                         </View>
-                    </SettingCard>
+                    </ScrollView>
 
-                    {/* Preferences Section */}
-                    <SectionHeader title="Preferences" />
+                    {/* All Modals - Add the new one */}
+                    <ThemeSelectionModal
+                        visible={showThemeModal}
+                        onClose={() => setShowThemeModal(false)}
+                    />
 
-                    <SettingCard>
-                        <View style={styles.settingRow}>
-                            <View style={{ flex: 1 }}>
-                                <ThemedText variant="body1">Notifications</ThemedText>
-                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                    Push notifications and reminders
-                                </ThemedText>
-                            </View>
-                            <ThemedSwitch value={notifications} onValueChange={handleNotificationsToggle} />
-                        </View>
-                    </SettingCard>
+                    <AccountInfoModal
+                        visible={showAccountModal}
+                        onClose={() => setShowAccountModal(false)}
+                        onChangeEmail={() => setShowEmailModal(true)}
+                        onChangePassword={() => setShowPasswordModal(true)}
+                    />
 
-                    <SettingCard>
-                        <View style={styles.settingRow}>
-                            <View style={{ flex: 1 }}>
-                                <ThemedText variant="body1">Sound Effects</ThemedText>
-                                <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                    App sounds and audio feedback
-                                </ThemedText>
-                            </View>
-                            <ThemedSwitch value={soundEnabled} onValueChange={handleSoundToggle} />
-                        </View>
-                    </SettingCard>
+                    <ChangeEmailModal
+                        visible={showEmailModal}
+                        onClose={() => setShowEmailModal(false)}
+                    />
 
-                    <SettingCard>
-                        <Pressable onPress={() => alert('Privacy settings coming soon')}>
-                            <View style={styles.settingRow}>
-                                <View style={{ flex: 1 }}>
-                                    <ThemedText variant="body1">Privacy</ThemedText>
-                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                        Data and privacy controls
-                                    </ThemedText>
-                                </View>
-                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
-                            </View>
-                        </Pressable>
-                    </SettingCard>
+                    <ChangePasswordModal
+                        visible={showPasswordModal}
+                        onClose={() => setShowPasswordModal(false)}
+                    />
 
-                    {/* Study Preferences */}
-                    <SectionHeader title="Study Preferences" />
+                    <LogoutConfirmModal
+                        visible={showLogoutModal}
+                        onClose={() => setShowLogoutModal(false)}
+                        onConfirm={handleLogout}
+                    />
 
-                    <SettingCard>
-                        <Pressable onPress={() => setShowXPGoalModal(true)}>
-                            <View style={styles.settingRow}>
-                                <View style={{ flex: 1 }}>
-                                    <ThemedText variant="body1">Daily XP Goal</ThemedText>
-                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                        {progress?.dailyGoalXP || 50} XP per day
-                                    </ThemedText>
-                                </View>
-                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
-                            </View>
-                        </Pressable>
-                    </SettingCard>
+                    <XPGoalModal
+                        visible={showXPGoalModal}
+                        onClose={() => setShowXPGoalModal(false)}
+                        currentGoal={progress?.dailyGoalXP || 50}
+                    />
 
-                    <SettingCard>
-                        <Pressable onPress={() => setShowReminderModal(true)}>
-                            <View style={styles.settingRow}>
-                                <View style={{ flex: 1 }}>
-                                    <ThemedText variant="body1">Study Reminder</ThemedText>
-                                    <ThemedText variant="body2" color="textSecondary" style={{ marginTop: 2 }}>
-                                        Daily at {progress?.reminderTime || '4:20 PM'}
-                                    </ThemedText>
-                                </View>
-                                <Ionicons name="chevron-forward" size={20} color={theme.colors.textMuted} />
-                            </View>
-                        </Pressable>
-                    </SettingCard>
+                    <ReminderTimeModal
+                        visible={showReminderModal}
+                        onClose={() => setShowReminderModal(false)}
+                        currentTime={progress?.reminderTime || '16:20'}
+                    />
 
-                    {/* Logout Button */}
-                    <View style={{ marginTop: theme.spacing.xl }}>
-                        <Pressable
-                            style={{
-                                backgroundColor: theme.colors.error,
-                                padding: theme.spacing.md,
-                                borderRadius: theme.borderRadius.md,
-                                alignItems: 'center',
-                            }}
-                            onPress={() => setShowLogoutModal(true)}
-                        >
-                            <ThemedText variant="button" style={{ color: '#fff' }}>
-                                Logout
-                            </ThemedText>
-                        </Pressable>
-                    </View>
-                </ScrollView>
-
-                {/* All Modals */}
-                <ThemeSelectionModal
-                    visible={showThemeModal}
-                    onClose={() => setShowThemeModal(false)}
-                />
-
-                <AccountInfoModal
-                    visible={showAccountModal}
-                    onClose={() => setShowAccountModal(false)}
-                    onChangeEmail={() => setShowEmailModal(true)}
-                    onChangePassword={() => setShowPasswordModal(true)}
-                />
-
-                <ChangeEmailModal
-                    visible={showEmailModal}
-                    onClose={() => setShowEmailModal(false)}
-                />
-
-                <ChangePasswordModal
-                    visible={showPasswordModal}
-                    onClose={() => setShowPasswordModal(false)}
-                />
-
-                <LogoutConfirmModal
-                    visible={showLogoutModal}
-                    onClose={() => setShowLogoutModal(false)}
-                    onConfirm={handleLogout}
-                />
-
-                <XPGoalModal
-                    visible={showXPGoalModal}
-                    onClose={() => setShowXPGoalModal(false)}
-                    currentGoal={progress?.dailyGoalXP || 50}
-                />
-
-                <ReminderTimeModal
-                    visible={showReminderModal}
-                    onClose={() => setShowReminderModal(false)}
-                    currentTime={progress?.reminderTime || '16:20'}
-                />
-            </SafeAreaView>
-        </ThemedView>
+                    {/* ADD THIS NEW MODAL */}
+                    <ResetProgressModal
+                        visible={showResetModal}
+                        onClose={() => setShowResetModal(false)}
+                        onConfirm={handleResetProgress}
+                        loading={resetLoading}
+                    />
+                </SafeAreaView>
+            </ThemedView>
+        </>
     );
 }
 
