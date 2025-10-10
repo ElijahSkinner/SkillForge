@@ -333,9 +333,11 @@ export default function QuizScreen() {
             </SafeAreaView>
 
             {/* Themed Exit Confirmation Modal */}
-            <QuizExitModal visible={showExitModal} onClose={cancelExit}>
-
-            </QuizExitModal>
+            <QuizExitModal
+                visible={showExitModal}
+                onConfirm={confirmExit}
+                onCancel={cancelExit}
+            />
         </ThemedView>
     );
 }
