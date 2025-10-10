@@ -64,7 +64,15 @@ export default function RoadmapScreen() {
         const previousLessonIndex = lessonIndex - 1;
         return getLessonProgress(module.id, previousLessonIndex);
     };
+// Helper function to check if module is unlocked
+    const isModuleUnlocked = (moduleId: number) => {
+        // First module is always unlocked
+        if (moduleId === 1) return true;
 
+        // Check if previous module's Q tile (lesson 0) is completed
+        const previousModuleId = moduleId - 1;
+        return getLessonProgress(previousModuleId, 0);
+    };
     // Helper function to get module completion percentage
     const getModuleProgress = (module: ModuleType) => {
         const totalLessons = module.lessons.length;
