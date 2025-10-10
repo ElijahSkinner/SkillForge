@@ -22,7 +22,7 @@ export default function QuizScreen() {
     }>();
     const { theme } = useTheme();
     const router = useRouter();
-    const { progress, addCompletedQuiz } = useAuth();
+    const { progress: userProgress, addCompletedQuiz } = useAuth();
     const { selectedCert } = useCert();
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
