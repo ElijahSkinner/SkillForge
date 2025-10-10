@@ -15,10 +15,10 @@ import { useRouter } from 'expo-router';
 import { CERTS_ROADMAP } from '../../../constants/certs';
 import { ModuleType } from "../../../types/certs";
 import { ThemedView, ThemedText } from '../../../components/themed';
+import { Ionicons } from '@expo/vector-icons';
 import TopBar from '../../../components/TopBar';
 import LessonSelectionModal from '../../../components/modals/LessonSelectionModal';
 import AnimatedProgressTile from '../../../components/modals/AnimatedProgressTile';
-import {DOMAIN_1_QUIZZES} from "../../../constants/quizData";
 
 const { TILE_SIZE, TILE_SPACING } = { TILE_SIZE: 70, TILE_SPACING: 12 };
 
@@ -50,6 +50,19 @@ export default function RoadmapScreen() {
     const getLessonProgress = (moduleId: number, lessonIndex: number) => {
         const lessonKey = `${selectedCert}_${moduleId}_${lessonIndex}`;
         return completedLessons.includes(lessonKey);
+    };
+
+    // Helper function to check if lesson is unlocked
+    const isLessonUnlocked = (module: ModuleType, lessonIndex: number) => {
+        // Q tiles (lesson 0) are always unlocked
+        if (lessonIndex === 0) return true;
+
+        // First lesson in module is always unlocked
+        if (lessonIndex === 1) return true;
+
+        // Check if previous lesson is completed
+        const previousLessonIndex = lessonIndex - 1;
+        return getLessonProgress(module.id, previousLessonIndex);
     };
 
     // Helper function to get module completion percentage
@@ -97,25 +110,11 @@ export default function RoadmapScreen() {
                 }
             }
 
-            //Check if this lesson has quizzes
-            const hasQuizzes = DOMAIN_1_QUIZZES[`1.${lesson.lessonIndex}`] !== undefined;
-
-            if (hasQuizzes) {
-                // Go straight to first quiz (or open a quiz selection modal if you want)
-                router.push({
-                    pathname: '/(tabs)/quiz/[objective]/[quizType]' as any,
-                    params: {
-                        objective: `1.${lesson.lessonIndex}`,
-                        quizType: 'quizA'
-                    },
-                });
-            } else {
-                // Default navigation (your existing lesson flow)
-                router.push({
-                    pathname: '/(tabs)/quiz/[cert]/[id]' as any,
-                    params: { cert: selectedCert || '', id: String(lesson.modId) },
-                });
-            }
+            // Navigate to quiz/lesson
+            router.push({
+                pathname: '/(tabs)/quiz/[cert]/[id]' as any,
+                params: { cert: selectedCert || '', id: String(lesson.modId) },
+            });
 
         } catch (error) {
             console.error('Failed to update lesson progress:', error);
@@ -123,6 +122,30 @@ export default function RoadmapScreen() {
             setUpdatingProgress(null);
             setSelectedLesson(null);
         }
+    };
+
+    // Handle tile press with lock check
+    const handleTilePress = (
+        module: ModuleType,
+        lessonIndex: number,
+        isUnlocked: boolean
+    ) => {
+        if (!isUnlocked) {
+            // Show locked message - tile is disabled
+            return;
+        }
+
+        const lessonName = lessonIndex === 0
+            ? `${module.name} Unit Review`
+            : module.lessons[lessonIndex - 1].name;
+
+        setSelectedLesson({
+            modId: module.id,
+            lessonIndex,
+            lessonName,
+            moduleWeight: module.weight,
+            totalLessons: module.lessons.length
+        });
     };
 
     if (!selectedCert) {
@@ -153,7 +176,6 @@ export default function RoadmapScreen() {
 
     // Create enrolled courses safely
     const enrolledCourses = Object.keys(CERTS_ROADMAP).map((name, idx) => {
-        // Create a dummy module for progress calculation
         const dummyModule: ModuleType = {
             id: idx,
             name: name,
@@ -210,29 +232,35 @@ export default function RoadmapScreen() {
                                     key={module.id}
                                     style={[styles.moduleContainer, { marginBottom: theme.spacing.xl }]}
                                 >
-                                    {/* Unit Review Tile (Q) */}
+                                    {/* Unit Review Tile (Q) - Always unlocked */}
                                     <AnimatedProgressTile
                                         size={TILE_SIZE}
                                         progress={isModuleComplete ? 1 : 0}
-                                        onPress={() => setSelectedLesson({
-                                            modId: module.id,
-                                            lessonIndex: 0,
-                                            lessonName: `${module.name} Unit Review`,
-                                            moduleWeight: module.weight,
-                                            totalLessons: module.lessons.length
-                                        })}
-                                        backgroundColor={theme.colors.secondary}
-                                        progressColor={theme.colors.success}
+                                        onPress={() => handleTilePress(module, 0, true)}
+                                        backgroundColor={isModuleComplete
+                                            ? theme.colors.primary
+                                            : theme.colors.secondary
+                                        }
+                                        progressColor={theme.colors.primary}
                                         style={{ ...styles.tile, marginBottom: TILE_SPACING }}
                                     >
-                                        <ThemedText variant="h4" color="text">Q</ThemedText>
+                                        <ThemedText
+                                            variant="h4"
+                                            style={{
+                                                color: isModuleComplete
+                                                    ? theme.colors.textOnPrimary
+                                                    : theme.colors.text
+                                            }}
+                                        >
+                                            Q
+                                        </ThemedText>
                                     </AnimatedProgressTile>
 
-                                    {/* Individual Lesson Tiles - CORRECTED ORDER */}
+                                    {/* Individual Lesson Tiles */}
                                     {module.lessons.slice().reverse().map((lesson, index) => {
-                                        // Since we reversed the lessons, index 0 is now the last lesson
                                         const lessonNumber = module.lessons.length - index;
                                         const isLessonComplete = getLessonProgress(module.id, lessonNumber);
+                                        const isUnlocked = isLessonUnlocked(module, lessonNumber);
                                         const lessonProgress = isLessonComplete ? 1 : 0;
 
                                         return (
@@ -240,29 +268,41 @@ export default function RoadmapScreen() {
                                                 key={`${module.id}-${lessonNumber}`}
                                                 size={TILE_SIZE}
                                                 progress={lessonProgress}
-                                                onPress={() => setSelectedLesson({
-                                                    modId: module.id,
-                                                    lessonIndex: lessonNumber,
-                                                    lessonName: lesson.name,
-                                                    moduleWeight: module.weight,
-                                                    totalLessons: module.lessons.length
-                                                })}
-                                                backgroundColor={isLessonComplete
-                                                    ? theme.colors.success
-                                                    : theme.colors.surface
+                                                onPress={() => handleTilePress(module, lessonNumber, isUnlocked)}
+                                                backgroundColor={
+                                                    !isUnlocked
+                                                        ? theme.colors.borderColor
+                                                        : isLessonComplete
+                                                            ? theme.colors.primary + '40'
+                                                            : theme.colors.surface
                                                 }
                                                 progressColor={theme.colors.primary}
-                                                style={{ ...styles.tile, marginBottom: TILE_SPACING }}
-                                                disabled={updatingProgress === `${module.id}_${lessonNumber}`}
+                                                style={{
+                                                    ...styles.tile,
+                                                    marginBottom: TILE_SPACING,
+                                                    opacity: isUnlocked ? 1 : 0.5
+                                                }}
+                                                disabled={!isUnlocked || updatingProgress === `${module.id}_${lessonNumber}`}
                                             >
-                                                <ThemedText
-                                                    variant="h4"
-                                                    style={{
-                                                        color: isLessonComplete ? theme.colors.success : theme.colors.text
-                                                    }}
-                                                >
-                                                    {lessonNumber}
-                                                </ThemedText>
+                                                {!isUnlocked ? (
+                                                    <Ionicons
+                                                        name="lock-closed"
+                                                        size={24}
+                                                        color={theme.colors.textMuted}
+                                                    />
+                                                ) : (
+                                                    <ThemedText
+                                                        variant="h4"
+                                                        style={{
+                                                            color: isLessonComplete
+                                                                ? theme.colors.primary
+                                                                : theme.colors.text,
+                                                            fontWeight: isLessonComplete ? '700' : '600'
+                                                        }}
+                                                    >
+                                                        {lessonNumber}
+                                                    </ThemedText>
+                                                )}
                                             </AnimatedProgressTile>
                                         );
                                     })}
@@ -341,7 +381,7 @@ const styles = {
     },
     overlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)', // Semi-transparent overlay
+        backgroundColor: 'rgba(0,0,0,0.3)',
     },
     safeArea: {
         flex: 1,
@@ -372,7 +412,7 @@ const styles = {
         width: '100%' as const,
         height: 4,
         borderRadius: 2,
-        overflow: 'hidden' as const,           
+        overflow: 'hidden' as const,
     },
     progressFill: {
         height: '100%' as const,
