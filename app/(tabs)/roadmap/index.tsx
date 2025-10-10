@@ -67,7 +67,7 @@ export default function RoadmapScreen() {
         const previousLessonIndex = lessonIndex - 1;
         return getLessonProgress(module.id, previousLessonIndex);
     };
-// Helper function to check if module is unlocked
+    // Helper function to check if module is unlocked
     const isModuleUnlocked = (moduleId: number) => {
         // First module is always unlocked
         if (moduleId === 1) return true;
