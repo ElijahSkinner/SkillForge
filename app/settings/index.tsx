@@ -29,7 +29,37 @@ export default function SettingsScreen() {
     const { theme, themeName, isDarkMode, toggleDarkMode } = useTheme();
     const [showResetModal, setShowResetModal] = useState(false);
     const [resetLoading, setResetLoading] = useState(false);
-    
+    const handleResetProgress = async () => {
+        setResetLoading(true);
+        try {
+            // Reset all progress fields
+            await updateProgressField('completedLessons', []);
+            await updateProgressField('completedModules', []);
+            await updateProgressField('completedQuizzes', []);
+            await updateProgressField('xp', 0);
+            await updateProgressField('weeklyXP', 0);
+            await updateProgressField('currentStreak', 0);
+            await updateProgressField('maxStreakAllTime', 0);
+            await updateProgressField('studyTimeMinutes', 0);
+            await updateProgressField('achievements', []);
+            await updateProgressField('badgesEarned', []);
+            await updateProgressField('mistakesReview', []);
+            await updateProgressField('leagueRank', 0);
+
+            Alert.alert(
+                'Progress Reset',
+                'Your learning progress has been reset successfully.',
+                [{ text: 'OK', onPress: () => router.push('/(tabs)/roadmap') }]
+            );
+
+            setShowResetModal(false);
+        } catch (error) {
+            console.error('Failed to reset progress:', error);
+            Alert.alert('Error', 'Failed to reset progress. Please try again.');
+        } finally {
+            setResetLoading(false);
+        }
+    };
     // Add null check for theme
     if (!theme || !theme.spacing || !theme.colors) {
         return (
