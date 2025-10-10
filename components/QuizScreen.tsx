@@ -1,7 +1,7 @@
 // components/QuizScreen.tsx - UPDATED WITH EXIT BUTTON AND COMPLETION TRACKING
 
 import React, { useState } from 'react';
-import { View, ScrollView, Alert, Pressable } from 'react-native';
+import { View, ScrollView, Pressable } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ import {
     DOMAIN_2_QUIZZES,
 } from '../constants/quizData';
 import QuizQuestionComponent from './QuizQuestion';
+import QuizExitModal from './modals/QuizExitModal';
 
 export default function QuizScreen() {
     const { objective, quizType } = useLocalSearchParams<{
@@ -29,6 +30,7 @@ export default function QuizScreen() {
     const [answers, setAnswers] = useState<{ isCorrect: boolean; userAnswer: any }[]>([]);
     const [showResult, setShowResult] = useState(false);
     const [quizCompleted, setQuizCompleted] = useState(false);
+    const [showExitModal, setShowExitModal] = useState(false);
 
     // Gather all domains into one lookup object
     const ALL_DOMAINS: Record<string, any> = {
@@ -40,21 +42,16 @@ export default function QuizScreen() {
 
     // Handle exit with confirmation
     const handleExit = () => {
-        Alert.alert(
-            "Exit Quiz?",
-            "Your progress will not be saved. Are you sure you want to leave?",
-            [
-                {
-                    text: "Stay",
-                    style: "cancel"
-                },
-                {
-                    text: "Exit",
-                    style: "destructive",
-                    onPress: () => router.back()
-                }
-            ]
-        );
+        setShowExitModal(true);
+    };
+
+    const confirmExit = () => {
+        setShowExitModal(false);
+        router.back();
+    };
+
+    const cancelExit = () => {
+        setShowExitModal(false);
     };
 
     if (!quiz) {
@@ -334,6 +331,59 @@ export default function QuizScreen() {
                     />
                 </View>
             </SafeAreaView>
+
+            {/* Themed Exit Confirmation Modal */}
+            <ThemedModal visible={showExitModal} onClose={cancelExit}>
+                <View style={{ alignItems: 'center' }}>
+                    {/* Warning Icon */}
+                    <View style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 40,
+                        backgroundColor: theme.colors.warning + '20',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: theme.spacing.lg
+                    }}>
+                        <Ionicons
+                            name="warning"
+                            size={40}
+                            color={theme.colors.warning}
+                        />
+                    </View>
+
+                    {/* Title */}
+                    <ThemedText variant="h3" style={{
+                        marginBottom: theme.spacing.sm,
+                        textAlign: 'center'
+                    }}>
+                        Exit Quiz?
+                    </ThemedText>
+
+                    {/* Description */}
+                    <ThemedText variant="body1" color="textSecondary" style={{
+                        textAlign: 'center',
+                        marginBottom: theme.spacing.xl,
+                        lineHeight: 24
+                    }}>
+                        Your progress will not be saved. Are you sure you want to leave?
+                    </ThemedText>
+
+                    {/* Action Buttons */}
+                    <View style={{ width: '100%', gap: theme.spacing.md }}>
+                        <ThemedButton
+                            title="Exit Quiz"
+                            variant="danger"
+                            onPress={confirmExit}
+                        />
+                        <ThemedButton
+                            title="Stay & Continue"
+                            variant="outline"
+                            onPress={cancelExit}
+                        />
+                    </View>
+                </View>
+            </ThemedModal>
         </ThemedView>
     );
 }
