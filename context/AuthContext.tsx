@@ -1,11 +1,10 @@
-// context/AuthContext.tsx - UPDATED FOR FUNCTION INTEGRATION
+// context/AuthContext.tsx - UPDATED WITH QUIZ COMPLETION TRACKING
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
 import { streakService } from "../services/StreakService";
 import { backgroundStreakService } from "../services/BackgroundStreakService";
 import appConfig from "../config/AppConfig";
 
-// Initialize Appwrite client with secure configuration
 const client = new Client()
     .setEndpoint(appConfig.appwrite.endpoint)
     .setProject(appConfig.appwrite.projectId);
@@ -13,11 +12,9 @@ const client = new Client()
 const databases = new Databases(client);
 const account = new Account(client);
 
-// Use configuration values instead of hardcoded ones
 const DATABASE_ID = appConfig.appwrite.databaseId;
 const COLLECTION_ID = appConfig.appwrite.collectionId;
 
-// Validate configuration on startup
 if (!appConfig.validateConfig()) {
     console.error('Invalid Appwrite configuration. App may not function correctly.');
 }
@@ -38,6 +35,7 @@ interface AuthContextType {
     updateProgressField: (field: string, value: any) => Promise<void>;
     addCompletedLesson: (certName: string, moduleId: number, lessonIndex: number, xpGained: number) => Promise<void>;
     addCompletedModule: (certName: string, moduleId: number) => Promise<void>;
+    addCompletedQuiz: (certName: string, moduleId: number, lessonIndex: number, quizType: string, score: number) => Promise<void>;
     updateStreak: (newStreak: number) => Promise<void>;
     databases: Databases;
     account: Account;
@@ -50,7 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [progress, setProgress] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    // Initialize services after login/registration
     useEffect(() => {
         if (progress) {
             streakService.initialize(updateProgressField);
@@ -64,7 +61,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const res = await account.get();
                 setUser(res);
 
-                // Fetch progress doc
                 const result = await databases.listDocuments(
                     DATABASE_ID,
                     COLLECTION_ID,
@@ -88,7 +84,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         checkSession();
     }, []);
 
-    // Helper function to wait for function to create progress document
     const waitForProgressDocument = async (userId: string, maxRetries = 5, delay = 1000) => {
         for (let i = 0; i < maxRetries; i++) {
             try {
@@ -102,7 +97,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     return result.documents[0];
                 }
 
-                // Wait before trying again
                 await new Promise(resolve => setTimeout(resolve, delay));
             } catch (error) {
                 console.error(`Attempt ${i + 1} to fetch progress document failed:`, error);
@@ -113,13 +107,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
         }
 
-        // If we get here, the function might not have created the document
-        // Fall back to creating it manually
         console.warn('Function did not create progress document, creating manually...');
         return await createInitialProgress(userId);
     };
 
-    // Fallback helper function to create initial progress document manually
     const createInitialProgress = async (userId: string) => {
         const initialProgress = {
             userID: userId,
@@ -127,6 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             xp: 0,
             completedLessons: [],
             completedModules: [],
+            completedQuizzes: [], // NEW FIELD
             maxStreakAllTime: 0,
             currentStreak: 0,
             selectedTheme: "forge",
@@ -162,7 +154,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
     };
 
-    // Update user progress from database
     const updateUserProgress = async () => {
         if (!user) return;
 
@@ -181,7 +172,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Update a specific field in the progress document
     const updateProgressField = async (field: string, value: any) => {
         if (!progress) return;
 
@@ -199,7 +189,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Add completed lesson and update XP + Streak
     const addCompletedLesson = async (certName: string, moduleId: number, lessonIndex: number, xpGained: number) => {
         if (!progress) return;
 
@@ -232,7 +221,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Add completed module
     const addCompletedModule = async (certName: string, moduleId: number) => {
         if (!progress) return;
 
@@ -260,7 +248,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Update streak information
+    // NEW FUNCTION: Add completed quiz
+    const addCompletedQuiz = async (
+        certName: string,
+        moduleId: number,
+        lessonIndex: number,
+        quizType: string,
+        score: number
+    ) => {
+        if (!progress) return;
+
+        // Only track passing scores (70% or higher)
+        if (score < 70) {
+            console.log('Quiz score below 70%, not tracking completion');
+            return;
+        }
+
+        const quizKey = `${certName}_${moduleId}_${lessonIndex}_${quizType}`;
+        const currentQuizzes = progress.completedQuizzes || [];
+
+        // Don't add duplicate
+        if (currentQuizzes.includes(quizKey)) {
+            console.log('Quiz already completed:', quizKey);
+            return;
+        }
+
+        const newCompletedQuizzes = [...currentQuizzes, quizKey];
+
+        try {
+            const updatedDoc = await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                progress.$id,
+                {
+                    completedQuizzes: newCompletedQuizzes,
+                    lastActiveDate: new Date().toISOString()
+                }
+            );
+            setProgress(updatedDoc);
+            console.log('✅ Quiz completion tracked:', quizKey);
+        } catch (error) {
+            console.error('Failed to add completed quiz:', error);
+            throw error;
+        }
+    };
+
     const updateStreak = async (newStreak: number) => {
         if (!progress) return;
 
@@ -300,31 +332,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (result.total > 0) {
             setProgress(result.documents[0]);
         } else {
-            // If no progress document exists, create one manually (shouldn't happen with function)
             const newDoc = await createInitialProgress(user.$id);
             setProgress(newDoc);
         }
     };
 
     const register = async (email: string, password: string, name: string) => {
-        // Create user account
         const user = await account.create(ID.unique(), email, password, name);
-
-        // SMTP DISABLED - Comment out email verification for now
-        // await account.createVerification(`${appConfig.app.deepLinkUrl}/verify-email`);
-
-        // Create session
         await account.createEmailPasswordSession(email, password);
         const loggedInUser = await account.get();
         setUser(loggedInUser);
 
-        // Wait for the Appwrite function to create the progress document
         try {
             const progressDoc = await waitForProgressDocument(loggedInUser.$id);
             setProgress(progressDoc);
         } catch (error) {
             console.error('Failed to get progress document:', error);
-            // Handle the error appropriately for your app
             throw new Error('Failed to initialize user progress. Please try again.');
         }
     };
@@ -382,6 +405,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 updateProgressField,
                 addCompletedLesson,
                 addCompletedModule,
+                addCompletedQuiz, // NEW FUNCTION EXPORTED
                 updateStreak,
                 databases,
                 account
