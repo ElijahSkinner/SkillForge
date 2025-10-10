@@ -405,7 +405,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 updateProgressField,
                 addCompletedLesson,
                 addCompletedModule,
-                addCompletedQuiz, 
+                addCompletedQuiz,
                 updateStreak,
                 databases,
                 account
