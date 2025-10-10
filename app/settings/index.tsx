@@ -27,7 +27,8 @@ export default function SettingsScreen() {
     const router = useRouter();
     const { user, logout, progress, updateProgressField } = useAuth();
     const { theme, themeName, isDarkMode, toggleDarkMode } = useTheme();
-
+    const [showResetModal, setShowResetModal] = useState(false);
+    const [resetLoading, setResetLoading] = useState(false);
     // Add null check for theme
     if (!theme || !theme.spacing || !theme.colors) {
         return (
