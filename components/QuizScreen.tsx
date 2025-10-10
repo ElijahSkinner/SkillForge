@@ -334,55 +334,7 @@ export default function QuizScreen() {
 
             {/* Themed Exit Confirmation Modal */}
             <QuizExitModal visible={showExitModal} onClose={cancelExit}>
-                <View style={{ alignItems: 'center' }}>
-                    {/* Warning Icon */}
-                    <View style={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: 40,
-                        backgroundColor: theme.colors.warning + '20',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginBottom: theme.spacing.lg
-                    }}>
-                        <Ionicons
-                            name="warning"
-                            size={40}
-                            color={theme.colors.warning}
-                        />
-                    </View>
-
-                    {/* Title */}
-                    <ThemedText variant="h3" style={{
-                        marginBottom: theme.spacing.sm,
-                        textAlign: 'center'
-                    }}>
-                        Exit Quiz?
-                    </ThemedText>
-
-                    {/* Description */}
-                    <ThemedText variant="body1" color="textSecondary" style={{
-                        textAlign: 'center',
-                        marginBottom: theme.spacing.xl,
-                        lineHeight: 24
-                    }}>
-                        Your progress will not be saved. Are you sure you want to leave?
-                    </ThemedText>
-
-                    {/* Action Buttons */}
-                    <View style={{ width: '100%', gap: theme.spacing.md }}>
-                        <ThemedButton
-                            title="Exit Quiz"
-                            variant="danger"
-                            onPress={confirmExit}
-                        />
-                        <ThemedButton
-                            title="Stay & Continue"
-                            variant="outline"
-                            onPress={cancelExit}
-                        />
-                    </View>
-                </View>
+                
             </QuizExitModal>
         </ThemedView>
     );
