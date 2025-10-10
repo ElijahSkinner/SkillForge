@@ -333,7 +333,7 @@ export default function QuizScreen() {
             </SafeAreaView>
 
             {/* Themed Exit Confirmation Modal */}
-            <QuizExitModal visible={showExitModal} onClose={cancelExit}>
+            <QuizExitModal>
                 <View style={{ alignItems: 'center' }}>
                     {/* Warning Icon */}
                     <View style={{
