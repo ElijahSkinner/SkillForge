@@ -1,7 +1,7 @@
 // components/QuizScreen.tsx - UPDATED WITH EXIT BUTTON AND COMPLETION TRACKING
 
 import React, { useState } from 'react';
-import { View, ScrollView, Alert } from 'react-native';
+import { View, ScrollView, Alert, Pressable } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -67,7 +67,7 @@ export default function QuizScreen() {
     }
 
     const currentQuestion = quiz.questions[currentQuestionIndex];
-    const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
+    const quizProgress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
     const handleAnswer = (isCorrect: boolean, userAnswer: any) => {
         const newAnswers = [...answers];
@@ -239,26 +239,23 @@ export default function QuizScreen() {
                             fontWeight: '600',
                         },
                         headerLeft: () => (
-                            <View style={{ marginLeft: theme.spacing.sm }}>
-                                <ThemedButton
-                                    title=""
-                                    variant="ghost"
-                                    onPress={handleExit}
-                                    style={{
-                                        width: 40,
-                                        height: 40,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: 'transparent'
-                                    }}
-                                >
-                                    <Ionicons
-                                        name="close"
-                                        size={28}
-                                        color={theme.colors.text}
-                                    />
-                                </ThemedButton>
-                            </View>
+                            <Pressable
+                                onPress={handleExit}
+                                style={{
+                                    marginLeft: theme.spacing.sm,
+                                    width: 40,
+                                    height: 40,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderRadius: theme.borderRadius.round,
+                                }}
+                            >
+                                <Ionicons
+                                    name="close"
+                                    size={28}
+                                    color={theme.colors.text}
+                                />
+                            </Pressable>
                         ),
                     }}
                 />
@@ -285,7 +282,7 @@ export default function QuizScreen() {
                         <View
                             style={{
                                 height: '100%',
-                                width: `${progress}%`,
+                                width: `${quizProgress}%`,
                                 backgroundColor: theme.colors.primary,
                                 borderRadius: theme.borderRadius.round,
                             }}
@@ -302,7 +299,7 @@ export default function QuizScreen() {
                             Question {currentQuestionIndex + 1} of {quiz.questions.length}
                         </ThemedText>
                         <ThemedText variant="body2" color="primary" style={{ fontWeight: '600' }}>
-                            {Math.round(progress)}%
+                            {Math.round(quizProgress)}%
                         </ThemedText>
                     </View>
                 </View>
