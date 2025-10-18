@@ -1,5 +1,4 @@
-// components/QuizScreen.tsx - UPDATED WITH EXIT BUTTON AND COMPLETION TRACKING
-
+// components/QuizScreen.tsx - UPDATED with practice/test modes and mistake tracking
 import React, { useState } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
@@ -16,14 +15,18 @@ import {
 import QuizQuestionComponent from './QuizQuestion';
 import QuizExitModal from './modals/QuizExitModal';
 
-export default function QuizScreen() {
-    const { objective, quizType } = useLocalSearchParams<{
+interface QuizScreenProps {
+    mode?: 'practice' | 'test';
+}
+
+export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
+    const { objective } = useLocalSearchParams<{
         objective: string;
-        quizType: 'quizA' | 'quizB';
     }>();
+
     const { theme } = useTheme();
     const router = useRouter();
-    const { progress: userProgress, addCompletedQuiz } = useAuth();
+    const { progress, addCompletedQuiz, savePracticeScore, addMistakeToReview } = useAuth();
     const { selectedCert } = useCert();
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -32,15 +35,36 @@ export default function QuizScreen() {
     const [quizCompleted, setQuizCompleted] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
 
-    // Gather all domains into one lookup object
+    const isPracticeMode = mode === 'practice';
+
+    // Gather all domains
     const ALL_DOMAINS: Record<string, any> = {
         ...DOMAIN_1_QUIZZES,
         ...DOMAIN_2_QUIZZES,
     };
 
-    const quiz = ALL_DOMAINS[objective!]?.[quizType!];
+    // For practice mode, use quizA. For test mode, intelligently select quiz
+    const getQuizType = (): 'quizA' | 'quizB' => {
+        if (isPracticeMode) return 'quizA'; // Practice always uses quizA
 
-    // Handle exit with confirmation
+        // Test mode: Check which quiz hasn't been completed yet
+        if (!progress || !selectedCert || !objective) return 'quizA';
+
+        const completedQuizzes = progress.completedQuizzes || [];
+        const [moduleId, lessonIndex] = objective.split('.').map(Number);
+        const baseKey = `${selectedCert}_${moduleId}_${lessonIndex}`;
+
+        const hasCompletedA = completedQuizzes.includes(`${baseKey}_quizA`);
+        const hasCompletedB = completedQuizzes.includes(`${baseKey}_quizB`);
+
+        if (!hasCompletedA) return 'quizA';
+        if (!hasCompletedB) return 'quizB';
+        return 'quizA'; // Both completed, allow retake of A
+    };
+
+    const quizType = getQuizType();
+    const quiz = ALL_DOMAINS[objective!]?.[quizType];
+
     const handleExit = () => {
         setShowExitModal(true);
     };
@@ -66,10 +90,31 @@ export default function QuizScreen() {
     const currentQuestion = quiz.questions[currentQuestionIndex];
     const quizProgress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
-    const handleAnswer = (isCorrect: boolean, userAnswer: any) => {
+    const handleAnswer = async (isCorrect: boolean, userAnswer: any) => {
         const newAnswers = [...answers];
         newAnswers[currentQuestionIndex] = { isCorrect, userAnswer };
         setAnswers(newAnswers);
+
+        // Track mistakes in practice mode for review
+        if (isPracticeMode && !isCorrect) {
+            try {
+                const [moduleId, lessonIndex] = (objective || '').split('.').map(Number);
+
+                await addMistakeToReview({
+                    questionId: `${objective}_${currentQuestion.id}`,
+                    question: currentQuestion.question,
+                    objective: objective || '',
+                    module: `Module ${moduleId}`,
+                    yourAnswer: String(userAnswer),
+                    correctAnswer: String(currentQuestion.correct),
+                    explanation: currentQuestion.explanation,
+                    timestamp: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error('Failed to track mistake:', error);
+            }
+        }
+
         setShowResult(true);
     };
 
@@ -90,26 +135,30 @@ export default function QuizScreen() {
     const handleQuizComplete = async () => {
         const score = calculateScore();
 
-        // Track quiz completion in database if passing score
-        if (selectedCert && objective && quizType) {
+        if (selectedCert && objective) {
             const [moduleId, lessonIndex] = objective.split('.').map(Number);
 
             try {
-                await addCompletedQuiz(
-                    selectedCert,
-                    moduleId,
-                    lessonIndex,
-                    quizType,
-                    score
-                );
-
-                console.log('✅ Quiz completion tracked successfully');
+                if (isPracticeMode) {
+                    // Save practice score (no XP, just tracking)
+                    await savePracticeScore(selectedCert, moduleId, lessonIndex, score);
+                    console.log('✅ Practice score saved');
+                } else {
+                    // Test mode: Track completion if passing
+                    await addCompletedQuiz(
+                        selectedCert,
+                        moduleId,
+                        lessonIndex,
+                        quizType,
+                        score
+                    );
+                    console.log('✅ Test completion tracked');
+                }
             } catch (error) {
-                console.error('Failed to track quiz completion:', error);
+                console.error('Failed to track quiz:', error);
             }
         }
 
-        // Navigate back to roadmap
         router.back();
     };
 
@@ -119,11 +168,7 @@ export default function QuizScreen() {
 
         return (
             <ThemedView style={{ flex: 1 }}>
-                <Stack.Screen
-                    options={{
-                        headerShown: false
-                    }}
-                />
+                <Stack.Screen options={{ headerShown: false }} />
                 <SafeAreaView style={{ flex: 1, padding: theme.spacing.lg }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         {/* Success/Failure Icon */}
@@ -131,27 +176,35 @@ export default function QuizScreen() {
                             width: 100,
                             height: 100,
                             borderRadius: 50,
-                            backgroundColor: passed ? theme.colors.success + '20' : theme.colors.warning + '20',
+                            backgroundColor: isPracticeMode
+                                ? theme.colors.info + '20'
+                                : passed
+                                    ? theme.colors.success + '20'
+                                    : theme.colors.warning + '20',
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginBottom: theme.spacing.lg
                         }}>
                             <Ionicons
-                                name={passed ? "checkmark-circle" : "alert-circle"}
+                                name={isPracticeMode ? "bulb" : passed ? "checkmark-circle" : "alert-circle"}
                                 size={60}
-                                color={passed ? theme.colors.success : theme.colors.warning}
+                                color={isPracticeMode ? theme.colors.info : passed ? theme.colors.success : theme.colors.warning}
                             />
                         </View>
 
                         <ThemedText variant="h2" style={{ marginBottom: theme.spacing.lg, textAlign: 'center' }}>
-                            {passed ? 'Quiz Complete!' : 'Keep Studying!'}
+                            {isPracticeMode
+                                ? 'Practice Complete!'
+                                : passed
+                                    ? 'Quiz Complete!'
+                                    : 'Keep Studying!'}
                         </ThemedText>
 
                         <ThemedText
                             variant="h3"
                             style={{
                                 marginBottom: theme.spacing.lg,
-                                color: passed ? theme.colors.success : theme.colors.warning,
+                                color: isPracticeMode ? theme.colors.info : passed ? theme.colors.success : theme.colors.warning,
                             }}
                         >
                             Your Score: {score}%
@@ -165,11 +218,15 @@ export default function QuizScreen() {
                                 paddingHorizontal: theme.spacing.lg
                             }}
                         >
-                            {passed
-                                ? score >= 90
-                                    ? "Outstanding! You've mastered this topic. 🌟"
-                                    : "Great job! You've passed this quiz. Keep up the good work! 💪"
-                                : "Don't worry! Review the material and try again. You've got this! 📚"
+                            {isPracticeMode
+                                ? score >= 70
+                                    ? "Great practice! You're ready for the real test. 💪"
+                                    : "Good effort! Review the material and try the practice quiz again."
+                                : passed
+                                    ? score >= 90
+                                        ? "Outstanding! You've mastered this topic. 🌟"
+                                        : "Great job! You've passed this quiz. Keep up the good work! 💪"
+                                    : "Don't worry! Review the material and try again. You've got this! 📚"
                             }
                         </ThemedText>
 
@@ -209,8 +266,28 @@ export default function QuizScreen() {
                             </View>
                         </View>
 
+                        {/* Mode-specific messaging */}
+                        {isPracticeMode && (
+                            <View style={{
+                                backgroundColor: theme.colors.info + '15',
+                                padding: theme.spacing.md,
+                                borderRadius: theme.borderRadius.md,
+                                width: '100%',
+                                marginBottom: theme.spacing.md,
+                                borderLeftWidth: 4,
+                                borderLeftColor: theme.colors.info
+                            }}>
+                                <ThemedText variant="body2" style={{ textAlign: 'center' }}>
+                                    💡 This was practice mode - your score doesn't count toward completion.
+                                    {score >= 70
+                                        ? " You're ready to take the real test!"
+                                        : " Keep practicing to improve!"}
+                                </ThemedText>
+                            </View>
+                        )}
+
                         <ThemedButton
-                            title="Continue Learning"
+                            title={isPracticeMode ? "Continue" : "Continue Learning"}
                             onPress={handleQuizComplete}
                             style={{ width: '100%' }}
                         />
@@ -223,11 +300,10 @@ export default function QuizScreen() {
     return (
         <ThemedView style={{ flex: 1 }}>
             <SafeAreaView style={{ flex: 1 }}>
-                {/* Custom Header with Exit Button */}
                 <Stack.Screen
                     options={{
                         headerShown: true,
-                        headerTitle: quiz.title,
+                        headerTitle: `${quiz.title} ${isPracticeMode ? '(Practice)' : ''}`,
                         headerStyle: {
                             backgroundColor: theme.colors.surface,
                         },
@@ -257,7 +333,7 @@ export default function QuizScreen() {
                     }}
                 />
 
-                {/* Progress Header */}
+                {/* Progress Header with Mode Badge */}
                 <View
                     style={{
                         padding: theme.spacing.md,
@@ -266,6 +342,25 @@ export default function QuizScreen() {
                         backgroundColor: theme.colors.surface
                     }}
                 >
+                    {/* Mode Badge */}
+                    {isPracticeMode && (
+                        <View style={{
+                            backgroundColor: theme.colors.info + '20',
+                            paddingHorizontal: theme.spacing.sm,
+                            paddingVertical: theme.spacing.xs,
+                            borderRadius: theme.borderRadius.md,
+                            alignSelf: 'center',
+                            marginBottom: theme.spacing.sm
+                        }}>
+                            <ThemedText variant="caption" style={{
+                                color: theme.colors.info,
+                                fontWeight: '600'
+                            }}>
+                                🎯 PRACTICE MODE - No score tracking
+                            </ThemedText>
+                        </View>
+                    )}
+
                     {/* Progress Bar */}
                     <View
                         style={{
@@ -280,7 +375,7 @@ export default function QuizScreen() {
                             style={{
                                 height: '100%',
                                 width: `${quizProgress}%`,
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: isPracticeMode ? theme.colors.info : theme.colors.primary,
                                 borderRadius: theme.borderRadius.round,
                             }}
                         />
@@ -295,7 +390,10 @@ export default function QuizScreen() {
                         <ThemedText variant="body2" color="textSecondary">
                             Question {currentQuestionIndex + 1} of {quiz.questions.length}
                         </ThemedText>
-                        <ThemedText variant="body2" color="primary" style={{ fontWeight: '600' }}>
+                        <ThemedText variant="body2" style={{
+                            color: isPracticeMode ? theme.colors.info : theme.colors.primary,
+                            fontWeight: '600'
+                        }}>
                             {Math.round(quizProgress)}%
                         </ThemedText>
                     </View>
@@ -311,6 +409,7 @@ export default function QuizScreen() {
                         onAnswer={handleAnswer}
                         showResult={showResult}
                         userAnswer={answers[currentQuestionIndex]?.userAnswer}
+                        isPracticeMode={isPracticeMode}
                     />
                 </ScrollView>
 
