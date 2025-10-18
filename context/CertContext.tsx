@@ -1,5 +1,5 @@
+// context/CertContext.tsx - UPDATED with proper JSON handling for enrolledCourses
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Pressable } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
 type Course = {
@@ -29,6 +29,54 @@ export const useCert = (): CertContextType => {
     return context;
 };
 
+// ============================================
+// HELPER FUNCTIONS FOR COURSE JSON HANDLING
+// ============================================
+
+/**
+ * Parse enrolledCourses from Appwrite (string array) to Course objects
+ */
+function parseEnrolledCourses(enrolledCourses: string[] | Course[] | null | undefined): Course[] {
+    if (!enrolledCourses || !Array.isArray(enrolledCourses)) {
+        return [];
+    }
+
+    // If already parsed as Course objects, return as-is
+    if (enrolledCourses.length > 0 && typeof enrolledCourses[0] === 'object' && 'name' in enrolledCourses[0]) {
+        return enrolledCourses as Course[];
+    }
+
+    // Parse string array to Course objects
+    return enrolledCourses.map((courseStr, index) => {
+        if (typeof courseStr === 'string') {
+            try {
+                return JSON.parse(courseStr) as Course;
+            } catch {
+                // If not JSON, create a basic Course object
+                return {
+                    id: index + 1,
+                    name: courseStr,
+                    score: 0,
+                    progress: 0,
+                    enrolledDate: new Date().toISOString(),
+                };
+            }
+        }
+        return courseStr as Course;
+    });
+}
+
+/**
+ * Prepare courses for Appwrite (stringify Course objects)
+ */
+function prepareCoursesForAppwrite(courses: Course[]): string[] {
+    return courses.map(course => JSON.stringify(course));
+}
+
+// ============================================
+// CERT PROVIDER COMPONENT
+// ============================================
+
 export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { progress, updateProgressField } = useAuth();
     const [selectedCert, setSelectedCertState] = useState<string | null>(null);
@@ -44,31 +92,9 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const savedCert = progress.currentCert || null;
             setSelectedCertState(savedCert);
 
-            // Load enrolled courses from Appwrite
-            // Parse the enrolledCourses string array into proper Course objects
+            // Load and parse enrolled courses from Appwrite
             const savedCourses = progress.enrolledCourses || [];
-
-            // If enrolledCourses is stored as string array in Appwrite
-            // we need to parse it into Course objects
-            let parsedCourses: Course[] = [];
-
-            if (Array.isArray(savedCourses)) {
-                parsedCourses = savedCourses.map((courseStr: string, index: number) => {
-                    try {
-                        // If stored as JSON strings
-                        return JSON.parse(courseStr) as Course;
-                    } catch {
-                        // If stored as simple strings, create Course objects
-                        return {
-                            id: index + 1,
-                            name: courseStr,
-                            score: 0,
-                            progress: 0,
-                            enrolledDate: new Date().toISOString(),
-                        };
-                    }
-                });
-            }
+            let parsedCourses = parseEnrolledCourses(savedCourses);
 
             // Add default courses if none exist
             if (parsedCourses.length === 0) {
@@ -90,7 +116,9 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 ];
 
                 // Save default courses to Appwrite
-                saveCoursesToAppwrite(parsedCourses);
+                saveCoursesToAppwrite(parsedCourses).catch(err =>
+                    console.error('Failed to save default courses:', err)
+                );
             }
 
             setEnrolledCoursesState(parsedCourses);
@@ -102,15 +130,17 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const saveCoursesToAppwrite = async (courses: Course[]) => {
         try {
             // Convert Course objects to JSON strings for Appwrite storage
-            const coursesAsStrings = courses.map(course => JSON.stringify(course));
+            const coursesAsStrings = prepareCoursesForAppwrite(courses);
             await updateProgressField('enrolledCourses', coursesAsStrings);
         } catch (error) {
             console.error('Failed to save courses to Appwrite:', error);
+            throw error;
         }
     };
 
     // Set selected certification and save to Appwrite
     const setSelectedCert = async (cert: string) => {
+        const previousCert = selectedCert;
         setSelectedCertState(cert);
 
         try {
@@ -118,13 +148,14 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (error) {
             console.error('Failed to save selected cert to Appwrite:', error);
             // Revert local state on error
-            setSelectedCertState(selectedCert);
+            setSelectedCertState(previousCert);
             throw error;
         }
     };
 
     // Add a new course and save to Appwrite
     const addCourse = async (course: Course) => {
+        const previousCourses = enrolledCourses;
         const newCourses = [...enrolledCourses, {
             ...course,
             enrolledDate: course.enrolledDate || new Date().toISOString(),
@@ -138,13 +169,14 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (error) {
             console.error('Failed to add course to Appwrite:', error);
             // Revert local state on error
-            setEnrolledCoursesState(enrolledCourses);
+            setEnrolledCoursesState(previousCourses);
             throw error;
         }
     };
 
     // Remove a course and update Appwrite
     const removeCourse = async (courseId: number) => {
+        const previousCourses = enrolledCourses;
         const newCourses = enrolledCourses.filter(course => course.id !== courseId);
         setEnrolledCoursesState(newCourses);
 
@@ -159,13 +191,14 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (error) {
             console.error('Failed to remove course from Appwrite:', error);
             // Revert local state on error
-            setEnrolledCoursesState(enrolledCourses);
+            setEnrolledCoursesState(previousCourses);
             throw error;
         }
     };
 
     // Update course progress and save to Appwrite
     const updateCourseProgress = async (courseName: string, progressValue: number) => {
+        const previousCourses = enrolledCourses;
         const newCourses = enrolledCourses.map(course =>
             course.name === courseName
                 ? {
@@ -183,7 +216,7 @@ export const CertProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (error) {
             console.error('Failed to update course progress in Appwrite:', error);
             // Revert local state on error
-            setEnrolledCoursesState(enrolledCourses);
+            setEnrolledCoursesState(previousCourses);
             throw error;
         }
     };
