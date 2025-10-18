@@ -1,4 +1,4 @@
-// components/LessonScreen.tsx - Beautiful Duolingo-style learning interface
+// components/LessonScreen.tsx - FIXED: Handle missing content properties
 import React, { useState, useRef } from 'react';
 import { View, ScrollView, Dimensions, Animated, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -43,33 +43,46 @@ export default function LessonScreen() {
         );
     }
 
-    // Convert lesson content into digestible slides
+    // Convert lesson content into digestible slides - FIXED
     const slides: LessonSlide[] = [
         // Intro slide
         {
             type: 'intro',
             title: lesson.title,
-            content: lesson.introduction
+            content: lesson.content?.introduction || lesson.introduction || 'Introduction to this topic'
         },
         // Key points slides
-        ...lesson.keyPoints.map((point: string, index: number) => ({
+        ...(lesson.content?.keyPoints || lesson.keyPoints || []).map((point: string, index: number) => ({
             type: 'keypoint' as const,
             title: `Key Point ${index + 1}`,
             content: point
         })),
-        // Detailed content slides (from layers, topologies, etc.)
-        ...(lesson.content?.layers ?
-                Object.entries(lesson.content.layers).map(([name, data]: [string, any]) => ({
+        // Detailed content slides - FIXED: Check for different content structures
+        ...(lesson.content?.layers
+                ? Object.entries(lesson.content.layers).map(([name, data]: [string, any]) => ({
                     type: 'concept' as const,
                     title: name,
                     content: data
-                })) : []
+                }))
+                : lesson.content?.physicalVirtualAppliances
+                    ? Object.entries(lesson.content.physicalVirtualAppliances).map(([name, data]: [string, any]) => ({
+                        type: 'concept' as const,
+                        title: name,
+                        content: data
+                    }))
+                    : lesson.content?.cloudConcepts
+                        ? Object.entries(lesson.content.cloudConcepts).map(([name, data]: [string, any]) => ({
+                            type: 'concept' as const,
+                            title: name,
+                            content: data
+                        }))
+                        : []
         ),
-        // Real world scenario
-        ...(lesson.realWorldScenario ? [{
+        // Real world scenario - FIXED: Check both locations
+        ...((lesson.content?.realWorldScenario || lesson.realWorldScenario) ? [{
             type: 'example' as const,
             title: 'Real-World Application',
-            content: lesson.realWorldScenario
+            content: lesson.content?.realWorldScenario || lesson.realWorldScenario
         }] : []),
         // Summary slide
         {
@@ -212,6 +225,14 @@ export default function LessonScreen() {
                             <ThemedCard variant="default" style={{ marginBottom: theme.spacing.md }}>
                                 <ThemedText variant="body1" style={{ lineHeight: 24 }}>
                                     {conceptData.description}
+                                </ThemedText>
+                            </ThemedCard>
+                        )}
+
+                        {conceptData.function && (
+                            <ThemedCard variant="default" style={{ marginBottom: theme.spacing.md }}>
+                                <ThemedText variant="body1" style={{ lineHeight: 24 }}>
+                                    {conceptData.function}
                                 </ThemedText>
                             </ThemedCard>
                         )}
