@@ -156,10 +156,17 @@ export default function LessonSelectionModal({
                 {/* Action Buttons */}
                 <View style={{ width: '100%', gap: theme.spacing.md }}>
                     <ThemedButton
-                        title={loading ? 'Starting...' : getQuizButtonText()}
-                        onPress={handleLessonStart}
-                        disabled={loading}
-                        variant="primary"
+                        title="📚 Learn (5 min)"
+                        onPress={() => navigateToLesson(lesson)} // New learning phase
+                    />
+                    <ThemedButton
+                        title="🎯 Practice Quiz"
+                        onPress={() => navigateToQuiz(lesson, 'practice')} // Practice mode
+                    />
+                    <ThemedButton
+                        title="✅ Test Knowledge"
+                        onPress={() => navigateToQuiz(lesson, 'test')} // Graded quiz
+                        disabled={!hasCompletedPractice}
                     />
 
                     <ThemedButton
