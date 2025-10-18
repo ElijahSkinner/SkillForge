@@ -1,4 +1,4 @@
-// components/QuizScreen.tsx - UPDATED with practice/test modes and mistake tracking
+// components/QuizScreen.tsx - FIXED: Removed isPracticeMode prop and fixed apostrophes
 import React, { useState } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
@@ -220,13 +220,13 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                         >
                             {isPracticeMode
                                 ? score >= 70
-                                    ? "Great practice! You're ready for the real test. 💪"
+                                    ? "Great practice! You&apos;re ready for the real test. 💪"
                                     : "Good effort! Review the material and try the practice quiz again."
                                 : passed
                                     ? score >= 90
-                                        ? "Outstanding! You've mastered this topic. 🌟"
-                                        : "Great job! You've passed this quiz. Keep up the good work! 💪"
-                                    : "Don't worry! Review the material and try again. You've got this! 📚"
+                                        ? "Outstanding! You&apos;ve mastered this topic. 🌟"
+                                        : "Great job! You&apos;ve passed this quiz. Keep up the good work! 💪"
+                                    : "Don&apos;t worry! Review the material and try again. You&apos;ve got this! 📚"
                             }
                         </ThemedText>
 
@@ -278,9 +278,9 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                                 borderLeftColor: theme.colors.info
                             }}>
                                 <ThemedText variant="body2" style={{ textAlign: 'center' }}>
-                                    💡 This was practice mode - your score doesn't count toward completion.
+                                    💡 This was practice mode - your score doesn&apos;t count toward completion.
                                     {score >= 70
-                                        ? " You're ready to take the real test!"
+                                        ? " You&apos;re ready to take the real test!"
                                         : " Keep practicing to improve!"}
                                 </ThemedText>
                             </View>
@@ -409,7 +409,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                         onAnswer={handleAnswer}
                         showResult={showResult}
                         userAnswer={answers[currentQuestionIndex]?.userAnswer}
-                        isPracticeMode={isPracticeMode}
                     />
                 </ScrollView>
 
