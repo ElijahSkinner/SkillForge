@@ -1,4 +1,4 @@
-// context/AuthContext.tsx - UPDATED with learning progress tracking
+// context/AuthContext.tsx - UPDATED with JSON stringify/parse for Appwrite
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
 import { streakService } from "../services/StreakService";
@@ -56,6 +56,107 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+// ============================================
+// HELPER FUNCTIONS FOR JSON HANDLING
+// ============================================
+
+/**
+ * Parse a field from Appwrite that might be JSON stringified
+ * Handles both string arrays and JSON objects
+ */
+function parseAppwriteField(field: any, defaultValue: any = null): any {
+    if (field === null || field === undefined) {
+        return defaultValue;
+    }
+
+    // If it's already an object/array, return as-is
+    if (typeof field === 'object') {
+        return field;
+    }
+
+    // If it's a string array from Appwrite, try to parse each item
+    if (Array.isArray(field)) {
+        return field.map(item => {
+            if (typeof item === 'string') {
+                try {
+                    return JSON.parse(item);
+                } catch {
+                    return item; // Return as-is if not JSON
+                }
+            }
+            return item;
+        });
+    }
+
+    // If it's a single string, try to parse it
+    if (typeof field === 'string') {
+        try {
+            return JSON.parse(field);
+        } catch {
+            return field; // Return as-is if not JSON
+        }
+    }
+
+    return field;
+}
+
+/**
+ * Prepare data for Appwrite by stringifying complex objects
+ */
+function prepareForAppwrite(value: any): any {
+    if (value === null || value === undefined) {
+        return value;
+    }
+
+    // If it's an array of objects, stringify each object
+    if (Array.isArray(value)) {
+        // Check if array contains objects (not primitives)
+        if (value.length > 0 && typeof value[0] === 'object') {
+            return value.map(item => JSON.stringify(item));
+        }
+        return value; // Return primitive arrays as-is
+    }
+
+    // If it's an object (but not array), stringify it
+    if (typeof value === 'object') {
+        return JSON.stringify(value);
+    }
+
+    // Primitives return as-is
+    return value;
+}
+
+/**
+ * Transform document from Appwrite to application format
+ * Parses all JSON fields automatically
+ */
+function transformFromAppwrite(doc: any): any {
+    if (!doc) return null;
+
+    return {
+        ...doc,
+        // Parse JSON fields
+        mistakesReview: parseAppwriteField(doc.mistakesReview, []),
+        achievements: parseAppwriteField(doc.achievements, []),
+        badgesEarned: parseAppwriteField(doc.badgesEarned, []),
+        practiceScores: parseAppwriteField(doc.practiceScores, {}),
+        // Keep string arrays as-is
+        completedLessons: doc.completedLessons || [],
+        completedModules: doc.completedModules || [],
+        completedQuizzes: doc.completedQuizzes || [],
+        enrolledCourses: doc.enrolledCourses || [],
+        viewedLessonContent: doc.viewedLessonContent || [],
+        friendsList: doc.friendsList || [],
+        friendRequests: doc.friendRequests || [],
+        favoriteTopics: doc.favoriteTopics || [],
+        weakTopics: doc.weakTopics || [],
+    };
+}
+
+// ============================================
+// AUTH PROVIDER COMPONENT
+// ============================================
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<any>(null);
     const [progress, setProgress] = useState<any>(null);
@@ -81,7 +182,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 );
 
                 if (result.total > 0) {
-                    setProgress(result.documents[0]);
+                    // Transform the document from Appwrite format
+                    const transformedDoc = transformFromAppwrite(result.documents[0]);
+                    setProgress(transformedDoc);
                 }
             } catch (error) {
                 if (appConfig.isDev) {
@@ -107,7 +210,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 );
 
                 if (result.total > 0) {
-                    return result.documents[0];
+                    return transformFromAppwrite(result.documents[0]);
                 }
 
                 await new Promise(resolve => setTimeout(resolve, delay));
@@ -132,12 +235,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             completedLessons: [],
             completedModules: [],
             completedQuizzes: [],
-            // NEW FIELDS for learning flow
             viewedLessonContent: [],
-            practiceScores: {},
-            mistakesReview: [],
+            practiceScores: JSON.stringify({}), // Stringify for Appwrite
+            mistakesReview: [], // Will be stringified when items are added
             masteredObjectives: [],
-            // End new fields
             maxStreakAllTime: 0,
             currentStreak: 0,
             selectedTheme: "forge",
@@ -153,8 +254,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             friendRequests: [],
             leagueRank: 0,
             weeklyXP: 0,
-            achievements: [],
-            badgesEarned: [],
+            achievements: [], // Will be stringified when items are added
+            badgesEarned: [], // Will be stringified when items are added
             favoriteTopics: [],
             weakTopics: [],
             notificationsEnabled: true,
@@ -164,12 +265,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
         };
 
-        return await databases.createDocument(
+        const doc = await databases.createDocument(
             DATABASE_ID,
             COLLECTION_ID,
             ID.unique(),
             initialProgress
         );
+
+        return transformFromAppwrite(doc);
     };
 
     const updateUserProgress = async () => {
@@ -183,7 +286,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             );
 
             if (result.total > 0) {
-                setProgress(result.documents[0]);
+                const transformedDoc = transformFromAppwrite(result.documents[0]);
+                setProgress(transformedDoc);
             }
         } catch (error) {
             console.error('Failed to update user progress:', error);
@@ -194,13 +298,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!progress) return;
 
         try {
+            // Prepare value for Appwrite (stringify if needed)
+            const preparedValue = prepareForAppwrite(value);
+
             const updatedDoc = await databases.updateDocument(
                 DATABASE_ID,
                 COLLECTION_ID,
                 progress.$id,
-                { [field]: value }
+                { [field]: preparedValue }
             );
-            setProgress(updatedDoc);
+
+            // Transform back to application format
+            const transformedDoc = transformFromAppwrite(updatedDoc);
+            setProgress(transformedDoc);
         } catch (error) {
             console.error(`Failed to update ${field}:`, error);
             throw error;
@@ -231,7 +341,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     lastActiveDate: new Date().toISOString()
                 }
             );
-            setProgress(updatedDoc);
+
+            const transformedDoc = transformFromAppwrite(updatedDoc);
+            setProgress(transformedDoc);
             await backgroundStreakService.onUserActivity();
         } catch (error) {
             console.error('Failed to add completed lesson:', error);
@@ -259,7 +371,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     lastActiveDate: new Date().toISOString()
                 }
             );
-            setProgress(updatedDoc);
+
+            const transformedDoc = transformFromAppwrite(updatedDoc);
+            setProgress(transformedDoc);
         } catch (error) {
             console.error('Failed to add completed module:', error);
             throw error;
@@ -275,7 +389,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     ) => {
         if (!progress) return;
 
-        // Only track passing scores (70% or higher) for test mode
         if (quizType !== 'practice' && score < 70) {
             console.log('Quiz score below 70%, not tracking completion');
             return;
@@ -284,7 +397,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const quizKey = `${certName}_${moduleId}_${lessonIndex}_${quizType}`;
         const currentQuizzes = progress.completedQuizzes || [];
 
-        // Don't add duplicate
         if (currentQuizzes.includes(quizKey)) {
             console.log('Quiz already completed:', quizKey);
             return;
@@ -302,7 +414,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     lastActiveDate: new Date().toISOString()
                 }
             );
-            setProgress(updatedDoc);
+
+            const transformedDoc = transformFromAppwrite(updatedDoc);
+            setProgress(transformedDoc);
             console.log('✅ Quiz completion tracked:', quizKey);
         } catch (error) {
             console.error('Failed to add completed quiz:', error);
@@ -310,7 +424,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // NEW FUNCTION: Save practice quiz score
     const savePracticeScore = async (
         certName: string,
         moduleId: number,
@@ -323,19 +436,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const currentScores = progress.practiceScores || {};
 
         try {
+            const updatedScores = {
+                ...currentScores,
+                [practiceKey]: score
+            };
+
+            // Stringify the entire practiceScores object
             const updatedDoc = await databases.updateDocument(
                 DATABASE_ID,
                 COLLECTION_ID,
                 progress.$id,
                 {
-                    practiceScores: {
-                        ...currentScores,
-                        [practiceKey]: score
-                    },
+                    practiceScores: JSON.stringify(updatedScores),
                     lastActiveDate: new Date().toISOString()
                 }
             );
-            setProgress(updatedDoc);
+
+            const transformedDoc = transformFromAppwrite(updatedDoc);
+            setProgress(transformedDoc);
             console.log('✅ Practice score saved:', practiceKey, score);
         } catch (error) {
             console.error('Failed to save practice score:', error);
@@ -343,25 +461,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // NEW FUNCTION: Add mistake to review
     const addMistakeToReview = async (mistake: MistakeItem) => {
         if (!progress) return;
 
         const currentMistakes = progress.mistakesReview || [];
-
-        // Limit to last 50 mistakes to prevent database bloat
         const updatedMistakes = [mistake, ...currentMistakes].slice(0, 50);
 
         try {
+            // Stringify each mistake object for Appwrite
+            const stringifiedMistakes = updatedMistakes.map(m => JSON.stringify(m));
+
             const updatedDoc = await databases.updateDocument(
                 DATABASE_ID,
                 COLLECTION_ID,
                 progress.$id,
                 {
-                    mistakesReview: updatedMistakes
+                    mistakesReview: stringifiedMistakes
                 }
             );
-            setProgress(updatedDoc);
+
+            const transformedDoc = transformFromAppwrite(updatedDoc);
+            setProgress(transformedDoc);
             console.log('✅ Mistake added to review');
         } catch (error) {
             console.error('Failed to add mistake to review:', error);
@@ -387,7 +507,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     lastActiveDate: new Date().toISOString()
                 }
             );
-            setProgress(updatedDoc);
+
+            const transformedDoc = transformFromAppwrite(updatedDoc);
+            setProgress(transformedDoc);
         } catch (error) {
             console.error('Failed to update streak:', error);
             throw error;
@@ -406,7 +528,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
 
         if (result.total > 0) {
-            setProgress(result.documents[0]);
+            const transformedDoc = transformFromAppwrite(result.documents[0]);
+            setProgress(transformedDoc);
         } else {
             const newDoc = await createInitialProgress(user.$id);
             setProgress(newDoc);
