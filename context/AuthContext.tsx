@@ -1,4 +1,4 @@
-// context/AuthContext.tsx - UPDATED WITH QUIZ COMPLETION TRACKING
+// context/AuthContext.tsx - UPDATED with learning progress tracking
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Account, Client, Databases, ID, Query } from "appwrite";
 import { streakService } from "../services/StreakService";
@@ -19,6 +19,17 @@ if (!appConfig.validateConfig()) {
     console.error('Invalid Appwrite configuration. App may not function correctly.');
 }
 
+interface MistakeItem {
+    questionId: string;
+    question: string;
+    objective: string;
+    module: string;
+    yourAnswer: string;
+    correctAnswer: string;
+    explanation: string;
+    timestamp: string;
+}
+
 interface AuthContextType {
     user: any;
     progress: any;
@@ -36,6 +47,8 @@ interface AuthContextType {
     addCompletedLesson: (certName: string, moduleId: number, lessonIndex: number, xpGained: number) => Promise<void>;
     addCompletedModule: (certName: string, moduleId: number) => Promise<void>;
     addCompletedQuiz: (certName: string, moduleId: number, lessonIndex: number, quizType: string, score: number) => Promise<void>;
+    savePracticeScore: (certName: string, moduleId: number, lessonIndex: number, score: number) => Promise<void>;
+    addMistakeToReview: (mistake: MistakeItem) => Promise<void>;
     updateStreak: (newStreak: number) => Promise<void>;
     databases: Databases;
     account: Account;
@@ -118,7 +131,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             xp: 0,
             completedLessons: [],
             completedModules: [],
-            completedQuizzes: [], // NEW FIELD
+            completedQuizzes: [],
+            // NEW FIELDS for learning flow
+            viewedLessonContent: [],
+            practiceScores: {},
+            mistakesReview: [],
+            masteredObjectives: [],
+            // End new fields
             maxStreakAllTime: 0,
             currentStreak: 0,
             selectedTheme: "forge",
@@ -136,7 +155,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             weeklyXP: 0,
             achievements: [],
             badgesEarned: [],
-            mistakesReview: [],
             favoriteTopics: [],
             weakTopics: [],
             notificationsEnabled: true,
@@ -248,7 +266,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // NEW FUNCTION: Add completed quiz
     const addCompletedQuiz = async (
         certName: string,
         moduleId: number,
@@ -258,8 +275,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     ) => {
         if (!progress) return;
 
-        // Only track passing scores (70% or higher)
-        if (score < 70) {
+        // Only track passing scores (70% or higher) for test mode
+        if (quizType !== 'practice' && score < 70) {
             console.log('Quiz score below 70%, not tracking completion');
             return;
         }
@@ -289,6 +306,65 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log('✅ Quiz completion tracked:', quizKey);
         } catch (error) {
             console.error('Failed to add completed quiz:', error);
+            throw error;
+        }
+    };
+
+    // NEW FUNCTION: Save practice quiz score
+    const savePracticeScore = async (
+        certName: string,
+        moduleId: number,
+        lessonIndex: number,
+        score: number
+    ) => {
+        if (!progress) return;
+
+        const practiceKey = `${certName}_${moduleId}_${lessonIndex}_practice`;
+        const currentScores = progress.practiceScores || {};
+
+        try {
+            const updatedDoc = await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                progress.$id,
+                {
+                    practiceScores: {
+                        ...currentScores,
+                        [practiceKey]: score
+                    },
+                    lastActiveDate: new Date().toISOString()
+                }
+            );
+            setProgress(updatedDoc);
+            console.log('✅ Practice score saved:', practiceKey, score);
+        } catch (error) {
+            console.error('Failed to save practice score:', error);
+            throw error;
+        }
+    };
+
+    // NEW FUNCTION: Add mistake to review
+    const addMistakeToReview = async (mistake: MistakeItem) => {
+        if (!progress) return;
+
+        const currentMistakes = progress.mistakesReview || [];
+
+        // Limit to last 50 mistakes to prevent database bloat
+        const updatedMistakes = [mistake, ...currentMistakes].slice(0, 50);
+
+        try {
+            const updatedDoc = await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                progress.$id,
+                {
+                    mistakesReview: updatedMistakes
+                }
+            );
+            setProgress(updatedDoc);
+            console.log('✅ Mistake added to review');
+        } catch (error) {
+            console.error('Failed to add mistake to review:', error);
             throw error;
         }
     };
@@ -406,6 +482,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 addCompletedLesson,
                 addCompletedModule,
                 addCompletedQuiz,
+                savePracticeScore,
+                addMistakeToReview,
                 updateStreak,
                 databases,
                 account
