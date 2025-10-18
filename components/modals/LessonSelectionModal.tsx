@@ -1,4 +1,4 @@
-// components/modals/LessonSelectionModal.tsx - UPDATED with Learn → Practice → Test flow
+// components/modals/LessonSelectionModal.tsx - FIXED: Moved useMemo, fixed color type, fixed apostrophes
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -34,14 +34,12 @@ export default function LessonSelectionModal({
     const { progress } = useAuth();
     const { selectedCert } = useCert();
 
-    if (!lesson) return null;
+    const isUnitReview = lesson?.lessonIndex === 0;
+    const objective = lesson ? `${lesson.modId}.${lesson.lessonIndex}` : '';
 
-    const isUnitReview = lesson.lessonIndex === 0;
-    const objective = `${lesson.modId}.${lesson.lessonIndex}`;
-
-    // Calculate lesson state
+    // Calculate lesson state - MOVED OUTSIDE OF CONDITIONAL
     const lessonState = useMemo(() => {
-        if (!progress || !selectedCert) {
+        if (!progress || !selectedCert || !lesson) {
             return {
                 hasViewedContent: false,
                 hasCompletedPractice: false,
@@ -65,9 +63,12 @@ export default function LessonSelectionModal({
             hasCompletedPractice: practiceScores[practiceKey] !== undefined,
             hasPassedTest: completedQuizzes.includes(testKeyA) || completedQuizzes.includes(testKeyB),
             practiceScore: practiceScores[practiceKey] || 0,
-            testScore: 0 // Can be enhanced later to track test scores
+            testScore: 0
         };
     }, [progress, selectedCert, objective, lesson]);
+
+    // Return early if no lesson
+    if (!lesson) return null;
 
     // Navigation handlers
     const navigateToLesson = () => {
@@ -130,7 +131,7 @@ export default function LessonSelectionModal({
                         <Ionicons
                             name={lessonState.hasViewedContent ? "checkmark-circle" : "ellipse-outline"}
                             size={20}
-                            color={lessonState.hasViewedContent ? theme.colors.success : theme.colors.textMuted}
+                            color={lessonState.hasViewedContent ? theme.colors.success : theme.colors.textSecondary}
                         />
                         <ThemedText variant="body2" style={{ marginLeft: theme.spacing.sm }}>
                             Learn the material
@@ -140,7 +141,7 @@ export default function LessonSelectionModal({
                         <Ionicons
                             name={lessonState.hasCompletedPractice ? "checkmark-circle" : "ellipse-outline"}
                             size={20}
-                            color={lessonState.hasCompletedPractice ? theme.colors.success : theme.colors.textMuted}
+                            color={lessonState.hasCompletedPractice ? theme.colors.success : theme.colors.textSecondary}
                         />
                         <ThemedText variant="body2" style={{ marginLeft: theme.spacing.sm }}>
                             Practice quiz {lessonState.practiceScore > 0 ? `(${lessonState.practiceScore}%)` : ''}
@@ -150,7 +151,7 @@ export default function LessonSelectionModal({
                         <Ionicons
                             name={lessonState.hasPassedTest ? "checkmark-circle" : "ellipse-outline"}
                             size={20}
-                            color={lessonState.hasPassedTest ? theme.colors.success : theme.colors.textMuted}
+                            color={lessonState.hasPassedTest ? theme.colors.success : theme.colors.textSecondary}
                         />
                         <ThemedText variant="body2" style={{ marginLeft: theme.spacing.sm }}>
                             Pass the test
@@ -179,7 +180,7 @@ export default function LessonSelectionModal({
                             disabled={!lessonState.hasViewedContent}
                         />
                         {!lessonState.hasViewedContent && (
-                            <ThemedText variant="caption" color="textMuted" style={{ textAlign: 'center', marginTop: 4 }}>
+                            <ThemedText variant="caption" color="textSecondary" style={{ textAlign: 'center', marginTop: 4 }}>
                                 Complete the lesson first
                             </ThemedText>
                         )}
@@ -194,13 +195,13 @@ export default function LessonSelectionModal({
                             disabled={!lessonState.hasCompletedPractice}
                         />
                         {!lessonState.hasCompletedPractice && (
-                            <ThemedText variant="caption" color="textMuted" style={{ textAlign: 'center', marginTop: 4 }}>
+                            <ThemedText variant="caption" color="textSecondary" style={{ textAlign: 'center', marginTop: 4 }}>
                                 Complete practice quiz first
                             </ThemedText>
                         )}
                         {lessonState.hasPassedTest && (
                             <ThemedText variant="caption" color="success" style={{ textAlign: 'center', marginTop: 4 }}>
-                                ✓ Test passed! You've earned your XP
+                                ✓ Test passed! You&apos;ve earned your XP
                             </ThemedText>
                         )}
                     </View>
@@ -216,7 +217,7 @@ export default function LessonSelectionModal({
                 {/* Help Text */}
                 <ThemedText
                     variant="caption"
-                    color="textMuted"
+                    color="textSecondary"
                     style={{
                         textAlign: 'center',
                         marginTop: theme.spacing.md,
@@ -224,7 +225,7 @@ export default function LessonSelectionModal({
                     }}
                 >
                     {!lessonState.hasViewedContent && "Start by learning the material, then practice with unlimited attempts."}
-                    {lessonState.hasViewedContent && !lessonState.hasCompletedPractice && "Practice mode gives instant feedback and doesn't count toward your score."}
+                    {lessonState.hasViewedContent && !lessonState.hasCompletedPractice && "Practice mode gives instant feedback and doesn&apos;t count toward your score."}
                     {lessonState.hasCompletedPractice && !lessonState.hasPassedTest && "Ready for the real test? You need 70% to pass and earn XP."}
                     {lessonState.hasPassedTest && "Lesson complete! You can retake anytime to improve your score."}
                 </ThemedText>
