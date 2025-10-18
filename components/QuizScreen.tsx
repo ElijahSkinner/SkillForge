@@ -1,5 +1,5 @@
-// components/QuizScreen.tsx - FIXED: Removed isPracticeMode prop and fixed apostrophes
-import React, { useState } from 'react';
+// components/QuizScreen.tsx - FIXED: Reset state when moving to next question
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -45,9 +45,8 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
 
     // For practice mode, use quizA. For test mode, intelligently select quiz
     const getQuizType = (): 'quizA' | 'quizB' => {
-        if (isPracticeMode) return 'quizA'; // Practice always uses quizA
+        if (isPracticeMode) return 'quizA';
 
-        // Test mode: Check which quiz hasn't been completed yet
         if (!progress || !selectedCert || !objective) return 'quizA';
 
         const completedQuizzes = progress.completedQuizzes || [];
@@ -59,7 +58,7 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
 
         if (!hasCompletedA) return 'quizA';
         if (!hasCompletedB) return 'quizB';
-        return 'quizA'; // Both completed, allow retake of A
+        return 'quizA';
     };
 
     const quizType = getQuizType();
@@ -121,7 +120,7 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
     const handleNext = () => {
         if (currentQuestionIndex < quiz.questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setShowResult(false);
+            setShowResult(false); // Reset to hide explanation
         } else {
             setQuizCompleted(true);
         }
@@ -140,11 +139,9 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
 
             try {
                 if (isPracticeMode) {
-                    // Save practice score (no XP, just tracking)
                     await savePracticeScore(selectedCert, moduleId, lessonIndex, score);
                     console.log('✅ Practice score saved');
                 } else {
-                    // Test mode: Track completion if passing
                     await addCompletedQuiz(
                         selectedCert,
                         moduleId,
@@ -171,7 +168,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                 <Stack.Screen options={{ headerShown: false }} />
                 <SafeAreaView style={{ flex: 1, padding: theme.spacing.lg }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        {/* Success/Failure Icon */}
                         <View style={{
                             width: 100,
                             height: 100,
@@ -220,17 +216,16 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                         >
                             {isPracticeMode
                                 ? score >= 70
-                                    ? "Great practice! You&apos;re ready for the real test. 💪"
+                                    ? "Great practice! You're ready for the real test. 💪"
                                     : "Good effort! Review the material and try the practice quiz again."
                                 : passed
                                     ? score >= 90
-                                        ? "Outstanding! You&apos;ve mastered this topic. 🌟"
-                                        : "Great job! You&apos;ve passed this quiz. Keep up the good work! 💪"
-                                    : "Don&apos;t worry! Review the material and try again. You&apos;ve got this! 📚"
+                                        ? "Outstanding! You've mastered this topic. 🌟"
+                                        : "Great job! You've passed this quiz. Keep up the good work! 💪"
+                                    : "Don't worry! Review the material and try again. You've got this! 📚"
                             }
                         </ThemedText>
 
-                        {/* Stats */}
                         <View style={{
                             backgroundColor: theme.colors.surface,
                             padding: theme.spacing.lg,
@@ -266,7 +261,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                             </View>
                         </View>
 
-                        {/* Mode-specific messaging */}
                         {isPracticeMode && (
                             <View style={{
                                 backgroundColor: theme.colors.info + '15',
@@ -278,9 +272,9 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                                 borderLeftColor: theme.colors.info
                             }}>
                                 <ThemedText variant="body2" style={{ textAlign: 'center' }}>
-                                    💡 This was practice mode - your score doesn&apos;t count toward completion.
+                                    💡 This was practice mode - your score doesn't count toward completion.
                                     {score >= 70
-                                        ? " You&apos;re ready to take the real test!"
+                                        ? " You're ready to take the real test!"
                                         : " Keep practicing to improve!"}
                                 </ThemedText>
                             </View>
@@ -333,7 +327,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                     }}
                 />
 
-                {/* Progress Header with Mode Badge */}
                 <View
                     style={{
                         padding: theme.spacing.md,
@@ -342,7 +335,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                         backgroundColor: theme.colors.surface
                     }}
                 >
-                    {/* Mode Badge */}
                     {isPracticeMode && (
                         <View style={{
                             backgroundColor: theme.colors.info + '20',
@@ -361,7 +353,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                         </View>
                     )}
 
-                    {/* Progress Bar */}
                     <View
                         style={{
                             height: 8,
@@ -381,7 +372,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                         />
                     </View>
 
-                    {/* Question Counter */}
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -399,10 +389,10 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                     </View>
                 </View>
 
-                {/* Question Content */}
                 <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={{ flexGrow: 1 }}
+                    key={currentQuestionIndex} // IMPORTANT: This forces re-render on question change
                 >
                     <QuizQuestionComponent
                         question={currentQuestion}
@@ -412,7 +402,6 @@ export default function QuizScreen({ mode = 'test' }: QuizScreenProps) {
                     />
                 </ScrollView>
 
-                {/* Navigation Footer */}
                 <View
                     style={{
                         padding: theme.spacing.md,
