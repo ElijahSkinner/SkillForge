@@ -1,4 +1,4 @@
-// app/(tabs)/today/index.tsx - PRODUCTION READY WITH REAL DATA
+// app/(tabs)/today/index.tsx - ENHANCED with mistake review
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,9 +16,14 @@ interface TodayStats {
 }
 
 interface MistakeItem {
-    topic: string;
-    module: string;
     questionId: string;
+    question: string;
+    objective: string;
+    module: string;
+    yourAnswer: string;
+    correctAnswer: string;
+    explanation: string;
+    timestamp: string;
 }
 
 interface LearnedItem {
@@ -59,7 +64,6 @@ export default function TodayReviewScreen() {
             lastActive.getDate() === todayStart.getDate();
 
         if (wasActiveToday) {
-            // Calculate actual stats from progress data
             const completedLessons = progress.completedLessons || [];
             const completedQuizzes = progress.completedQuizzes || [];
 
@@ -88,11 +92,7 @@ export default function TodayReviewScreen() {
 
     const getRecentMistakes = (): MistakeItem[] => {
         const mistakes = progress?.mistakesReview || [];
-        return mistakes.slice(0, 3).map((mistake: any) => ({
-            topic: mistake.topic || 'Review Topic',
-            module: mistake.module || 'General Review',
-            questionId: mistake.questionId || ''
-        }));
+        return mistakes.slice(0, 5); // Show 5 most recent
     };
 
     const getRecentlyLearned = (): LearnedItem[] => {
@@ -107,6 +107,11 @@ export default function TodayReviewScreen() {
         });
     };
 
+    const navigateToMistakeReview = (mistake: MistakeItem) => {
+        // Navigate to the specific objective to review
+        router.push(`/learn/${mistake.objective}` as any);
+    };
+
     const studiedToday = hasStudiedToday();
     const recentMistakes = getRecentMistakes();
     const recentlyLearned = getRecentlyLearned();
@@ -117,12 +122,13 @@ export default function TodayReviewScreen() {
                 style={styles.container}
                 contentContainerStyle={{ padding: theme.spacing.lg }}
             >
+                {/* Header */}
                 <View style={{ marginBottom: theme.spacing.lg }}>
                     <Text style={[
                         theme.typography.h2,
                         { color: theme.colors.text, marginBottom: theme.spacing.xs }
                     ]}>
-                        Today&apos;s Review
+                        Today's Review
                     </Text>
                     <Text style={[theme.typography.body2, { color: theme.colors.textSecondary }]}>
                         {new Date().toLocaleDateString('en-US', {
@@ -133,6 +139,7 @@ export default function TodayReviewScreen() {
                     </Text>
                 </View>
 
+                {/* Today's Progress Stats */}
                 <View style={[{
                     backgroundColor: theme.colors.surface,
                     borderRadius: theme.borderRadius.md,
@@ -143,7 +150,7 @@ export default function TodayReviewScreen() {
                         theme.typography.h4,
                         { color: theme.colors.text, marginBottom: theme.spacing.md }
                     ]}>
-                        Today&apos;s Progress
+                        Today's Progress
                     </Text>
 
                     <View style={styles.statsGrid}>
@@ -209,6 +216,7 @@ export default function TodayReviewScreen() {
                     </View>
                 </View>
 
+                {/* Quick Actions */}
                 <View style={{ marginBottom: theme.spacing.lg }}>
                     <Text style={[
                         theme.typography.h4,
@@ -259,43 +267,111 @@ export default function TodayReviewScreen() {
                     </Pressable>
                 </View>
 
+                {/* MISTAKE REVIEW SECTION - NEW! */}
                 {recentMistakes.length > 0 && (
                     <View style={{ marginBottom: theme.spacing.lg }}>
-                        <Text style={[
-                            theme.typography.h4,
-                            { color: theme.colors.text, marginBottom: theme.spacing.md }
-                        ]}>
-                            Topics to Review
-                        </Text>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: theme.spacing.md
+                        }}>
+                            <Text style={[
+                                theme.typography.h4,
+                                { color: theme.colors.text }
+                            ]}>
+                                Review Your Mistakes
+                            </Text>
+                            <View style={{
+                                backgroundColor: theme.colors.error + '20',
+                                paddingHorizontal: theme.spacing.sm,
+                                paddingVertical: theme.spacing.xs,
+                                borderRadius: theme.borderRadius.round
+                            }}>
+                                <Text style={[
+                                    theme.typography.caption,
+                                    { color: theme.colors.error, fontWeight: '600' }
+                                ]}>
+                                    {recentMistakes.length} recent
+                                </Text>
+                            </View>
+                        </View>
+
                         {recentMistakes.map((mistake, idx) => (
-                            <View
+                            <Pressable
                                 key={idx}
                                 style={{
                                     backgroundColor: theme.colors.surface,
                                     borderRadius: theme.borderRadius.md,
                                     borderLeftWidth: 4,
-                                    borderLeftColor: theme.colors.warning,
+                                    borderLeftColor: theme.colors.error,
                                     marginBottom: theme.spacing.sm,
-                                    padding: theme.spacing.md
+                                    padding: theme.spacing.md,
+                                    ...theme.shadows.small
                                 }}
+                                onPress={() => navigateToMistakeReview(mistake)}
                             >
+                                <View style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    marginBottom: theme.spacing.xs
+                                }}>
+                                    <Text style={[
+                                        theme.typography.caption,
+                                        { color: theme.colors.textSecondary, flex: 1 }
+                                    ]}>
+                                        {mistake.module} • {mistake.objective}
+                                    </Text>
+                                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textMuted} />
+                                </View>
+
                                 <Text style={[
                                     theme.typography.body1,
-                                    { color: theme.colors.text, fontWeight: '600' }
+                                    { color: theme.colors.text, fontWeight: '600', marginBottom: theme.spacing.sm }
                                 ]}>
-                                    {mistake.topic}
+                                    {mistake.question.substring(0, 80)}
+                                    {mistake.question.length > 80 ? '...' : ''}
                                 </Text>
-                                <Text style={[
-                                    theme.typography.caption,
-                                    { color: theme.colors.textSecondary, marginTop: theme.spacing.xs }
-                                ]}>
-                                    {mistake.module}
-                                </Text>
-                            </View>
+
+                                <View style={{
+                                    backgroundColor: theme.colors.error + '10',
+                                    padding: theme.spacing.sm,
+                                    borderRadius: theme.borderRadius.sm,
+                                    marginBottom: theme.spacing.xs
+                                }}>
+                                    <Text style={[
+                                        theme.typography.caption,
+                                        { color: theme.colors.error, marginBottom: 2 }
+                                    ]}>
+                                        Your answer:
+                                    </Text>
+                                    <Text style={[theme.typography.body2, { color: theme.colors.text }]}>
+                                        {mistake.yourAnswer}
+                                    </Text>
+                                </View>
+
+                                <View style={{
+                                    backgroundColor: theme.colors.success + '10',
+                                    padding: theme.spacing.sm,
+                                    borderRadius: theme.borderRadius.sm
+                                }}>
+                                    <Text style={[
+                                        theme.typography.caption,
+                                        { color: theme.colors.success, marginBottom: 2 }
+                                    ]}>
+                                        Correct answer:
+                                    </Text>
+                                    <Text style={[theme.typography.body2, { color: theme.colors.text }]}>
+                                        {mistake.correctAnswer}
+                                    </Text>
+                                </View>
+                            </Pressable>
                         ))}
                     </View>
                 )}
 
+                {/* Recently Learned */}
                 {recentlyLearned.length > 0 && (
                     <View>
                         <Text style={[
@@ -338,6 +414,7 @@ export default function TodayReviewScreen() {
                     </View>
                 )}
 
+                {/* Empty State */}
                 {!studiedToday && recentlyLearned.length === 0 && (
                     <View style={{
                         padding: theme.spacing.xl,
