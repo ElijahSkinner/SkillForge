@@ -122,7 +122,7 @@ export default function TodayReviewScreen() {
                         theme.typography.h2,
                         { color: theme.colors.text, marginBottom: theme.spacing.xs }
                     ]}>
-                        Today's Review
+                        Today&apos;s Review
                     </Text>
                     <Text style={[theme.typography.body2, { color: theme.colors.textSecondary }]}>
                         {new Date().toLocaleDateString('en-US', {
@@ -143,7 +143,7 @@ export default function TodayReviewScreen() {
                         theme.typography.h4,
                         { color: theme.colors.text, marginBottom: theme.spacing.md }
                     ]}>
-                        Today's Progress
+                        Today&apos;s Progress
                     </Text>
 
                     <View style={styles.statsGrid}>
