@@ -1,5 +1,5 @@
-// components/quiz/QuizQuestion.tsx
-import React, { useState } from 'react';
+// components/QuizQuestion.tsx - FIXED: Reset state when question changes
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
 import { ThemedText, ThemedButton } from '../components/themed';
 import { useTheme } from '../context/ThemeContext';
@@ -22,6 +22,13 @@ export default function QuizQuestionComponent({
     const [selectedOption, setSelectedOption] = useState<number | string | null>(null);
     const [textAnswer, setTextAnswer] = useState('');
     const [draggedItems, setDraggedItems] = useState<Record<string, string>>({});
+
+    // CRITICAL FIX: Reset state when question changes
+    useEffect(() => {
+        setSelectedOption(null);
+        setTextAnswer('');
+        setDraggedItems({});
+    }, [question.id]); // Reset whenever question.id changes
 
     const handleSubmit = () => {
         let isCorrect = false;
@@ -190,7 +197,6 @@ export default function QuizQuestionComponent({
     const renderDragDrop = () => {
         const q = question as Extract<QuizQuestion, { type: 'drag-drop' }>;
 
-        // Simplified drag-drop implementation
         return (
             <View>
                 <ThemedText variant="caption" style={{ marginBottom: theme.spacing.md }}>
